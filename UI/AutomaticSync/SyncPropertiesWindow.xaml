@@ -1,0 +1,50 @@
+﻿<Window x:Class="BeyondRevit.UI.SyncPropertiesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BeyondRevit.UI"
+        mc:Ignorable="d"
+        Title="Automatic Synchronization Settings" Height="410.455" Width="375" WindowStartupLocation="CenterScreen" Background="{DynamicResource ResourceKey=MainBackground}">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/BeyondRevit;component/Resources/Styles.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Grid Margin="0,0,0,0">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="60"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Button Style="{StaticResource RoundButton}" 
+				Content="Save Sync Settings" 
+				Margin="0,0,10,10" 
+				Height="40"
+				HorizontalAlignment="Right" 
+				Width="153"
+				Click="Button_Click" Grid.Row="3" VerticalAlignment="Bottom"/>
+		<StackPanel>
+			<TextBox Style="{StaticResource ResourceKey=BannerTextbox}" 
+				 Text="Interval until next Save in Minutes" 
+				 Margin="10,10,10,0" 
+				 VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+			<TextBox x:Name="SaveInterval" Foreground="{StaticResource MainBackground}" Margin="30,10,30,20" FontSize="15" Text="60" FontWeight="DemiBold" TextChanged="NumberCheck_TextChanged"/>
+			<TextBox Style="{StaticResource ResourceKey=BannerTextbox}" 
+				 Text="Interval until next Reload from Central in minutes" 
+				 Margin="10,10,10,0" 
+				 VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+			<TextBox x:Name="ReloadInterval" Foreground="{StaticResource MainBackground}" Margin="30,10,30,20" FontSize="15" Text="60" FontWeight="DemiBold" TextChanged="NumberCheck_TextChanged"/>
+			<TextBox Style="{StaticResource ResourceKey=BannerTextbox}" 
+				 Text="Interval until next Synchronization in minutes" 
+				 Margin="10,10,10,0" 
+				 VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+			<TextBox x:Name="SyncInterval" Foreground="{StaticResource MainBackground}" Margin="30,10,30,20" FontSize="15" Text="60" FontWeight="DemiBold" TextChanged="NumberCheck_TextChanged"/>
+
+		</StackPanel>
+	</Grid>
+</Window>

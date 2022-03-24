@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>BeyondRevit</Name>
+    <Assembly>BeyondRevit/BeyondRevit.dll</Assembly>
+    <AddInId>5b22acad-6f3d-4830-a6dd-ec5ea414d396</AddInId>
+    <FullClassName>BeyondRevit.BRApplication</FullClassName>
+    <VendorId>J van Herwaarden</VendorId>
+    <VendorDescription>A Set of Awesome tools for Revit</VendorDescription>
+  </AddIn>
+</RevitAddIns>
