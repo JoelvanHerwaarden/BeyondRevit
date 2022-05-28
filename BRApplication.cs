@@ -21,17 +21,18 @@ namespace BeyondRevit
     public class BRApplication : IExternalApplication
     {
         private static RibbonPanel SheetPanel { get; set; }
+        private static RibbonPanel HadesPanel { get; set; }
         private static RibbonPanel SelectionPanel { get; set; }
         private static RibbonPanel JoinCutUtilsPanel { get; set; }
         private static RibbonPanel DimensionsPanel { get; set; }
         private static RibbonPanel SyncPanel { get; set; }
         private static RibbonPanel QuickCommandPanel { get; set; }
+        public static PushButton CommandLineButton { get; set; }
         public static PushButton OrganizeViewsButton { get; set; }
         public static PushButton AutoSyncButton { get; set; }
         public static PushButton PauzeAutoSyncButton { get; set; }
         public static PushButton SyncSettingsButton { get; set; }
-        public static PushButton SelectAllInstancesInView { get; set; }
-        public static PushButton SelectAllTypesInView { get; set; }
+        public static PulldownButtonData HadesPulldownButton { get; set; }
 
         public Result OnShutdown(UIControlledApplication application)
         {
@@ -44,11 +45,13 @@ namespace BeyondRevit
             Window revitWindow = HwndSource.FromHwnd(application.MainWindowHandle).RootVisual as Window;
             BeyondRevit.UI.SplashScreen splashScreen = new BeyondRevit.UI.SplashScreen(revitWindow);
 
-            MIPOverride.TrainingWheelsProtocol(application);
+            //MIPOverride.TrainingWheelsProtocol(application);
 
             splashScreen.ShowSplash();
 
             SetupRibbonPanels(application);
+            CommandLineButton = CreateRibbonButton("Command Line", "CommandLine", "BeyondRevit.Commands.CommandLine", QuickCommandPanel, "commandLine_32.bmp");
+
             OrganizeViewsButton = CreateRibbonButton("Organize Views", "OrganizeViews", "BeyondRevit.Commands.OrganizeViewsOnSheet", SheetPanel, "organizeViews_32.bmp");
 
             string[] titles = new List<string>() { "Select All Instances in View", "Select All Instances on the same Sheet", "Select All Instances in the Project", "Select All Types in View", "Select All Types on the same Sheet", "Select All Types in the Project" }.ToArray();
@@ -92,12 +95,12 @@ namespace BeyondRevit
 
             PulldownButtonData dimensionPullDown = new PulldownButtonData("DimensionsPullDown", "Dimensions");
             CreateStackedRibbonButton(dimensionPullDown,
-                new List<string>() { "Align First Dimension Distance", "Create Total Dimension", "Duplicate Dimension with Offset","Remove Dimension At Reference","Move Small Dimensions", "Split Dimension At Reference", "Auto Dimension" }.ToArray(),
-                new List<string>() { "AlignFirstDimension", "CreateTotalDimension","DuplicateDimension", "RemoveDimensionSegment","MoveSmallDimensions", "SplitDimension", "AutoDimension" }.ToArray(),
-                new List<string>() { "BeyondRevit.Commands.AlignFirstDimensionbyDistance", "BeyondRevit.Commands.CreateTotalDimension", "BeyondRevit.Commands.DuplicateDimension","BeyondRevit.Commands.RemoveDimensionSegment", "BeyondRevit.Commands.MoveDimensionEnds", "BeyondRevit.Commands.SplitDimensionLine", "BeyondRevit.Commands.AutoDimension" }.ToArray(),
+                new List<string>() { "Create Total Dimension", "Duplicate Dimension with Offset", "Move Small Dimensions", "Remove Dimension Reference", "Split Dimensions", "Merge Dimensions", "Align First Dimension Distance", "Auto Dimension" }.ToArray(),
+                new List<string>() { "CreateTotalDimension","DuplicateDimension", "MoveSmallDimensions", "RemoveDimensionSegment", "SplitDimension","MergeDimensions", "AlignFirstDimension", "AutoDimension" }.ToArray(),
+                new List<string>() { "BeyondRevit.Commands.CreateTotalDimension", "BeyondRevit.Commands.DuplicateDimension", "BeyondRevit.Commands.MoveDimensionEnds", "BeyondRevit.Commands.RemoveDimensionSegment",  "BeyondRevit.Commands.SplitDimensionLine", "BeyondRevit.Commands.MergeDimensions", "BeyondRevit.Commands.AlignFirstDimensionbyDistance", "BeyondRevit.Commands.AutoDimension" }.ToArray(),
                 "dimensions_32.bmp",
                 DimensionsPanel, 
-                new List<string>() { "alignDimensions_32.bmp", "dimensionTotal_32.bmp","dimensionDuplicate_32.bmp", "dimensionRemoveReference_32.bmp","smalldimensions_32.bmp", "dimensionSplit_32.bmp", "autoDimension_32.bmp" }.ToArray());
+                new List<string>() { "dimensionTotal_32.bmp", "dimensionDuplicate_32.bmp", "smalldimensions_32.bmp", "dimensionRemoveReference_32.bmp", "dimensionSplit_32.bmp", "dimensionMerge_32.bmp", "alignDimensions_32.bmp", "autoDimension_32.bmp" }.ToArray());
 
             PushButtonData AlignElevationTags = CreateQuickButton("Align ElevationTags", "AlignElevationTags", "BeyondRevit.Commands.AlignElevations");
             PushButtonData RemoveDimensionSegment = CreateQuickButton("Remove Dimension Segment", "RemoveDimensionSegment", "BeyondRevit.Commands.RemoveDimensionSegment");
@@ -121,6 +124,19 @@ namespace BeyondRevit
             PushButtonData MakeHalftone = CreateQuickButton("Make Elements Halftone in View", "HalfTone", "BeyondRevit.Commands.MakeHalftone");
             PushButtonData RemoveOverrides = CreateQuickButton("Remove Element Overrides in View", "RemoveOverrides", "BeyondRevit.Commands.RemoveOverrides");
             QuickCommandPanel.AddStackedItems(MakeHalftone, RemoveOverrides);
+
+            CreateRibbonButton("PhaseBack", "Previous Phase", "BeyondRevit.Commands.GoToPreviousPhase", QuickCommandPanel, "previous_32.bmp");
+            CreateRibbonButton("PhaseForward", "Next Phase", "BeyondRevit.Commands.GoToNextPhase", QuickCommandPanel, "next_32.bmp");
+
+            HadesPulldownButton = new PulldownButtonData("HadesPullDown", "Hades");
+            CreateStackedRibbonButton(HadesPulldownButton,
+                new List<string>() { "Purge Import Lines styles", "Purge View Filters", "Purge View Template", "Purge Unplaced Views", "Purge Worksets" }.ToArray(),
+                new List<string>() { "PurgeLinesStyles", "PurgeViewFilters", "PurgeViewTemplates", "PurgeViews", "PurgeWorksets"}.ToArray(),
+                new List<string>() { "BeyondRevit.Hades.PurgeImportedLineStyles", "BeyondRevit.Hades.PurgeViewFilters", "BeyondRevit.Hades.PurgeViewTemplates", "BeyondRevit.Hades.PurgeViewsNotOnSheet", "BeyondRevit.Hades.PurgeWorksets" }.ToArray(),
+                "hades_32.bmp",
+                HadesPanel,
+                new List<string>() { "hades_32.bmp", "hades_32.bmp", "hades_32.bmp", "hades_32.bmp", "hades_32.bmp" }.ToArray());
+
             return Result.Succeeded;
         }
 
@@ -134,6 +150,7 @@ namespace BeyondRevit
             JoinCutUtilsPanel = application.CreateRibbonPanel("Beyond Revit", "Join/Cut Commands");
             DimensionsPanel = application.CreateRibbonPanel("Beyond Revit", "Dimensions");
             QuickCommandPanel = application.CreateRibbonPanel("Beyond Revit", "Quick Commands");
+            HadesPanel = application.CreateRibbonPanel("Beyond Revit", "Hades");
         }
 
         private PushButton CreateRibbonButton(string Title, string buttonName, string Command, RibbonPanel panel, string imageName = null, string toolTip = null)

@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Autodesk.Internal.InfoCenter;
 using BeyondRevit.ViewModels;
-using NUnit.Framework;
 
 namespace BeyondRevit.UI
 {

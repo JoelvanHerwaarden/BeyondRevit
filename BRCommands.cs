@@ -17,17 +17,80 @@ using adskWindows = Autodesk.Windows;
 using Autodesk.Revit.UI.Selection;
 using System.Collections.ObjectModel;
 using BeyondRevit.Models;
-using TagAlignmentTool;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using System.Drawing.Printing;
 using static System.Drawing.Printing.PrinterSettings;
-using Archigrafix.iSync;
 using Newtonsoft.Json;
 using System.Reflection;
 using System.Collections;
 
 namespace BeyondRevit.Commands
 {
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ApplyMaterialSettingsAsOverrides : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            Document doc = commandData.Application.ActiveUIDocument.Document;
+
+            Selection selection = commandData.Application.ActiveUIDocument.Selection;
+
+            SelectElements:
+            try
+            {
+                IList<Reference> references = selection.PickObjects(ObjectType.Element, "Select elements");
+
+                IList<Element> elementsList = new FilteredElementCollector(doc).OfClass(typeof(Material)).ToElements();
+                List<Element> sortedElementList = elementsList.OrderBy(e => e.Name).ToList();
+                List<string> itemNames = new List<string>();
+                foreach (Element element in sortedElementList)
+                {
+                    itemNames.Add(element.Name);
+                }
+                GenericDropdownWindow window = new GenericDropdownWindow("Select Materials", "Select Materials", itemNames, sortedElementList, Utils.RevitWindow(commandData), false);
+                window.ShowDialog();
+                if (!window.Cancelled)
+                {
+                    using(Transaction transaction = new Transaction(doc, "Override Elements with Material settings"))
+                    {
+                        transaction.Start(); 
+                        Material material = window.SelectedItems[0];
+                        OverrideGraphicSettings overrides = new OverrideGraphicSettings();
+                        overrides.SetSurfaceForegroundPatternId(material.SurfaceForegroundPatternId);
+                        overrides.SetSurfaceForegroundPatternColor(material.SurfaceForegroundPatternColor);
+                        overrides.SetSurfaceBackgroundPatternId(material.SurfaceBackgroundPatternId);
+                        overrides.SetSurfaceBackgroundPatternColor(material.SurfaceBackgroundPatternColor);
+
+                        overrides.SetCutForegroundPatternId(material.CutForegroundPatternId);
+                        overrides.SetCutForegroundPatternColor(material.CutForegroundPatternColor);
+                        overrides.SetCutBackgroundPatternId(material.CutBackgroundPatternId);
+                        overrides.SetCutBackgroundPatternColor(material.CutBackgroundPatternColor);
+
+                        foreach (Reference reference in references)
+                        {
+                            Element element = doc.GetElement(reference);
+                            doc.ActiveView.SetElementOverrides(element.Id, overrides);
+                        }
+                        transaction.Commit();
+                    }
+                    
+                }
+                else
+                {
+                    return Result.Succeeded;
+                }
+            }
+            catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+            {
+                return Result.Succeeded;
+            }
+            goto SelectElements;
+
+        }
+            
+    }
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class GoToProjectLocationCycloMedia : IExternalCommand
@@ -75,9 +138,6 @@ namespace BeyondRevit.Commands
             return Result.Succeeded;
         }
     }
-
-    
-
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -558,217 +618,7 @@ namespace BeyondRevit.Commands
         }
     }
 
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class DisallowJoins : IExternalCommand
-    {
-        internal sealed class WallBeamFilter : ISelectionFilter
-        {
-            public bool AllowElement(Element elem)
-            {
-                if (elem is null) return false;
-
-
-                BuiltInCategory builtInCategory = (BuiltInCategory)GetCategoryIdAsInteger(elem);
-
-                if (builtInCategory == BuiltInCategory.OST_StructuralFraming || builtInCategory == BuiltInCategory.OST_Walls) return true;
-
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                return false;
-            }
-
-            public static int GetCategoryIdAsInteger(Element element)
-            {
-                return element?.Category?.Id?.IntegerValue ?? -1;
-            }
-        }
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uiDoc = commandData.Application.ActiveUIDocument;
-            Document doc = uiDoc.Document;
-            IList<Reference> references = Utils.GetCurrentSelection(uiDoc, new WallBeamFilter(), "Select Walls or Beams");
-
-            using (Transaction t = new Transaction(doc, "Disallow Joints"))
-            {
-                t.Start();
-                foreach (Reference reference in references)
-                {
-                    Element element = doc.GetElement(reference.ElementId);
-                    Category category = element.Category;
-                    if (category.Name=="Structural Framing")
-                    {
-                        FamilyInstance f = (FamilyInstance)element;
-                        Autodesk.Revit.DB.Structure.StructuralFramingUtils.DisallowJoinAtEnd(f, 0);
-                        Autodesk.Revit.DB.Structure.StructuralFramingUtils.DisallowJoinAtEnd(f, 1);
-                    }
-                    else if (category.Name == "Walls")
-                    {
-                        Wall w = (Wall)element;
-                        Autodesk.Revit.DB.WallUtils.DisallowWallJoinAtEnd(w, 0);
-                        Autodesk.Revit.DB.WallUtils.DisallowWallJoinAtEnd(w, 1);
-                    }
-
-
-                }
-                doc.Regenerate();
-                t.Commit();
-            }
-
-            return Result.Succeeded;
-        }
-    }
-
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class AllowJoins : IExternalCommand
-    {
-        internal sealed class WallBeamFilter : ISelectionFilter
-        {
-            public bool AllowElement(Element elem)
-            {
-                if (elem is null) return false;
-
-
-                BuiltInCategory builtInCategory = (BuiltInCategory)GetCategoryIdAsInteger(elem);
-
-                if (builtInCategory == BuiltInCategory.OST_StructuralFraming || builtInCategory == BuiltInCategory.OST_Walls) return true;
-
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                return false;
-            }
-
-            public static int GetCategoryIdAsInteger(Element element)
-            {
-                return element?.Category?.Id?.IntegerValue ?? -1;
-            }
-        }
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uiDoc = commandData.Application.ActiveUIDocument;
-            Document doc = uiDoc.Document;
-            IList<Reference> references = Utils.GetCurrentSelection(uiDoc, new WallBeamFilter(), "Select Walls or Beams");
-            IList<Element> el = new List<Element>();
-
-            using (Transaction t = new Transaction(doc, "Disallow Joints"))
-            {
-                t.Start();
-                foreach (Reference reference in references)
-                {
-                    Element element = doc.GetElement(reference.ElementId);
-                    Category category = element.Category;
-                    if (category.Name == "Structural Framing")
-                    {
-                        FamilyInstance f = (FamilyInstance)element;
-                        Autodesk.Revit.DB.Structure.StructuralFramingUtils.AllowJoinAtEnd(f, 0);
-                        Autodesk.Revit.DB.Structure.StructuralFramingUtils.AllowJoinAtEnd(f, 1);
-                    }
-                    else if (category.Name == "Walls")
-                    {
-                        Wall w = (Wall)element;
-                        Autodesk.Revit.DB.WallUtils.AllowWallJoinAtEnd(w, 0);
-                        Autodesk.Revit.DB.WallUtils.AllowWallJoinAtEnd(w, 1);
-                    }
-                }
-                doc.Regenerate();
-                t.Commit();
-            }
-
-            return Result.Succeeded;
-        }
-    }
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class CutMultipleElements : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uiDoc = commandData.Application.ActiveUIDocument;
-            Document doc = uiDoc.Document;
-            Selection selection = uiDoc.Selection;
-            IList<Reference> cuttingElements = selection.PickObjects(ObjectType.Element, "Select the Elements which are being cut");
-            IList<Reference> cuttedElements = selection.PickObjects(ObjectType.Element, "Select the Cutting Elements");
-            using (Transaction t = new Transaction(doc, "Cut MultipleElements"))
-            {
-                t.Start();
-                foreach (Reference cuttingRef in cuttingElements)
-                {
-                    foreach (Reference cuttedRef in cuttedElements)
-                    {
-                        Element cut = doc.GetElement(cuttingRef.ElementId);
-                        Element cutted = doc.GetElement(cuttedRef.ElementId);
-                        try
-                        {
-                            SolidSolidCutUtils.AddCutBetweenSolids(doc, cutted, cut, false);
-                        }
-                        catch
-                        {
-                            try
-                            {
-                                InstanceVoidCutUtils.AddInstanceVoidCut(doc, cutted, cut);
-                            }
-                            catch
-                            {
-                                continue;
-                            }
-                        }
-                    }
-                }
-                t.Commit();
-            }
-
-            return Result.Succeeded;
-        }
-    }
-
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class JoinMultipleElements : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            string warnings = "";
-            UIDocument uiDoc = commandData.Application.ActiveUIDocument;
-            Document doc = uiDoc.Document;
-            Selection selection = uiDoc.Selection;
-            IList<Reference> cuttingElements = selection.PickObjects(ObjectType.Element, "Select the Elements which are being cut");
-            IList<Reference> cuttedElements = selection.PickObjects(ObjectType.Element, "Select the Cutting Elements");
-            using (Transaction t = new Transaction(doc, "Join Multiple Elements"))
-            {
-                t.Start();
-                foreach (Reference cuttingRef in cuttingElements)
-                {
-                    foreach (Reference cuttedRef in cuttedElements)
-                    {
-                        Element cut = doc.GetElement(cuttingRef.ElementId);
-                        Element cutted = doc.GetElement(cuttedRef.ElementId);
-                        try
-                        {
-                            JoinGeometryUtils.JoinGeometry(doc, cutted, cut);
-                        }
-                        catch(Exception e)
-                        {
-                            warnings += e.Message + "\n";
-                            continue;
-                        }
-                    }
-                }
-                t.Commit();
-            }
-            if (warnings != "")
-            {
-                Utils.Show(warnings);
-            }
-            return Result.Succeeded;
-        }
-    }
+    
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class HeightDifferenceBetweenElevations : IExternalCommand
@@ -1457,28 +1307,8 @@ namespace BeyondRevit.Commands
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            Utils.Show(BirdTagAlignmentTool.entt.ToString());
-            BirdTagAlignmentTool.entt = 1;
-            return Result.Succeeded;
-        }
-    }
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class ISyncToolsHack : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            bool currentLicense = Archigrafix.iSync.ExternalApp.isValidLicense;
-            Utils.Show("ISync License = " + currentLicense.ToString());
-            if (currentLicense)
-            {
-                Archigrafix.iSync.ExternalApp.isValidLicense = false;
-            }
-            else
-            {
-                Archigrafix.iSync.ExternalApp.isValidLicense = true;
-            }
-             
+            //Utils.Show(BirdTagAlignmentTool.entt.ToString());
+            //BirdTagAlignmentTool.entt = 1;
             return Result.Succeeded;
         }
     }
@@ -1959,11 +1789,11 @@ namespace BeyondRevit.Commands
     
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class CommandConsole : IExternalCommand
+    public class CommandLine : IExternalCommand
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            ConsoleWindow consoleWindow = new ConsoleWindow();
+            CommandLineWindow consoleWindow = new CommandLineWindow();
             consoleWindow.Owner = Utils.RevitWindow(commandData);
             consoleWindow.Activate();
             consoleWindow.ShowDialog();
@@ -3588,45 +3418,6 @@ namespace BeyondRevit.Commands
                 }
                 Utils.Show(errors);
                 transaction.Commit();
-            }
-            return Result.Succeeded;
-        }
-
-    }
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class TopoFromCSV : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            Document document = commandData.Application.ActiveUIDocument.Document;
-            Forms.OpenFileDialog openFileDialog = new Forms.OpenFileDialog();
-            openFileDialog.Filter = "CSV Files | .csv";
-            if(openFileDialog.ShowDialog() == Forms.DialogResult.OK)
-            {
-                string csvFilePath = openFileDialog.FileName;
-                using(Transaction transaction = new Transaction(document, "Create Topography From CSV"))
-                {
-                    transaction.Start();
-                    BasePoint basepoint = new FilteredElementCollector(document).OfClass(typeof(BasePoint)).ToElements()[1] as BasePoint;
-                    XYZ basePointXYZ = basepoint.Position;
-                    string[] textPoints = File.ReadAllLines(csvFilePath);
-                    List<XYZ> topographyPoints = new List<XYZ>();
-                    foreach(string textPoint in textPoints)
-                    {
-                        string[] xyz = textPoint.Split(';');
-                        //double x = (double.Parse(xyz[0]) / 0.3048) + basePointXYZ.X;
-                        //double y = (double.Parse(xyz[1]) / 0.3048) + basePointXYZ.Y;
-                        //double z = (double.Parse(xyz[2]) / 0.3048) + basePointXYZ.Z;
-                        double x = (double.Parse(xyz[0]) / 0.3048);
-                        double y = (double.Parse(xyz[1]) / 0.3048);
-                        double z = (double.Parse(xyz[2]) / 0.3048);
-                        XYZ point = new XYZ(x, y, z);
-                        topographyPoints.Add(point);
-                    }
-                    Autodesk.Revit.DB.Architecture.TopographySurface topo = Autodesk.Revit.DB.Architecture.TopographySurface.Create(document, topographyPoints);
-                    transaction.Commit();
-                }
             }
             return Result.Succeeded;
         }

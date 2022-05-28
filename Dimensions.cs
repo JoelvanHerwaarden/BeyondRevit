@@ -8,7 +8,81 @@ using Autodesk.Revit.UI.Selection;
 
 namespace BeyondRevit.Commands
 {
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class Measure3D : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document document = uidoc.Document;
+            
+            if(document.ActiveView.GetType() != typeof(View3D))
+            {
+                Utils.Show("Function Only Works in 3D Views");
+                return Result.Succeeded;
+            }
+            Measuring:
 
+            Selection selection = uidoc.Selection;
+            try
+            {
+                XYZ firstPoint = DimensionUtils.Pick3DPoint(uidoc, "Select Start point", true);
+                XYZ secondPoint = DimensionUtils.Pick3DPoint(uidoc, "Select Point to Measure to", true);
+                double distanceInFeet = firstPoint.DistanceTo(secondPoint);
+                double distance = Math.Round(Utils.FromInternalUnits(document, distanceInFeet), 3);
+                Utils.Show(distance.ToString());
+                goto Measuring;
+            }
+            catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+            {
+            }
+            return Result.Succeeded;
+
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class Measure3DContinues : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document document = uidoc.Document;
+
+            if (document.ActiveView.GetType() != typeof(View3D))
+            {
+                Utils.Show("Function Only Works in 3D Views");
+                return Result.Succeeded;
+            }
+        Measuring:
+            Selection selection = uidoc.Selection;
+            try
+            {
+                XYZ firstPoint = selection.PickPoint(ObjectSnapTypes.Centers |
+                    ObjectSnapTypes.Points |
+                    ObjectSnapTypes.Endpoints |
+                    ObjectSnapTypes.Midpoints |
+                    ObjectSnapTypes.Tangents |
+                    ObjectSnapTypes.Nearest |
+                    ObjectSnapTypes.Quadrants |
+                    ObjectSnapTypes.Perpendicular |
+                    ObjectSnapTypes.WorkPlaneGrid |
+                    ObjectSnapTypes.Intersections, "Select Start point");
+                XYZ secondPoint = selection.PickPoint("Select Point to Measure to");
+                double distanceInFeet = firstPoint.DistanceTo(secondPoint);
+                double distance = Math.Round(Utils.FromInternalUnits(document, distanceInFeet), 3);
+                Utils.Show(distance.ToString());
+                goto Measuring;
+            }
+            catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+            {
+            }
+            return Result.Succeeded;
+
+        }
+    }
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -177,7 +251,6 @@ namespace BeyondRevit.Commands
                 using (Transaction trans = new Transaction(document, "Remove Dimension Segment"))
                 {
                     trans.Start();
-
                     DimensionUtils.SketchplaneByView(document.ActiveView);
                     try
                     {
@@ -233,14 +306,15 @@ namespace BeyondRevit.Commands
             Selection selection = uidoc.Selection;
 
             SelectSplitDimension:
-            Reference othersegment = selection.PickObject(ObjectType.Element, new MultiSegmentDimensionFilter(), "Select The Dimension line which you want to split.");
-            Dimension dimension = (Dimension)document.GetElement(othersegment);
 
             using (Transaction trans = new Transaction(document, "Split Dimension"))
             {
                 trans.Start();
                 try
                 {
+                    Reference othersegment = selection.PickObject(ObjectType.Element, new MultiSegmentDimensionFilter(), "Select The Dimension line which you want to split.");
+                    Dimension dimension = (Dimension)document.GetElement(othersegment);
+
                     DimensionUtils.SketchplaneByView(document.ActiveView);
                     XYZ point = selection.PickPoint(ObjectSnapTypes.None, "Select Where you want to split.");
 
@@ -340,6 +414,104 @@ namespace BeyondRevit.Commands
         }
     }
 
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class MergeDimensions : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document document = uidoc.Document;
+            Selection selection = uidoc.Selection;
+
+            SelectMergeDimension:
+            using (Transaction trans = new Transaction(document, "Merge Dimension"))
+            {
+                try
+                {
+                    Reference firstDimensionReference = selection.PickObject(ObjectType.Element, new DimensionFilter(), "Select The First Dimension");
+                    Dimension firstDimension = (Dimension)document.GetElement(firstDimensionReference);
+
+                    ParallelDimensionFilter parallelDimensionFilter = new ParallelDimensionFilter();
+                    parallelDimensionFilter.SourceDimension = firstDimension;
+                    Reference secondDimensionReference = selection.PickObject(ObjectType.Element, new DimensionFilter(), "Select The Second Dimension");
+                    Dimension secondDimension = (Dimension)document.GetElement(secondDimensionReference);
+
+                    trans.Start();
+                    ReferenceArray references = new ReferenceArray();
+                    List<string> referenceRepresentations = new List<string>();
+                    foreach (Reference reference in firstDimension.References)
+                    {
+                        string represent = reference.ConvertToStableRepresentation(document);
+                        if (!referenceRepresentations.Contains(represent))
+                        {
+                            references.Append(reference);
+                            referenceRepresentations.Add(represent);
+
+                        }
+                    }
+                    foreach (Reference reference in secondDimension.References)
+                    {
+                        string represent = reference.ConvertToStableRepresentation(document);
+                        if (!referenceRepresentations.Contains(represent))
+                        {
+                            references.Append(reference);
+                            referenceRepresentations.Add(represent);
+                        }
+                    }
+                    Dimension mergeDimension = document.Create.NewDimension(document.ActiveView, (Line)firstDimension.Curve, references);
+                    document.Delete(firstDimension.Id);
+                    document.Delete(secondDimension.Id);
+
+                    trans.Commit();
+                }
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                {
+                    return Result.Succeeded;
+                }
+
+            }
+            goto SelectMergeDimension;
+
+
+        }
+
+        public static List<Dimension> SplitDimension(Dimension dimension, int indexOfSegment)
+        {
+            ReferenceArray firstReferences = new ReferenceArray();
+            ReferenceArray secondReferences = new ReferenceArray();
+
+            for (int i = 0; i < dimension.References.Size; i++)
+            {
+                if (i < indexOfSegment)
+                {
+                    Reference reference = DimensionUtils.ParseToStableReference(dimension.Document, dimension.References.get_Item(i));
+                    firstReferences.Append(reference);
+                }
+                else if (i == indexOfSegment)
+                {
+                    Reference reference = DimensionUtils.ParseToStableReference(dimension.Document, dimension.References.get_Item(i));
+                    firstReferences.Append(reference);
+                    reference = DimensionUtils.ParseToStableReference(dimension.Document, dimension.References.get_Item(i));
+                    secondReferences.Append(reference);
+                }
+                else
+                {
+                    Reference reference = DimensionUtils.ParseToStableReference(dimension.Document, dimension.References.get_Item(i));
+                    secondReferences.Append(reference);
+                }
+            }
+
+            Line dimensionLine = dimension.Curve as Line;
+            Document doc = dimension.Document;
+            DimensionType dimensionType = doc.GetElement(dimension.GetTypeId()) as DimensionType;
+            Dimension firstNewDim = doc.Create.NewDimension(doc.ActiveView, dimensionLine, firstReferences);
+            Dimension secondNewDim = doc.Create.NewDimension(doc.ActiveView, dimensionLine, secondReferences);
+            return new List<Dimension>() { firstNewDim, secondNewDim };
+        }
+    }
+
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class CopyDimensionsOverrides : IExternalCommand
@@ -390,7 +562,6 @@ namespace BeyondRevit.Commands
                     EvaluateDimensionEnds(dim);
                 }
                 trans.Commit();
-
             }
 
 
@@ -400,7 +571,7 @@ namespace BeyondRevit.Commands
         private static void EvaluateDimensionEnds(Dimension dim)
         {
             View view = dim.View;
-            int minValue = view.Scale * 5;
+            int minValue = view.Scale * 6;
             Curve dimensionCurve = dim.Curve;
             dimensionCurve.MakeBound(0, 1);
             XYZ startRot = dimensionCurve.GetEndPoint(0);
@@ -572,6 +743,54 @@ namespace BeyondRevit.Commands
             throw new NotImplementedException();
         }
     }
+
+    internal sealed class ParallelDimensionFilter : ISelectionFilter
+    {
+        public Dimension SourceDimension { get; set; }
+        public bool AllowElement(Element elem)
+        {
+            if (elem is null) return false;
+
+            Type type = elem.GetType();
+
+            if (type == typeof(Dimension) && elem.Id != this.SourceDimension.Id)
+            {
+                Dimension dimension = (Dimension)elem;
+                if (IsParallelDimension(dimension))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        public bool AllowReference(Reference reference, XYZ position)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsParallelDimension(Dimension dimension)
+        {
+            XYZ sourceDirection = this.SourceDimension.Curve.Evaluate(0.5, true);
+            XYZ targetDirection = dimension.Curve.Evaluate(0.5, true);
+            double angle = sourceDirection.AngleTo(targetDirection);
+            Utils.Show(angle.ToString());
+            if(angle == 0 | angle == 180)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
     internal sealed class SingleDimensionSegmentFilter : ISelectionFilter
     {
         public bool AllowElement(Element elem)
@@ -736,6 +955,55 @@ namespace BeyondRevit.Commands
                     }
                 }
             }
+        }
+
+
+        public static XYZ Pick3DPoint(UIDocument uidoc, string PickPointPrompt, bool ShowWorkplane = false)
+        {
+            XYZ selectedPoint = null;
+            Document doc = uidoc.Document;
+            Reference face = uidoc.Selection.PickObject(ObjectType.Face, "Select Face to Work on");
+            Element e = doc.GetElement(face.ElementId);
+
+            if (null != e)
+            {
+                PlanarFace PFace
+                  = e.GetGeometryObjectFromReference(face)
+                    as PlanarFace;
+
+                if (PFace != null)
+                {
+                    Plane plane = Plane.CreateByNormalAndOrigin(PFace.FaceNormal, PFace.Origin);
+
+                    Transaction t = new Transaction(doc);
+
+                    t.Start("Temporarily set work plane"
+                      + " to pick point in 3D");
+
+                    SketchPlane sp = SketchPlane.Create(doc, plane);
+
+                    uidoc.ActiveView.SketchPlane = sp;
+                    if (ShowWorkplane)
+                    {
+                        uidoc.ActiveView.ShowActiveWorkPlane();
+                    }
+
+                    try
+                    {
+                        selectedPoint = uidoc.Selection.PickPoint(ObjectSnapTypes.Endpoints|
+                            ObjectSnapTypes.Centers |
+                            ObjectSnapTypes.Midpoints ,
+                            PickPointPrompt);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                    }
+
+                    t.RollBack();
+                }
+            }
+            return selectedPoint;
+            
         }
         public static int GetReferenceIndixByPoint(Dimension dimension, XYZ point)
         {

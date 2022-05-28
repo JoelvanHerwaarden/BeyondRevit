@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-11-807134672
+11-1730524029
 
-27-2002840565
-28-1358384837
-UI\AutomaticSync\SyncPropertiesWindow.xaml;UI\GenericDropdown\GenericDropdownWindow.xaml;UI\ConsoleBar\ConsoleWindow.xaml;UI\SplashWindow\SplashScreen.xaml;UI\StructuralConnectionPrompt\StructuralConnectionPromptWindow.xaml;UI\ManageTabs\ManageTabsWindow.xaml;UI\AerialDimension\AerialDimensionPrompt.xaml;UI\OrganizeViews\OrganizeViewsWindow.xaml;Resources\Styles.xaml;UI\SlopeConverter\SlopeConverterWindow.xaml;UI\SymbolLibrary\SymbolLibraryWindow.xaml;
+361545375646
+201252923405
+UI\AutomaticSync\SyncPropertiesWindow.xaml;UI\GenericDropdown\GenericDropdownWindow.xaml;UI\CommandLine\CommandLineWindow.xaml;UI\SplashWindow\SplashScreen.xaml;UI\StructuralConnectionPrompt\StructuralConnectionPromptWindow.xaml;UI\ManageTabs\ManageTabsWindow.xaml;UI\AerialDimension\AerialDimensionPrompt.xaml;UI\OrganizeViews\OrganizeViewsWindow.xaml;Resources\Styles.xaml;UI\SlopeConverter\SlopeConverterWindow.xaml;UI\SymbolLibrary\SymbolLibraryWindow.xaml;
 
-False
+True
 

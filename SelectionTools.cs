@@ -175,7 +175,7 @@ namespace BeyondRevit.Commands
                     Family family = symbol.Family;
                     typeList.AddRange(family.GetFamilySymbolIds());
                 }
-                catch(Exception e)
+                catch
                 {
                     typeList.Add(id);
                 }

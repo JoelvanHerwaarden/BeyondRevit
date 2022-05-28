@@ -14,7 +14,6 @@ using System.Windows.Shapes;
 using Autodesk.Revit.Creation;
 using BeyondRevit.ViewModels;
 using Autodesk.Windows;
-using NUnit.Framework;
 
 namespace BeyondRevit.UI
 {
