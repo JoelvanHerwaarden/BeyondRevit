@@ -8,81 +8,8 @@ using Autodesk.Revit.UI.Selection;
 
 namespace BeyondRevit.Commands
 {
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class Measure3D : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document document = uidoc.Document;
-            
-            if(document.ActiveView.GetType() != typeof(View3D))
-            {
-                Utils.Show("Function Only Works in 3D Views");
-                return Result.Succeeded;
-            }
-            Measuring:
 
-            Selection selection = uidoc.Selection;
-            try
-            {
-                XYZ firstPoint = DimensionUtils.Pick3DPoint(uidoc, "Select Start point", true);
-                XYZ secondPoint = DimensionUtils.Pick3DPoint(uidoc, "Select Point to Measure to", true);
-                double distanceInFeet = firstPoint.DistanceTo(secondPoint);
-                double distance = Math.Round(Utils.FromInternalUnits(document, distanceInFeet), 3);
-                Utils.Show(distance.ToString());
-                goto Measuring;
-            }
-            catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
-            {
-            }
-            return Result.Succeeded;
-
-        }
-    }
-
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class Measure3DContinues : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document document = uidoc.Document;
-
-            if (document.ActiveView.GetType() != typeof(View3D))
-            {
-                Utils.Show("Function Only Works in 3D Views");
-                return Result.Succeeded;
-            }
-        Measuring:
-            Selection selection = uidoc.Selection;
-            try
-            {
-                XYZ firstPoint = selection.PickPoint(ObjectSnapTypes.Centers |
-                    ObjectSnapTypes.Points |
-                    ObjectSnapTypes.Endpoints |
-                    ObjectSnapTypes.Midpoints |
-                    ObjectSnapTypes.Tangents |
-                    ObjectSnapTypes.Nearest |
-                    ObjectSnapTypes.Quadrants |
-                    ObjectSnapTypes.Perpendicular |
-                    ObjectSnapTypes.WorkPlaneGrid |
-                    ObjectSnapTypes.Intersections, "Select Start point");
-                XYZ secondPoint = selection.PickPoint("Select Point to Measure to");
-                double distanceInFeet = firstPoint.DistanceTo(secondPoint);
-                double distance = Math.Round(Utils.FromInternalUnits(document, distanceInFeet), 3);
-                Utils.Show(distance.ToString());
-                goto Measuring;
-            }
-            catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
-            {
-            }
-            return Result.Succeeded;
-
-        }
-    }
+    
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -722,6 +649,41 @@ namespace BeyondRevit.Commands
         }
     }
 
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class IsolateDimensionHosts : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document document = uidoc.Document;
+            using (Transaction trans = new Transaction(document, "Isolate Dimension Hosts"))
+            {
+                trans.Start();
+                try
+                {
+                    IList<Reference> dimensions = uidoc.Selection.PickObjects(ObjectType.Element, new DimensionFilter(), "Select Dimensions to Isolate. Press Escape to Cancel");
+                    List<ElementId> elementsToIsolate = new List<ElementId>();
+                    foreach(Reference r in dimensions)
+                    {
+                        Dimension dim = (Dimension)document.GetElement(r);
+                        elementsToIsolate.AddRange(DimensionUtils.GetHostElementIds(dim));
+
+                    }
+                    document.ActiveView.IsolateElementsTemporary(elementsToIsolate);
+                }
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                {
+                    return Result.Succeeded;
+                }
+                trans.Commit();
+            }
+
+            return Result.Succeeded;
+
+        }
+    }
+
     internal sealed class DimensionFilter : ISelectionFilter
     {
         public bool AllowElement(Element elem)
@@ -1098,8 +1060,6 @@ namespace BeyondRevit.Commands
             }
         }
 
-        
-
         public static Reference ParseToStableReference(Document doc, Reference reference)
         {
             Element element = doc.GetElement(reference);
@@ -1176,6 +1136,19 @@ namespace BeyondRevit.Commands
             return Result;
 
         }
+
+        public static List<ElementId> GetHostElementIds(Dimension dimension)
+        {
+            List<ElementId> elements = new List<ElementId>();
+            elements.Add(dimension.Id);
+            foreach(Reference r in dimension.References)
+            {
+                Element host = dimension.Document.GetElement(r);
+                elements.Add(host.Id);
+            }
+            return elements;
+        }
     }
     
 }
+

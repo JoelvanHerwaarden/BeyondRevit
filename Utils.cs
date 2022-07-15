@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,7 +18,19 @@ namespace BeyondRevit
 {
     public class Utils
     {
+        public static Dictionary<string, dynamic> SortDictionary(Dictionary<string, dynamic> dictionary)
+        {
+            Dictionary<string, dynamic> result = new Dictionary<string, dynamic>();
+            IList<string> sortedKeys = dictionary.Keys.ToList().OrderBy(x => x).ToList();
 
+            foreach (string key in sortedKeys)
+            {
+                result.Add(key, dictionary[key]);
+
+            }
+
+            return result;
+        }
         public static double FeetToMm(double number)
         {
             return number * 304.8;
@@ -163,12 +176,12 @@ namespace BeyondRevit
         {
             IList<Reference> result = null;
             ICollection<ElementId> selection = uidoc.Selection.GetElementIds();
-            if(selection.Count != 0)
+            if (selection.Count != 0)
             {
                 result = new List<Reference>();
                 if (filter == null)
                 {
-                    foreach(ElementId id in selection)
+                    foreach (ElementId id in selection)
                     {
                         Reference reference = new Reference(uidoc.Document.GetElement(id));
                         result.Add(reference);
@@ -178,7 +191,7 @@ namespace BeyondRevit
                 else
                 {
                     bool nothing = true;
-                    foreach(ElementId id in selection)
+                    foreach (ElementId id in selection)
                     {
                         Element element = uidoc.Document.GetElement(id);
                         if (filter.AllowElement(element))
@@ -197,7 +210,7 @@ namespace BeyondRevit
             }
             else
             {
-                if(message==null && filter == null)
+                if (message == null && filter == null)
                 {
                     result = uidoc.Selection.PickObjects(ObjectType.Element);
                 }
@@ -205,7 +218,7 @@ namespace BeyondRevit
                 {
                     result = uidoc.Selection.PickObjects(ObjectType.Element, filter);
                 }
-                else if(filter==null)
+                else if (filter == null)
                 {
                     result = uidoc.Selection.PickObjects(ObjectType.Element, message);
                 }
@@ -236,7 +249,7 @@ namespace BeyondRevit
                 else
                 {
                     bool nothing = true;
-                    
+
                     Element element = uidoc.Document.GetElement(id);
                     if (filter.AllowElement(element))
                     {
@@ -290,5 +303,39 @@ namespace BeyondRevit
             }
             return result;
         }
+
+        public static DetailCurve DrawDetailCurve(Document doc)
+        {
+            ICollection<ElementId> detailCurveIds = new FilteredElementCollector(doc).OfClass(typeof(DetailCurve)).WhereElementIsNotElementType().ToElementIds();
+            DetailCurve result = null;
+            PostableCommand drawCurveCommand = PostableCommand.DetailLine;
+            UIApplication application = new UIApplication(doc.Application);
+            application.PostCommand(RevitCommandId.LookupPostableCommandId(drawCurveCommand));
+            return result;
+        }
+
+        public static void SketchplaneByView(Autodesk.Revit.DB.View view)
+        {
+            Document doc = view.Document;
+            using (Transaction t = new Transaction(doc, "Set Sketchplane"))
+            {
+                t.Start();
+                Plane plane = PlaneByView(view);
+                SketchPlane sp = SketchPlane.Create(view.Document, plane);
+                view.SketchPlane = sp;
+                t.Commit();
+            }
+
+        }
+
+        public static Plane PlaneByView(Autodesk.Revit.DB.View view)
+        {
+
+            Plane plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin);
+            return plane;
+        }
+
+
+
     }
 }

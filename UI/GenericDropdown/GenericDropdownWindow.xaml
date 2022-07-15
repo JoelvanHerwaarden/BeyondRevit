@@ -26,7 +26,7 @@
         </Grid.RowDefinitions>
         <Label x:Name="InstructionLabel" Content="Instruction" VerticalAlignment="Center" Margin="10" Foreground="White" Grid.ColumnSpan="3"/>
         <TextBox x:Name="SearchBox" Text="Search..." MaxLines="1" Grid.Row="1" Margin="10,0,10,0" Grid.ColumnSpan="3" TextChanged="SearchBox_TextChanged" GotKeyboardFocus="SearchBox_GotFocus"/>
-        <ListBox Margin="10,10,10,10" x:Name="ItemNamesListBox" Grid.Row="2" Grid.ColumnSpan="3" SelectionMode="Multiple"/>
+        <ListBox Margin="10,10,10,10" FontSize="14" x:Name="ItemNamesListBox" Grid.Row="2" Grid.ColumnSpan="3" SelectionMode="Multiple"/>
         <Button x:Name="SelectAllButton" Grid.Row="3" Style="{StaticResource RoundButton}" Content="Select All" Margin="10" Click="SelectAll_Click" Grid.Column="0"/>
         <Button x:Name="SelectNoneButton" Grid.Row="3" Style="{StaticResource RoundButton}" Content="Select None" Margin="10" Click="SelectNone_Click" Grid.Column="1"/>
         <Button x:Name="SubmitButton" Grid.Row="3" Style="{StaticResource RoundButton}" Content="Submit" Margin="10" Click="SubmitButton_Click" Grid.Column="2"/>

@@ -54,10 +54,6 @@ namespace BeyondRevit.Hades
             Document doc = uidoc.Document;
             IList<Element> views = new FilteredElementCollector(doc).OfClass(typeof(View)).WhereElementIsNotElementType().ToElements();
             IList<UIView> openViews = uidoc.GetOpenUIViews();
-            foreach(UIView openView in openViews)
-            {
-                openView.
-            }
             for(int i = 0; i < views.Count; i++)
             {
                 View view = views[i] as View;

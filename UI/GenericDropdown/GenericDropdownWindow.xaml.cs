@@ -28,20 +28,10 @@ namespace BeyondRevit.UI
         public Dictionary<string, dynamic> Items { get; set; }
         public List<dynamic> SelectedItems {get;set;}
 
-        public GenericDropdownWindow(string windowTitle, string instruction, List<string> itemNames, dynamic items, Window owner, bool selectMultiple)
+        public GenericDropdownWindow(string windowTitle, string instruction, Dictionary<string, dynamic> items, Window owner, bool selectMultiple)
         {
             InitializeComponent();
-            Items = new Dictionary<string, dynamic>();
-            for(int i = 0; i < itemNames.Count; i++) 
-            {
-                string name = itemNames[i];
-                var item = items[i];
-                try
-                {
-                    Items.Add(name, item);
-                }
-                catch { }
-            }
+            this.Items = Utils.SortDictionary(items);
             PopulateListbox();
             if (!selectMultiple)
             {
@@ -94,11 +84,19 @@ namespace BeyondRevit.UI
         }
         private void PopulateListbox()
         {
-            this.ItemNamesListBox.Items.Clear();
-            foreach (string key in this.Items.Keys)
+            try
             {
-                this.ItemNamesListBox.Items.Add(key);
+                this.ItemNamesListBox.Items.Clear();
+                foreach (string key in this.Items.Keys)
+                {
+                    this.ItemNamesListBox.Items.Add(key);
+                }
             }
+            catch
+            {
+                
+            }
+            
         }
 
         private void SearchList(string searchTerm)

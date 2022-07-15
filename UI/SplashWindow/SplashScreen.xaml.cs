@@ -25,7 +25,15 @@ namespace BeyondRevit.UI
         {
             InitializeComponent();
             this.Owner = owner;
-            this.SplashFact = DownloadRandomFact();
+            try
+            {
+
+                this.SplashFact = DownloadRandomFact();
+            }
+            catch
+            {
+                this.SplashFact = "You are not connected to the Internet";
+            }
             this.FactLabel.Text = this.SplashFact;
         }
 

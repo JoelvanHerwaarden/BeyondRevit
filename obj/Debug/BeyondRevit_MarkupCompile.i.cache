@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\907335\GitHub\BeyondRevit\obj\Debug\
+C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\
 BeyondRevit
 none
 false
@@ -12,9 +12,9 @@ DEBUG;TRACE
 
 11-1730524029
 
-361545375646
-201252923405
+441499387968
+20-22125871
 UI\AutomaticSync\SyncPropertiesWindow.xaml;UI\GenericDropdown\GenericDropdownWindow.xaml;UI\CommandLine\CommandLineWindow.xaml;UI\SplashWindow\SplashScreen.xaml;UI\StructuralConnectionPrompt\StructuralConnectionPromptWindow.xaml;UI\ManageTabs\ManageTabsWindow.xaml;UI\AerialDimension\AerialDimensionPrompt.xaml;UI\OrganizeViews\OrganizeViewsWindow.xaml;Resources\Styles.xaml;UI\SlopeConverter\SlopeConverterWindow.xaml;UI\SymbolLibrary\SymbolLibraryWindow.xaml;
 
-True
+False
 

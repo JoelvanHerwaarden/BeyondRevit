@@ -43,13 +43,19 @@ namespace BeyondRevit.Commands
                 IList<Reference> references = selection.PickObjects(ObjectType.Element, "Select elements");
 
                 IList<Element> elementsList = new FilteredElementCollector(doc).OfClass(typeof(Material)).ToElements();
-                List<Element> sortedElementList = elementsList.OrderBy(e => e.Name).ToList();
-                List<string> itemNames = new List<string>();
-                foreach (Element element in sortedElementList)
+                Dictionary<string, dynamic> materials = new Dictionary<string, dynamic>();
+                foreach(Element element in elementsList)
                 {
-                    itemNames.Add(element.Name);
+                    try
+                    {
+                        materials.Add(element.Name, element);
+                    }
+                    catch
+                    {
+
+                    }
                 }
-                GenericDropdownWindow window = new GenericDropdownWindow("Select Materials", "Select Materials", itemNames, sortedElementList, Utils.RevitWindow(commandData), false);
+                GenericDropdownWindow window = new GenericDropdownWindow("Select Materials", "Select Materials", materials, Utils.RevitWindow(commandData), false);
                 window.ShowDialog();
                 if (!window.Cancelled)
                 {
@@ -90,6 +96,294 @@ namespace BeyondRevit.Commands
 
         }
             
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ApplyMaterialSettingsAsOverridesToDirectShapes : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            Document doc = commandData.Application.ActiveUIDocument.Document;
+            ICollection<ElementId> directShapes = new FilteredElementCollector(doc).OfClass(typeof(DirectShape)).WhereElementIsNotElementType().ToElementIds();
+            Dictionary<string, OverrideGraphicSettings> overridesDictionary = CreateDirectShapeOverridesDictionary(doc, directShapes);
+
+            using(Transaction transaction = new Transaction(doc, "Apply Material Overrides to Directshapes"))
+            {
+                transaction.Start();
+                List<Element> views = new FilteredElementCollector(doc).OfClass(typeof(View)).WhereElementIsNotElementType().ToElements().ToList();
+                foreach (View view in views)
+                {
+                    try
+                    {
+                        ICollection<ElementId> directShapesInView = new FilteredElementCollector(doc, view.Id).OfClass(typeof(DirectShape)).WhereElementIsNotElementType().ToElementIds();
+                        foreach (ElementId id in directShapesInView)
+                        {
+                            OverrideGraphicSettings overrides = overridesDictionary[id.ToString()];
+                            view.SetElementOverrides(id, overrides);
+                        }
+                    }
+                    catch { }
+                    
+                }
+                transaction.Commit();
+            }
+            return Result.Succeeded;
+        }
+
+        public static Dictionary<string, OverrideGraphicSettings> CreateOverridesDictionary(Document doc, ICollection<ElementId> materialIds)
+        {
+            Dictionary<string, OverrideGraphicSettings> result = new Dictionary<string, OverrideGraphicSettings>();
+            foreach(ElementId id in materialIds)
+            {
+                if (!result.Keys.Contains(id.ToString()))
+                {
+                    Material material = (Material)doc.GetElement(id);
+                    OverrideGraphicSettings overrides = new OverrideGraphicSettings();
+                    overrides.SetSurfaceForegroundPatternId(material.SurfaceForegroundPatternId);
+                    overrides.SetSurfaceForegroundPatternColor(material.SurfaceForegroundPatternColor);
+                    overrides.SetSurfaceBackgroundPatternId(material.SurfaceBackgroundPatternId);
+                    overrides.SetSurfaceBackgroundPatternColor(material.SurfaceBackgroundPatternColor);
+
+                    overrides.SetCutForegroundPatternId(material.CutForegroundPatternId);
+                    overrides.SetCutForegroundPatternColor(material.CutForegroundPatternColor);
+                    overrides.SetCutBackgroundPatternId(material.CutBackgroundPatternId);
+                    overrides.SetCutBackgroundPatternColor(material.CutBackgroundPatternColor);
+                    result.Add(id.ToString(), overrides);
+                }
+            }
+            return result;
+
+        }
+
+        public static Dictionary<string, OverrideGraphicSettings> CreateDirectShapeOverridesDictionary(Document doc, ICollection<ElementId> directshapes)
+        {
+            Dictionary<string, OverrideGraphicSettings> result = new Dictionary<string, OverrideGraphicSettings>();
+            foreach (ElementId id in directshapes)
+            {
+                if (!result.Keys.Contains(id.ToString()))
+                {
+                    DirectShape directShape = (DirectShape)doc.GetElement(id);
+                    Material material = (Material)doc.GetElement(directShape.GetMaterialIds(false).FirstOrDefault());
+                    OverrideGraphicSettings overrides = new OverrideGraphicSettings();
+                    overrides.SetSurfaceForegroundPatternId(material.SurfaceForegroundPatternId);
+                    overrides.SetSurfaceForegroundPatternColor(material.SurfaceForegroundPatternColor);
+                    overrides.SetSurfaceBackgroundPatternId(material.SurfaceBackgroundPatternId);
+                    overrides.SetSurfaceBackgroundPatternColor(material.SurfaceBackgroundPatternColor);
+
+                    overrides.SetCutForegroundPatternId(material.CutForegroundPatternId);
+                    overrides.SetCutForegroundPatternColor(material.CutForegroundPatternColor);
+                    overrides.SetCutBackgroundPatternId(material.CutBackgroundPatternId);
+                    overrides.SetCutBackgroundPatternColor(material.CutBackgroundPatternColor);
+                    result.Add(id.ToString(), overrides);
+                }
+            }
+            return result;
+
+        }
+    }
+
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CreateFilledRegionTypesByMaterials : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            Document doc = commandData.Application.ActiveUIDocument.Document;
+
+            IList<Element> elementsList = new FilteredElementCollector(doc).OfClass(typeof(Material)).ToElements();
+            Dictionary<string, dynamic> materials = new Dictionary<string, dynamic>();
+            foreach (Element element in elementsList)
+            {
+                try
+                {
+                    materials.Add(element.Name, element);
+                }
+                catch
+                {
+
+                }
+            }
+            GenericDropdownWindow window = new GenericDropdownWindow("Select Materials", "Select Materials", materials, Utils.RevitWindow(commandData), false);
+            window.ShowDialog();
+            if (!window.Cancelled)
+            {
+                using (Transaction transaction = new Transaction(doc, "Create Filled Regions by Material"))
+                {
+                    transaction.Start();
+
+                    Material material = window.SelectedItems[0];
+
+                    string projectionName = material.Name + "_Projection";
+                    string sectionName = material.Name + "_Section";
+                    FilledRegionType filledRegion = new FilteredElementCollector(doc).OfClass(typeof(FilledRegionType)).Where(e => e.Name == projectionName).FirstOrDefault() as FilledRegionType;
+                    if (filledRegion == null)
+                    {
+                        filledRegion = new FilteredElementCollector(doc).OfClass(typeof(FilledRegionType)).FirstOrDefault() as FilledRegionType;
+                        FilledRegionType newFilledRegion = (FilledRegionType)filledRegion.Duplicate(projectionName);
+                        newFilledRegion.ForegroundPatternId = material.SurfaceForegroundPatternId;
+                        newFilledRegion.ForegroundPatternColor = material.SurfaceForegroundPatternColor;
+                        newFilledRegion.BackgroundPatternId = material.SurfaceBackgroundPatternId;
+                        newFilledRegion.BackgroundPatternColor = material.SurfaceBackgroundPatternColor;
+                    }
+
+                    filledRegion = new FilteredElementCollector(doc).OfClass(typeof(FilledRegionType)).Where(e => e.Name == sectionName).FirstOrDefault() as FilledRegionType;
+                    if (filledRegion == null)
+                    {
+                        filledRegion = new FilteredElementCollector(doc).OfClass(typeof(FilledRegionType)).FirstOrDefault() as FilledRegionType;
+                        FilledRegionType newFilledRegion = (FilledRegionType)filledRegion.Duplicate(sectionName);
+                        newFilledRegion.ForegroundPatternId = material.CutForegroundPatternId;
+                        newFilledRegion.ForegroundPatternColor = material.CutForegroundPatternColor;
+                        newFilledRegion.BackgroundPatternId = material.CutBackgroundPatternId;
+                        newFilledRegion.BackgroundPatternColor = material.CutBackgroundPatternColor;
+                    }
+
+                    transaction.Commit();
+                }
+
+            }
+            else
+            {
+            }
+
+            return Result.Succeeded;
+
+
+        }
+
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CreateFilledRegionTypesByMaterialsShaded : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            Document doc = commandData.Application.ActiveUIDocument.Document;
+
+            IList<Element> elementsList = new FilteredElementCollector(doc).OfClass(typeof(Material)).ToElements();
+            Dictionary<string, dynamic> materials = new Dictionary<string, dynamic>();
+            foreach (Element element in elementsList)
+            {
+                try
+                {
+                    materials.Add(element.Name, element);
+                }
+                catch
+                {
+
+                }
+            }
+            GenericDropdownWindow window = new GenericDropdownWindow("Select Materials", "Select Materials", materials, Utils.RevitWindow(commandData), false);
+            window.ShowDialog();
+            if (!window.Cancelled)
+            {
+                using (Transaction transaction = new Transaction(doc, "Create Filled Regions by Material Shaded"))
+                {
+                    transaction.Start();
+
+                    Material material = window.SelectedItems[0];
+
+                    string projectionName = material.Name + "_Projection_Shaded";
+                    string sectionName = material.Name + "_Section_Shaded";
+                    FillPatternElement backgroundPattern = new FilteredElementCollector(doc).OfClass(typeof(FillPatternElement)).Where(e => e.Name == "<Solid fill>").FirstOrDefault() as FillPatternElement;
+
+                    FilledRegionType filledRegion = new FilteredElementCollector(doc).OfClass(typeof(FilledRegionType)).Where(e => e.Name == projectionName).FirstOrDefault() as FilledRegionType;
+                    if (filledRegion == null)
+                    {
+                        filledRegion = new FilteredElementCollector(doc).OfClass(typeof(FilledRegionType)).FirstOrDefault() as FilledRegionType;
+                        FilledRegionType newFilledRegion = (FilledRegionType)filledRegion.Duplicate(projectionName);
+                        newFilledRegion.ForegroundPatternId = material.SurfaceForegroundPatternId;
+                        newFilledRegion.ForegroundPatternColor = material.SurfaceForegroundPatternColor;
+                        newFilledRegion.BackgroundPatternId = backgroundPattern.Id;
+                        newFilledRegion.BackgroundPatternColor = material.Color;
+                    }
+
+                    filledRegion = new FilteredElementCollector(doc).OfClass(typeof(FilledRegionType)).Where(e => e.Name == sectionName).FirstOrDefault() as FilledRegionType;
+                    if (filledRegion == null)
+                    {
+                        filledRegion = new FilteredElementCollector(doc).OfClass(typeof(FilledRegionType)).FirstOrDefault() as FilledRegionType;
+                        FilledRegionType newFilledRegion = (FilledRegionType)filledRegion.Duplicate(sectionName);
+                        newFilledRegion.ForegroundPatternId = material.CutForegroundPatternId;
+                        newFilledRegion.ForegroundPatternColor = material.CutForegroundPatternColor;
+                        newFilledRegion.BackgroundPatternId = backgroundPattern.Id;
+                        newFilledRegion.BackgroundPatternColor = material.Color;
+                    }
+
+                    transaction.Commit();
+                }
+
+            }
+            else
+            {
+            }
+
+            return Result.Succeeded;
+
+
+        }
+
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class HideSubCategoryInAllViews : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            Document doc = commandData.Application.ActiveUIDocument.Document;
+
+            Categories categories = doc.Settings.Categories;
+            Dictionary<string, dynamic> categoriesDict = new Dictionary<string, dynamic>();
+            foreach (Category cat in categories)
+            {
+                try
+                {
+                    categoriesDict.Add(cat.Name, cat);
+                }
+                catch
+                {
+
+                }
+            }
+
+            GenericDropdownWindow categoryWindow = new GenericDropdownWindow("Select Main Category", "Select Main Category", categoriesDict, Utils.RevitWindow(commandData), false);
+            categoryWindow.ShowDialog();
+            if (!categoryWindow.Cancelled)
+            {
+                Category selectedCategory = categoryWindow.SelectedItems[0];
+                CategoryNameMap subCategories = selectedCategory.SubCategories;
+                Dictionary<string, dynamic> subCategoryDict = new Dictionary<string, dynamic>();
+                foreach (Category subCat in subCategories)
+                {
+                    try
+                    {
+                        subCategoryDict.Add(subCat.Name, subCat);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                GenericDropdownWindow subCategoryWindow = new GenericDropdownWindow("Select Subcategory", "Select Subcategory to Hide", subCategoryDict, Utils.RevitWindow(commandData), false);
+                subCategoryWindow.ShowDialog();
+                if (!subCategoryWindow.Cancelled)
+                {
+                    using (Transaction transaction = new Transaction(doc, "Hide Subcategory in All Views"))
+                    {
+                        transaction.Start();
+
+                        transaction.Commit();
+                    }
+                }
+            }
+            else
+            {
+                return Result.Succeeded;
+            }
+            return Result.Succeeded;
+
+        }
+
     }
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -732,7 +1026,7 @@ namespace BeyondRevit.Commands
                 transaction.Start();
                 OverrideGraphicSettings highlight = new OverrideGraphicSettings();
                 highlight.SetProjectionLineColor(new Color(255, 153, 51));
-                SketchplaneByView(document.ActiveView);
+                Utils.SketchplaneByView(document.ActiveView);
                 transaction.Commit();
 
                 XYZ guide = null;
@@ -777,17 +1071,6 @@ namespace BeyondRevit.Commands
 
         }
 
-        private static void SketchplaneByView(View view)
-        {
-            using (SubTransaction t = new SubTransaction(view.Document))
-            {
-                t.Start();
-                Plane plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin);
-                SketchPlane sp = SketchPlane.Create(view.Document, plane);
-                view.SketchPlane = sp;
-                t.Commit();
-            }
-        }
 
         private static bool IsLeftTag(SpotDimension elevationTag)
         {
@@ -1696,95 +1979,7 @@ namespace BeyondRevit.Commands
         }
     }
 
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class HideCropRegion : IExternalCommand
-    {
-        internal sealed class ViewportFilter : ISelectionFilter
-        {
-            public bool AllowElement(Element elem)
-            {
-                if (elem is null) return false;
-
-                Type type = elem.GetType();
-
-                if (type == typeof(Viewport)) return true;
-
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                return false;
-            }
-
-        }
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document document = uidoc.Document;
-            Selection selection = uidoc.Selection;
-            ViewportFilter filter = new ViewportFilter();
-            IList<Reference> references = selection.PickObjects(ObjectType.Element, filter, "Select Viewports");
-            using (Transaction t = new Transaction(document, "Hide Crop Region"))
-            {
-                t.Start();
-                foreach (Reference reference in references)
-                {
-                    Viewport viewport = (Viewport)document.GetElement(reference.ElementId);
-                    View view = (View)document.GetElement(viewport.ViewId);
-                    view.CropBoxVisible = false;
-                }
-                t.Commit();
-            }
-            return Result.Succeeded;
-        }
-    }
-
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class ShowCropRegion : IExternalCommand
-    {
-        internal sealed class SelectionFilterSheet : ISelectionFilter
-        {
-            public bool AllowElement(Element elem)
-            {
-                if (elem is null) return false;
-
-                Type type = elem.GetType();
-
-                if (type == typeof(Viewport)) return true;
-
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                return false;
-            }
-
-        }
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document document = uidoc.Document;
-            Selection selection = uidoc.Selection;
-            SelectionFilterSheet filter = new SelectionFilterSheet();
-            IList<Reference> references = selection.PickObjects(ObjectType.Element, filter, "Select Viewports");
-            using (Transaction t = new Transaction(document, "Show Crop Region"))
-            {
-                t.Start();
-                foreach (Reference reference in references)
-                {
-                    Viewport viewport = (Viewport)document.GetElement(reference.ElementId);
-                    View view = (View)document.GetElement(viewport.ViewId);
-                    view.CropBoxVisible = true;
-                }
-                t.Commit();
-            }
-            return Result.Succeeded;
-        }
-    }
+    
 
     
     [Transaction(TransactionMode.Manual)]
@@ -1796,10 +1991,18 @@ namespace BeyondRevit.Commands
             CommandLineWindow consoleWindow = new CommandLineWindow();
             consoleWindow.Owner = Utils.RevitWindow(commandData);
             consoleWindow.Activate();
-            consoleWindow.ShowDialog();
-            RevitCommandId commandId = RevitCommandId.LookupPostableCommandId(consoleWindow.Command);
-            commandData.Application.PostCommand(commandId);
-            return Result.Succeeded;
+            try
+            {
+
+                consoleWindow.ShowDialog();
+                RevitCommandId commandId = RevitCommandId.LookupPostableCommandId(consoleWindow.Command);
+                commandData.Application.PostCommand(commandId);
+                return Result.Succeeded;
+            }
+            catch (OperationCanceledException)
+            {
+                return Result.Cancelled;
+            }
         }
 
     }
@@ -1850,152 +2053,8 @@ namespace BeyondRevit.Commands
         }
 
     }
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class OpenViewportView : IExternalCommand
-    {
-        internal sealed class ViewportFilter : ISelectionFilter
-        {
-            public bool AllowElement(Element elem)
-            {
-                if (elem is null) return false;
-
-                Type type = elem.GetType();
-
-                if (type == typeof(Viewport)) return true;
-
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                return false;
-            }
-
-        }
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document document = uidoc.Document;
-            Selection selection = uidoc.Selection;
-            ViewportFilter filter = new ViewportFilter();
-            //IList<Reference> references = selection.PickObjects(ObjectType.Element, filter, "Select Viewport");
-            IList<Reference> references = Utils.GetCurrentSelection(uidoc, filter, "Select Viewport");
-            foreach(Reference reference in references)
-            {
-                Viewport viewport = (Viewport)document.GetElement(reference);
-                View view = (View)document.GetElement(viewport.ViewId);
-                uidoc.ActiveView = view;
-            }
-            uidoc.RefreshActiveView();
-            return Result.Succeeded;
-        }
-    }
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class UnTempHide : IExternalCommand
-    {
-        public Dictionary<string, OverrideGraphicSettings> OGOverrides { get; set; }
-        internal sealed class TempHiddenFilter : ISelectionFilter
-        {
-            public View view { get; set; }
-            public bool AllowElement(Element elem)
-            {
-                if (elem is null) return false;
-
-                Type type = elem.GetType();
-
-                if (elem.IsHidden(this.view))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                return false;
-            }
-
-        }
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document document = uidoc.Document;
-            Selection selection = uidoc.Selection;
-            View currentView = document.ActiveView;
-
-            using (Transaction transaction = new Transaction(document, "Unhide temporary hidden Elements"))
-            {
-                transaction.Start();
-                IList<ElementId> visibleElements = new List<ElementId>();
-                if (currentView.IsTemporaryHideIsolateActive())
-                {
-                    visibleElements = new FilteredElementCollector(document, currentView.Id).WhereElementIsNotElementType().ToElementIds().ToList<ElementId>();
-                }
-
-                TemporaryViewModes modes = currentView.TemporaryViewModes;
-                modes.DeactivateAllModes();
-                OverrideIsolatedElements(currentView, visibleElements);
-
-                IList<Reference> references = selection.PickObjects(ObjectType.Element, "Select Elements to Add to the Temporary Isolation");
-                foreach (Reference r in references)
-                {
-                    visibleElements.Add(r.ElementId);
-                }
-                RemoveOverridesIsolatedElements(currentView);
-                currentView.IsolateElementsTemporary(visibleElements);
-                transaction.Commit();
-            }
-            
-            uidoc.RefreshActiveView();
-            return Result.Succeeded;
-        }
-
-        private void OverrideIsolatedElements(View ActiveView, IList<ElementId> elementIds)
-        {
-            this.OGOverrides = new Dictionary<string, OverrideGraphicSettings>();
-            OverrideGraphicSettings overrideGraphicSettings = new OverrideGraphicSettings();
-            overrideGraphicSettings.SetSurfaceForegroundPatternColor(new Autodesk.Revit.DB.Color( 128, 255,0));
-            overrideGraphicSettings.SetSurfaceTransparency(40);
-            ElementId pattern = GetFillPatternByName(ActiveView.Document);
-            if (pattern != null)
-            {
-                overrideGraphicSettings.SetSurfaceForegroundPatternId(pattern);
-            }
-            foreach (ElementId element in elementIds)
-            {
-                OverrideGraphicSettings overrides = ActiveView.GetElementOverrides(element);
-                OGOverrides.Add(element.ToString(), overrides);
-                ActiveView.SetElementOverrides(element, overrideGraphicSettings);
-            }
-        }
-
-        private static ElementId GetFillPatternByName(Document document)
-        {
-            ElementId result = null;
-            IList<Element> patterns = new FilteredElementCollector(document).OfClass(typeof(FillPatternElement)).ToElements();
-            foreach (Element pat in patterns)
-            {
-                FillPatternElement p = (FillPatternElement)pat; 
-                if (p.GetFillPattern().IsSolidFill)
-                {
-
-                    result = pat.Id;
-                }
-            }
-            return result;
-        }
-        private void RemoveOverridesIsolatedElements(View activeView)
-        {
-            foreach(string key in this.OGOverrides.Keys)
-            {
-                OverrideGraphicSettings settings = OGOverrides[key];
-                activeView.SetElementOverrides(new ElementId(int.Parse(key)), settings);
-            }
-        }
-    }
+    
+    
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -3423,5 +3482,233 @@ namespace BeyondRevit.Commands
         }
 
     }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ExportFamilies : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            Document doc = commandData.Application.ActiveUIDocument.Document;
+            IList<Element> families = new FilteredElementCollector(doc).OfClass(typeof(Family)).ToElements();
+            Dictionary<string, dynamic> famDict = new Dictionary<string, dynamic>();
+            foreach(Family family in families)
+            {
+                famDict.Add(family.Name+" - " +family.Id.ToString(), family);
+            }
+            GenericDropdownWindow window = new GenericDropdownWindow("Select Families to Export", "Select Families to Export", famDict, Utils.RevitWindow(commandData), true);
+            window.ShowDialog();
+            if (!window.Cancelled)
+            {
+                List<dynamic> selectedFamilies = window.SelectedItems;
+                Forms.FolderBrowserDialog folderSelection = new Forms.FolderBrowserDialog();
+                if(folderSelection.ShowDialog() == Forms.DialogResult.OK)
+                {
+                    string msg = "";
+                    string folderPath = folderSelection.SelectedPath;
+                    foreach (Family fam in selectedFamilies)
+                    {
+                        Document familyDocument = doc.EditFamily(fam);
+                        string fileName = Path.Combine(folderPath, fam.Name + ".rfa");
+                        try
+                        {
+
+                            familyDocument.SaveAs(fileName, new SaveAsOptions() { OverwriteExistingFile = true, Compact = true });
+                        }
+                        catch(Exception e)
+                        {
+                            msg += e.Message + "\n";
+                        }
+
+                        familyDocument.Close();
+
+                    }
+                    Cleanup(folderPath);
+                    if (msg != "")
+                    {
+                        Utils.Show(msg);
+                    }
+                }
+                
+            }
+            return Result.Succeeded;
+        }
+
+        public void Cleanup(string FolderPath)
+        {
+            string[] files = Directory.GetFiles(FolderPath);
+            foreach(string file in files)
+            {
+                if (Path.GetFileName(file).Contains(".00"))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+
+    }
+
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CopyViewsBewtweenModels : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            Autodesk.Revit.DB.Document doc = commandData.Application.ActiveUIDocument.Document;
+            Document targetDocument = null;
+            foreach(Document document in commandData.Application.Application.Documents)
+            {
+                if(document.GetHashCode() != doc.GetHashCode())
+                {
+                    targetDocument = document;
+                    break;
+                }
+            }
+            Dictionary<string, dynamic> views = GetViewsInModel(doc);
+            GenericDropdownWindow window = new GenericDropdownWindow("Select Views", "Select Views", views, Utils.RevitWindow(commandData), false);
+            window.ShowDialog();
+            if (!window.Cancelled)
+            {
+                using (Transaction transaction = new Transaction(targetDocument, "Copy Views between Documents"))
+                {
+                    transaction.Start();
+                    ICollection<ElementId> viewIds = new Collection<ElementId>();
+                    foreach(View view in window.SelectedItems)
+                    {
+                        viewIds.Add(view.Id);
+                    }
+                    ElementTransformUtils.CopyElements(doc, viewIds, targetDocument, Transform.CreateTranslation(new XYZ(0, 0, 0)), new CopyPasteOptions());
+                    transaction.Commit();
+                }
+            }
+            return Result.Succeeded;
+        }
+        public static Dictionary<string, dynamic> GetViewsInModel(Autodesk.Revit.DB.Document doc)
+        {
+            IList<Element> collector = new FilteredElementCollector(doc).OfClass(typeof(View)).WhereElementIsNotElementType().ToElements();
+            Dictionary<string, dynamic> filteredViews = new Dictionary<string, dynamic>();
+            foreach (View view in collector)
+            {
+                if (!view.IsTemplate)
+                {
+                    try
+                    {
+
+                        filteredViews.Add(view.Name, view);
+                    }
+                    catch { }
+                }
+            }
+            return filteredViews;
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CopyComments : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+            startSelecting:
+
+            using (Transaction trans = new Transaction(doc, "Copy Comments"))
+            {
+                trans.Start();
+                try
+                {
+                    Element element = doc.GetElement(selection.PickObject(ObjectType.Element, "Source"));
+                    Parameter source = element.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);
+
+                    Element targetelement = doc.GetElement(selection.PickObject(ObjectType.Element, "Target"));
+                    Parameter target = targetelement.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);
+                    target.Set(source.AsString());
+                }
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                {
+                    return Result.Succeeded;
+                }
+                trans.Commit();
+            }
+            goto startSelecting;
+            return Result.Succeeded;
+        }
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class SendViewportToTheBack : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+
+            using (Transaction trans = new Transaction(doc, "Copy Comments"))
+            {
+                trans.Start();
+                try
+                {
+                    Element element = doc.GetElement(selection.PickObject(ObjectType.Element, "Viewport"));
+                    ViewSheet sheet = doc.ActiveView as ViewSheet;
+                    foreach(ElementId id in sheet.GetAllViewports())
+                    {
+                        if (id.ToString() != element.Id.ToString())
+                        {
+                            Viewport vp = doc.GetElement(id) as Viewport;
+                            ElementId viewId = vp.ViewId;
+                            XYZ point = vp.GetBoxCenter();
+                            doc.Delete(id);
+                            Viewport.Create(doc, sheet.Id, viewId, point);
+                        }
+                    }
+                }
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                {
+                    return Result.Succeeded;
+                }
+                trans.Commit();
+            }
+            return Result.Succeeded;
+        }
+    }
+
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ApplyCurrentWorksetsToCurrentViewTemplate : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+
+            using (Transaction trans = new Transaction(doc, "Apply Workset Overrides"))
+            {
+                trans.Start();
+                View currentView = doc.ActiveView;
+                ElementId viewTemplateId = currentView.ViewTemplateId;
+                if (viewTemplateId != ElementId.InvalidElementId)
+                {
+                    View viewTemplate = doc.GetElement(viewTemplateId) as View;
+                    ICollection<WorksetId> worksets = new FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksetIds();
+                    foreach(WorksetId worksetId in worksets)
+                    {
+                        WorksetVisibility visibility = currentView.GetWorksetVisibility(worksetId);
+                        viewTemplate.SetWorksetVisibility(worksetId, visibility);
+                    }
+                }
+                
+
+                trans.Commit();
+            }
+            return Result.Succeeded;
+        }
+    }
+
+
 }
 

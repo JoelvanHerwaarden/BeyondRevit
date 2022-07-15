@@ -8,15 +8,15 @@
         Title="SplashScreen" Height="450" Width="800" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="None" Background="Transparent" ResizeMode="NoResize">
 	<Grid>
 		<StackPanel Panel.ZIndex="3" VerticalAlignment="Center">
-			<Label Content="Beyond Revit" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="100" Foreground="White" FontWeight="ExtraLight" FontFamily="Segoe UI" Panel.ZIndex="3" />
-			<Label Content="Did you know?" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" Foreground="DarkRed" FontWeight="Bold" FontFamily="Segoe UI" Panel.ZIndex="3" />
-			<TextBlock x:Name="FactLabel" Text="" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Foreground="LightGray" FontWeight="Normal" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="20"  Panel.ZIndex="3" />
+            <Label Content="Beyond Revit" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="100" Foreground="DarkSlateGray" FontWeight="ExtraLight" FontFamily="Segoe UI" Panel.ZIndex="3" />
+            <Label Content="Did you know?" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" Foreground="DarkSlateGray" FontWeight="Bold" FontFamily="Segoe UI" Panel.ZIndex="3" />
+            <TextBlock x:Name="FactLabel" Text="" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Foreground="DarkSlateGray" FontWeight="Normal" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="20"  Panel.ZIndex="3" />
 		</StackPanel>
 		<Border>
 			<Border.Background>
 				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-					<GradientStop Color="#8360c3" Offset="0.0" />
-					<GradientStop Color="#2ebf91" Offset="0.9" />
+                    <GradientStop Color="Azure" Offset="0.4" />
+					<GradientStop Color="LightBlue" Offset="1.1" />
 				</LinearGradientBrush>
 			</Border.Background>
 			<Border.CornerRadius>

@@ -82,13 +82,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddItemsToTemporaryIsolation.cs" />
     <Compile Include="BackgroundWorker.cs" />
     <Compile Include="BRApplication.cs" />
     <Compile Include="BRSynchronize.cs" />
     <Compile Include="BRCommands.cs" />
+    <Compile Include="CenterElementCommands.cs" />
     <Compile Include="Dimensions.cs" />
+    <Compile Include="DrawCurveUtils.cs" />
     <Compile Include="Hades\HadesUtils.cs" />
     <Compile Include="Hades\PurgeCurrentSheet.cs" />
+    <Compile Include="Hades\PurgeFamilyParameters.cs" />
     <Compile Include="Hades\PurgeViewsNotOnSheet.cs" />
     <Compile Include="Hades\PurgeViewFilters.cs" />
     <Compile Include="Hades\PurgeImportedLineStyles.cs" />
@@ -96,10 +100,13 @@
     <Compile Include="Hades\PurgeCurrentWorkset.cs" />
     <Compile Include="Hades\PurgeWorksets.cs" />
     <Compile Include="Joining.cs" />
+    <Compile Include="LinkFamilyParameters.cs" />
+    <Compile Include="MatchViewProperties.cs" />
     <Compile Include="MIPOverride.cs" />
     <Compile Include="Phasing.cs" />
     <Compile Include="Resources\StylesCodeBehind.cs" />
     <Compile Include="SelectionTools.cs" />
+    <Compile Include="GoToBeyondRevit.cs" />
     <Compile Include="UI\AutomaticSync\SyncPropertiesWindow.xaml.cs">
       <DependentUpon>SyncPropertiesWindow.xaml</DependentUpon>
     </Compile>
@@ -134,6 +141,7 @@
     </Compile>
     <Compile Include="UI\SymbolLibrary\Symbols.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="ViewportTools.cs" />
     <Page Include="UI\AutomaticSync\SyncPropertiesWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -216,7 +224,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y $(TargetDir)$(ProjectName).dll " %25appdata%25\Autodesk\Revit\addins\2020\"
-copy /y $(TargetDir)$(ProjectName).Addin "%25appdata%25\Autodesk\Revit\addins\2020\"</PostBuildEvent>
+    <PostBuildEvent>copy /y $(TargetDir)$(ProjectName).dll "C:\ProgramData\Autodesk\Revit\Addins\2020\BeyondRevit"
+copy /y $(TargetDir)$(ProjectName).Addin "C:\ProgramData\Autodesk\Revit\Addins\2020"</PostBuildEvent>
   </PropertyGroup>
 </Project>

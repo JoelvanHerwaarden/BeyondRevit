@@ -143,8 +143,31 @@ namespace BeyondRevit.Commands
             return Result.Succeeded;
         }
     }
-    
 
+    
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class SelectAllAssociatedParts : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+            SelectionUtils.PartFilter filter = new SelectionUtils.PartFilter();
+            IList<Reference> refs = Utils.GetCurrentSelection(uidoc, filter, "Select Elements");
+            IList<ElementId> targetIds = new List<ElementId>();
+            List<ElementId> partIds = new List<ElementId>();
+            foreach (Reference r in refs)
+            {
+                partIds.AddRange(PartUtils.GetAssociatedParts(doc, r.ElementId, true, true));
+            }
+            
+            selection.SetElementIds(partIds);
+            return Result.Succeeded;
+        }
+
+    }
     public class SelectionUtils
     {
 
@@ -186,12 +209,12 @@ namespace BeyondRevit.Commands
         public static List<ElementId> GetAllInstances(Document doc, List<ElementId> typeIds, IList<View> views = null)
         {
             List<ElementId> idsToSelect = new List<ElementId>();
-            if(views != null)
+            if (views != null)
             {
-                foreach(View view in views)
+                foreach (View view in views)
                 {
                     IEnumerable<Element> elementsInView = new FilteredElementCollector(doc, view.Id).WhereElementIsNotElementType().ToElements().Where(element => typeIds.Contains(element.GetTypeId()));
-                    foreach(Element e in elementsInView)
+                    foreach (Element e in elementsInView)
                     {
                         idsToSelect.Add(e.Id);
                     }
@@ -212,7 +235,7 @@ namespace BeyondRevit.Commands
         {
             ViewSheet Result = null;
             IList<Element> sheets = new FilteredElementCollector(view.Document).OfClass(typeof(ViewSheet)).WhereElementIsNotElementType().ToElements();
-            foreach(ViewSheet sheet in sheets)
+            foreach (ViewSheet sheet in sheets)
             {
                 if (sheet.GetAllPlacedViews().Contains(view.Id))
                 {
@@ -226,11 +249,51 @@ namespace BeyondRevit.Commands
         public static IList<View> GetViewsOnSheet(ViewSheet sheet)
         {
             IList<View> views = new List<View>();
-            foreach(ElementId id in sheet.GetAllPlacedViews())
+            foreach (ElementId id in sheet.GetAllPlacedViews())
             {
                 views.Add((View)sheet.Document.GetElement(id));
             }
             return views;
+        }
+
+        public static IList<ElementId> GetPartSources(Part part)
+        {
+            List<ElementId> sourceElements = new List<ElementId>();
+            ICollection<LinkElementId> sourceIds = part.GetSourceElementIds();
+            foreach(LinkElementId id in sourceIds)
+            {
+                Element element = part.Document.GetElement(id.HostElementId);
+                if (element.GetType().ToString().Contains("Part"))
+                {
+                    sourceElements.AddRange(GetPartSources((Part)element));
+                }
+                else
+                {
+                    sourceElements.Add(id.HostElementId);
+                }
+            }
+            return sourceElements;
+        }
+        internal sealed class PartFilter : ISelectionFilter
+        {
+            public bool AllowElement(Element elem)
+            {
+                if (elem is null) return false;
+
+
+                if (!elem.GetType().ToString().Contains("Part"))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            public bool AllowReference(Reference reference, XYZ position)
+            {
+                return false;
+            }
+
         }
 
     }
