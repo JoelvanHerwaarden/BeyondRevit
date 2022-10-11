@@ -104,7 +104,7 @@ namespace BeyondRevit.Commands
                         DimensionUtils.CopyDimensionOverridesBetweenSegments(source, target);
                     }
                 }
-                catch(Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch(Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
@@ -146,7 +146,7 @@ namespace BeyondRevit.Commands
                     Dimension newDimension = document.Create.NewDimension(sourceDimension.View, newDimensionCurve, references);
                     newDimension.DimensionType = sourceDimension.DimensionType;
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
@@ -188,7 +188,7 @@ namespace BeyondRevit.Commands
                         dimension = DeleteDimensionSegment(dimension, deletedSegmentIndex);
 
                     }
-                    catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                    catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                     {
                         return Result.Succeeded;
                     }
@@ -294,7 +294,7 @@ namespace BeyondRevit.Commands
                     document.Delete(dimension.Id);
 
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
@@ -393,7 +393,7 @@ namespace BeyondRevit.Commands
 
                     trans.Commit();
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
@@ -568,7 +568,7 @@ namespace BeyondRevit.Commands
                     dynamic targetDimension = GetDimensionSegmentByPoint(selection.PickPoint("Select a point close to the Target Dimension segment"), dimensions);
                     DimensionUtils.CopyDimensionOverridesBetweenSegments(sourceDimension, targetDimension);
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
@@ -637,7 +637,7 @@ namespace BeyondRevit.Commands
                     }
                     document.Delete(sourceDimension.Id);
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
@@ -672,7 +672,7 @@ namespace BeyondRevit.Commands
                     }
                     document.ActiveView.IsolateElementsTemporary(elementsToIsolate);
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
@@ -1034,7 +1034,7 @@ namespace BeyondRevit.Commands
             {
                 p = dim.Origin;
             }
-            catch (Autodesk.Revit.Exceptions.ApplicationException ex)
+            catch (Autodesk.Revit.Exceptions.ApplicationException)
             {
                 foreach (DimensionSegment seg in dim.Segments)
                 {

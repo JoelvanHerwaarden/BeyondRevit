@@ -165,11 +165,13 @@ namespace BeyondRevit.UI
         private void Submit()
         {
             RevitUI.PostableCommand command = (RevitUI.PostableCommand)this.SearchList.SelectedItem;
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
             if (command != null)
             {
                 this.Command = command;
                 this.Close();
             }
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
         }
     }
 }

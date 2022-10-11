@@ -397,7 +397,7 @@ namespace BeyondRevit.ViewportCommands
                 foreach (Viewport vp in viewportList)
                 {
                     View view = (View)document.GetElement(vp.ViewId);
-                    if(view.Title != String.Empty)
+                    if (view.Title != String.Empty)
                     {
                         Parameter parameter = Utils.GetParameterByName(view, "Title on Sheet");
                         parameter.Set(parameter.AsString().ToUpper());
@@ -406,6 +406,84 @@ namespace BeyondRevit.ViewportCommands
                 transaction.Commit();
             }
             return Result.Succeeded;
+        }
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class MoveViewportsToAnotherSheet : IExternalCommand
+    {
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uiDocument = commandData.Application.ActiveUIDocument;
+            Document document = uiDocument.Document;
+            Selection selection = uiDocument.Selection;
+            IList<Viewport> viewportList = ViewportToolsUtils.SelectViewports(document, selection);
+            BeyondRevit.UI.GenericDropdownWindow selectSheet = new UI.GenericDropdownWindow("Select Sheet", "Select Sheet", GetSheetDictionary(document), Utils.RevitWindow(commandData), false);
+            selectSheet.ShowDialog();
+            if (selectSheet.Cancelled)
+            {
+                return Result.Cancelled;
+            }
+            using (Transaction transaction = new Transaction(document, "Move Viewport to Other Sheet"))
+            {
+                transaction.Start();
+                ViewSheet targetSheet = selectSheet.SelectedItems.FirstOrDefault();
+                foreach (Viewport vp in viewportList)
+                {
+                    BRViewport brViewport = new BRViewport(vp);
+                    Viewport newViewport = Viewport.Create(document, targetSheet.Id, brViewport.View, brViewport.Position);
+                    newViewport.ChangeTypeId(brViewport.ViewportType);
+                    newViewport.LookupParameter("Detail Number").Set(brViewport.DetailNumber);
+                }
+
+                transaction.Commit();
+            }
+            return Result.Succeeded;
+        }
+
+        public Dictionary<string, dynamic> GetSheetDictionary(Document document)
+        {
+            IList<Element> sheets = new FilteredElementCollector(document).OfClass(typeof(ViewSheet)).WhereElementIsNotElementType().ToElements();
+            Dictionary<string, dynamic> sheetDictionary = new Dictionary<string, dynamic>();
+            foreach(ViewSheet sheet in sheets)
+            {
+                string key = string.Format("{0} - {1} ({2})", sheet.SheetNumber, sheet.Name, sheet.Id.ToString());
+                sheetDictionary.Add(key, sheet);
+            }
+            return sheetDictionary;
+
+        }
+
+        internal class BRViewport
+        {
+            public string DetailNumber { get; }
+            public ElementId ViewportType { get; }
+            public ElementId View { get; }
+            public XYZ Position { get; }
+            public Document Document { get; }
+            public BRViewport(Viewport viewport)
+            {
+                List<ViewType> CopyableViewTypes = new List<ViewType>()
+                {
+                    ViewType.Schedule,
+                    ViewType.ColumnSchedule,
+                    ViewType.PanelSchedule,
+                    ViewType.DraftingView,
+                    ViewType.Legend
+                };
+                View = viewport.ViewId;
+                Position = viewport.GetBoxCenter();
+                Document = viewport.Document;
+                DetailNumber = viewport.LookupParameter("Detail Number").AsString();
+
+                View view = (View)Document.GetElement(this.View);
+                ViewportType = viewport.GetTypeId();
+                if (!CopyableViewTypes.Contains(view.ViewType))
+                {
+                    Document.Delete(viewport.Id);
+                }
+            }
         }
     }
 }

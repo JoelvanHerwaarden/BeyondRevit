@@ -1,4 +1,6 @@
 ﻿using Autodesk.Revit.UI;
+using Autodesk.Revit.DB;
+using BeyondRevit.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +20,30 @@ namespace BeyondRevit.Hades
             {
                 taskDialog.MainContent = extendedInstruction;
             }
-            taskDialog.CommonButtons = TaskDialogCommonButtons.Yes|TaskDialogCommonButtons.No;
+            taskDialog.CommonButtons = TaskDialogCommonButtons.Yes|TaskDialogCommonButtons.No|TaskDialogCommonButtons.Retry;
             return taskDialog.Show();
         }
+
+        public static List<dynamic> SelectivePurge(List<Element> elements, ExternalCommandData commandData)
+        {
+            Dictionary<string, dynamic> elementDictionary = new Dictionary<string, dynamic>();
+            foreach(Element element in elements)
+            {
+                elementDictionary.Add(element.Name+ " - "+element.Id, element);
+            }
+            elementDictionary = Utils.SortDictionary(elementDictionary);
+            GenericDropdownWindow selectionWindow = new GenericDropdownWindow("Select Elements", "Select only the Unused Elements you want to purge", elementDictionary, Utils.RevitWindow(commandData), true);
+            selectionWindow.ShowDialog();
+            if (selectionWindow.Cancelled)
+            {
+                return null;
+            }
+            else
+            {
+                return selectionWindow.SelectedItems;
+            }
+        }
+
+
     }
 }

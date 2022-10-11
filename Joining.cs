@@ -16,35 +16,44 @@ namespace BeyondRevit.Commands
         {
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document doc = uiDoc.Document;
-            IList<Reference> references = Utils.GetCurrentSelection(uiDoc, new JoiningUtils.WallBeamFilter(), "Select Walls or Beams");
 
-            using (Transaction t = new Transaction(doc, "Disallow Joints"))
+            try
             {
-                t.Start();
-                foreach (Reference reference in references)
+                IList<Reference> references = Utils.GetCurrentSelection(uiDoc, new JoiningUtils.WallBeamFilter(), "Select Walls or Beams");
+
+                using (Transaction t = new Transaction(doc, "Disallow Joints"))
                 {
-                    Element element = doc.GetElement(reference.ElementId);
-                    Category category = element.Category;
-                    if (category.Name == "Structural Framing")
+                    t.Start();
+                    foreach (Reference reference in references)
                     {
-                        FamilyInstance f = (FamilyInstance)element;
-                        Autodesk.Revit.DB.Structure.StructuralFramingUtils.DisallowJoinAtEnd(f, 0);
-                        Autodesk.Revit.DB.Structure.StructuralFramingUtils.DisallowJoinAtEnd(f, 1);
-                    }
-                    else if (category.Name == "Walls")
-                    {
-                        Wall w = (Wall)element;
-                        Autodesk.Revit.DB.WallUtils.DisallowWallJoinAtEnd(w, 0);
-                        Autodesk.Revit.DB.WallUtils.DisallowWallJoinAtEnd(w, 1);
-                    }
+                        Element element = doc.GetElement(reference.ElementId);
+                        Category category = element.Category;
+                        if (category.Name == "Structural Framing")
+                        {
+                            FamilyInstance f = (FamilyInstance)element;
+                            Autodesk.Revit.DB.Structure.StructuralFramingUtils.DisallowJoinAtEnd(f, 0);
+                            Autodesk.Revit.DB.Structure.StructuralFramingUtils.DisallowJoinAtEnd(f, 1);
+                        }
+                        else if (category.Name == "Walls")
+                        {
+                            Wall w = (Wall)element;
+                            Autodesk.Revit.DB.WallUtils.DisallowWallJoinAtEnd(w, 0);
+                            Autodesk.Revit.DB.WallUtils.DisallowWallJoinAtEnd(w, 1);
+                        }
 
 
+                    }
+                    doc.Regenerate();
+                    t.Commit();
                 }
-                doc.Regenerate();
-                t.Commit();
-            }
 
-            return Result.Succeeded;
+                return Result.Succeeded;
+            }
+            catch (OperationCanceledException)
+            {
+
+                return Result.Cancelled;
+            }
         }
     }
 
@@ -56,34 +65,41 @@ namespace BeyondRevit.Commands
         {
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document doc = uiDoc.Document;
-            IList<Reference> references = Utils.GetCurrentSelection(uiDoc, new JoiningUtils.WallBeamFilter(), "Select Walls or Beams");
-            IList<Element> el = new List<Element>();
-
-            using (Transaction t = new Transaction(doc, "Disallow Joints"))
+            try
             {
-                t.Start();
-                foreach (Reference reference in references)
-                {
-                    Element element = doc.GetElement(reference.ElementId);
-                    Category category = element.Category;
-                    if (category.Name == "Structural Framing")
-                    {
-                        FamilyInstance f = (FamilyInstance)element;
-                        Autodesk.Revit.DB.Structure.StructuralFramingUtils.AllowJoinAtEnd(f, 0);
-                        Autodesk.Revit.DB.Structure.StructuralFramingUtils.AllowJoinAtEnd(f, 1);
-                    }
-                    else if (category.Name == "Walls")
-                    {
-                        Wall w = (Wall)element;
-                        Autodesk.Revit.DB.WallUtils.AllowWallJoinAtEnd(w, 0);
-                        Autodesk.Revit.DB.WallUtils.AllowWallJoinAtEnd(w, 1);
-                    }
-                }
-                doc.Regenerate();
-                t.Commit();
-            }
+                IList<Reference> references = Utils.GetCurrentSelection(uiDoc, new JoiningUtils.WallBeamFilter(), "Select Walls or Beams");
 
-            return Result.Succeeded;
+                using (Transaction t = new Transaction(doc, "Disallow Joints"))
+                {
+                    t.Start();
+                    foreach (Reference reference in references)
+                    {
+                        Element element = doc.GetElement(reference.ElementId);
+                        Category category = element.Category;
+                        if (category.Name == "Structural Framing")
+                        {
+                            FamilyInstance f = (FamilyInstance)element;
+                            Autodesk.Revit.DB.Structure.StructuralFramingUtils.AllowJoinAtEnd(f, 0);
+                            Autodesk.Revit.DB.Structure.StructuralFramingUtils.AllowJoinAtEnd(f, 1);
+                        }
+                        else if (category.Name == "Walls")
+                        {
+                            Wall w = (Wall)element;
+                            Autodesk.Revit.DB.WallUtils.AllowWallJoinAtEnd(w, 0);
+                            Autodesk.Revit.DB.WallUtils.AllowWallJoinAtEnd(w, 1);
+                        }
+                    }
+                    doc.Regenerate();
+                    t.Commit();
+                }
+
+                return Result.Succeeded;
+            }
+            catch (OperationCanceledException)
+            {
+
+                return Result.Cancelled;
+            }
         }
     }
     [Transaction(TransactionMode.Manual)]
@@ -95,38 +111,46 @@ namespace BeyondRevit.Commands
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document doc = uiDoc.Document;
             Selection selection = uiDoc.Selection;
-            IList<Reference> cuttingElements = selection.PickObjects(ObjectType.Element, "Select the Elements which are being cut");
-            IList<Reference> cuttedElements = selection.PickObjects(ObjectType.Element, "Select the Cutting Elements");
-            using (Transaction t = new Transaction(doc, "Cut MultipleElements"))
+            try
             {
-                t.Start();
-                foreach (Reference cuttingRef in cuttingElements)
+                IList<Reference> cuttingElements = selection.PickObjects(ObjectType.Element, "Select the Elements which are being cut");
+                IList<Reference> cuttedElements = selection.PickObjects(ObjectType.Element, "Select the Cutting Elements");
+                using (Transaction t = new Transaction(doc, "Cut MultipleElements"))
                 {
-                    foreach (Reference cuttedRef in cuttedElements)
+                    t.Start();
+                    foreach (Reference cuttingRef in cuttingElements)
                     {
-                        Element cut = doc.GetElement(cuttingRef.ElementId);
-                        Element cutted = doc.GetElement(cuttedRef.ElementId);
-                        try
+                        foreach (Reference cuttedRef in cuttedElements)
                         {
-                            SolidSolidCutUtils.AddCutBetweenSolids(doc, cutted, cut, false);
-                        }
-                        catch
-                        {
+                            Element cut = doc.GetElement(cuttingRef.ElementId);
+                            Element cutted = doc.GetElement(cuttedRef.ElementId);
                             try
                             {
-                                InstanceVoidCutUtils.AddInstanceVoidCut(doc, cutted, cut);
+                                SolidSolidCutUtils.AddCutBetweenSolids(doc, cutted, cut, false);
                             }
                             catch
                             {
-                                continue;
+                                try
+                                {
+                                    InstanceVoidCutUtils.AddInstanceVoidCut(doc, cutted, cut);
+                                }
+                                catch
+                                {
+                                    continue;
+                                }
                             }
                         }
                     }
+                    t.Commit();
                 }
-                t.Commit();
-            }
 
-            return Result.Succeeded;
+                return Result.Succeeded;
+            }
+            catch (OperationCanceledException)
+            {
+
+                return Result.Cancelled;
+            }
         }
     }
 
@@ -140,35 +164,43 @@ namespace BeyondRevit.Commands
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document doc = uiDoc.Document;
             Selection selection = uiDoc.Selection;
-            IList<Reference> cuttingElements = selection.PickObjects(ObjectType.Element, "Select the Elements which are being cut");
-            IList<Reference> cuttedElements = selection.PickObjects(ObjectType.Element, "Select the Cutting Elements");
-            using (Transaction t = new Transaction(doc, "Join Multiple Elements"))
+            try
             {
-                t.Start();
-                foreach (Reference cuttingRef in cuttingElements)
+                IList<Reference> cuttingElements = selection.PickObjects(ObjectType.Element, "Select the Elements which are being cut");
+                IList<Reference> cuttedElements = selection.PickObjects(ObjectType.Element, "Select the Cutting Elements");
+                using (Transaction t = new Transaction(doc, "Join Multiple Elements"))
                 {
-                    foreach (Reference cuttedRef in cuttedElements)
+                    t.Start();
+                    foreach (Reference cuttingRef in cuttingElements)
                     {
-                        Element cut = doc.GetElement(cuttingRef.ElementId);
-                        Element cutted = doc.GetElement(cuttedRef.ElementId);
-                        try
+                        foreach (Reference cuttedRef in cuttedElements)
                         {
-                            JoinGeometryUtils.JoinGeometry(doc, cutted, cut);
-                        }
-                        catch (Exception e)
-                        {
-                            warnings += e.Message + "\n";
-                            continue;
+                            Element cut = doc.GetElement(cuttingRef.ElementId);
+                            Element cutted = doc.GetElement(cuttedRef.ElementId);
+                            try
+                            {
+                                JoinGeometryUtils.JoinGeometry(doc, cutted, cut);
+                            }
+                            catch (Exception e)
+                            {
+                                warnings += e.Message + "\n";
+                                continue;
+                            }
                         }
                     }
+                    t.Commit();
                 }
-                t.Commit();
+                if (warnings != "")
+                {
+                    Utils.Show(warnings);
+                }
+                return Result.Succeeded;
             }
-            if (warnings != "")
+            catch (OperationCanceledException)
             {
-                Utils.Show(warnings);
+
+                return Result.Cancelled;
             }
-            return Result.Succeeded;
         }
     }
 
@@ -182,27 +214,35 @@ namespace BeyondRevit.Commands
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document doc = uiDoc.Document;
             Selection selection = uiDoc.Selection;
-            IList<Reference> sourceElements = selection.PickObjects(ObjectType.Element, "Select Elements");
-            IList<ElementId> elementsToIsolate = new List<ElementId>();
-            foreach(Reference sourceElement in sourceElements)
+            try
             {
-                elementsToIsolate.Add(sourceElement.ElementId);
-                ICollection<ElementId> joinedElements = JoinGeometryUtils.GetJoinedElements(doc, doc.GetElement(sourceElement));
-                foreach(ElementId elementId in joinedElements)
+                IList<Reference> sourceElements = selection.PickObjects(ObjectType.Element, "Select Elements");
+                IList<ElementId> elementsToIsolate = new List<ElementId>();
+                foreach (Reference sourceElement in sourceElements)
                 {
-                    if (!elementsToIsolate.Contains(elementId))
+                    elementsToIsolate.Add(sourceElement.ElementId);
+                    ICollection<ElementId> joinedElements = JoinGeometryUtils.GetJoinedElements(doc, doc.GetElement(sourceElement));
+                    foreach (ElementId elementId in joinedElements)
                     {
-                        elementsToIsolate.Add(elementId);
+                        if (!elementsToIsolate.Contains(elementId))
+                        {
+                            elementsToIsolate.Add(elementId);
+                        }
                     }
                 }
+                using (Transaction transaction = new Transaction(doc, "Isolate Joined Elements"))
+                {
+                    transaction.Start();
+                    doc.ActiveView.IsolateElementsTemporary(elementsToIsolate);
+                    transaction.Commit();
+                }
+                return Result.Succeeded;
             }
-            using(Transaction transaction = new Transaction(doc, "Isolate Joined Elements"))
+            catch (OperationCanceledException)
             {
-                transaction.Start();
-                doc.ActiveView.IsolateElementsTemporary(elementsToIsolate);
-                transaction.Commit();
+
+                return Result.Cancelled;
             }
-            return Result.Succeeded;
         }
     }
 
@@ -216,26 +256,34 @@ namespace BeyondRevit.Commands
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document doc = uiDoc.Document;
             Selection selection = uiDoc.Selection;
-            IList<Reference> cuttingElements = selection.PickObjects(ObjectType.Element, "Select the First Elements");
-            IList<Reference> cuttedElements = selection.PickObjects(ObjectType.Element, "Select the Second Elements");
-            using (Transaction t = new Transaction(doc, "Switch Join Order Multiple Elements"))
+            try
             {
-                t.Start();
-                foreach (Reference cuttingRef in cuttingElements)
+                IList<Reference> cuttingElements = selection.PickObjects(ObjectType.Element, "Select the First Elements");
+                IList<Reference> cuttedElements = selection.PickObjects(ObjectType.Element, "Select the Second Elements");
+                using (Transaction t = new Transaction(doc, "Switch Join Order Multiple Elements"))
                 {
-                    foreach (Reference cuttedRef in cuttedElements)
+                    t.Start();
+                    foreach (Reference cuttingRef in cuttingElements)
                     {
-                        Element cut = doc.GetElement(cuttingRef.ElementId);
-                        Element cutted = doc.GetElement(cuttedRef.ElementId);
-                        if(JoinGeometryUtils.AreElementsJoined(doc, cut, cutted))
+                        foreach (Reference cuttedRef in cuttedElements)
                         {
-                            JoinGeometryUtils.SwitchJoinOrder(doc, cut, cutted);
+                            Element cut = doc.GetElement(cuttingRef.ElementId);
+                            Element cutted = doc.GetElement(cuttedRef.ElementId);
+                            if (JoinGeometryUtils.AreElementsJoined(doc, cut, cutted))
+                            {
+                                JoinGeometryUtils.SwitchJoinOrder(doc, cut, cutted);
+                            }
                         }
                     }
+                    t.Commit();
                 }
-                t.Commit();
+                return Result.Succeeded;
             }
-            return Result.Succeeded;
+            catch (OperationCanceledException)
+            {
+
+                return Result.Cancelled;
+            }
         }
     }
 

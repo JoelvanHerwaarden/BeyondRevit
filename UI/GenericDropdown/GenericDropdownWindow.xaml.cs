@@ -16,6 +16,7 @@ using BeyondRevit.ViewModels;
 using BeyondRevit.Models;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
+using System.Text.RegularExpressions;
 
 namespace BeyondRevit.UI
 {
@@ -32,7 +33,10 @@ namespace BeyondRevit.UI
         {
             InitializeComponent();
             this.Items = Utils.SortDictionary(items);
-            PopulateListbox();
+            this.InstructionLabel.Content = instruction;
+            this.Title = windowTitle;
+            this.Owner = owner;
+            SearchList("");
             if (!selectMultiple)
             {
                 this.SelectAllButton.Visibility = System.Windows.Visibility.Hidden;
@@ -72,7 +76,7 @@ namespace BeyondRevit.UI
             {
                 try
                 {
-                    PopulateListbox();
+                    SearchList("");
                 }
                 catch { }
                 box.Text = "Search...";
@@ -82,25 +86,11 @@ namespace BeyondRevit.UI
                 SearchList(searchString);
             }
         }
-        private void PopulateListbox()
-        {
-            try
-            {
-                this.ItemNamesListBox.Items.Clear();
-                foreach (string key in this.Items.Keys)
-                {
-                    this.ItemNamesListBox.Items.Add(key);
-                }
-            }
-            catch
-            {
-                
-            }
-            
-        }
 
         private void SearchList(string searchTerm)
         {
+
+            IList<object> SelectedItems = GetCurrentSelection();
             this.ItemNamesListBox.Items.Clear();
             string[] searchTerms = searchTerm.Split(' ');
             foreach(string key in this.Items.Keys)
@@ -110,14 +100,33 @@ namespace BeyondRevit.UI
                 {
                     if (!key.ToLower().Contains(searchString.ToLower()))
                     {
+                        if (Regex.Match(key, searchTerm).Success)
+                        {
+                            match = true;
+                            break;
+                        }
                         match = false;
                     }
                 }
                 if (match)
                 {
                     this.ItemNamesListBox.Items.Add(key);
+                    if (SelectedItems.Contains(key))
+                    {
+                        this.ItemNamesListBox.SelectedItems.Add(key);
+                    }
                 }
             }
+        }
+
+        private IList<object> GetCurrentSelection()
+        {
+            IList<object> SelectedItems = new List<object>();
+            foreach(object obj in this.ItemNamesListBox.SelectedItems)
+            {
+                SelectedItems.Add(obj);
+            }
+            return SelectedItems;
         }
 
         private void SearchBox_GotFocus(object sender, RoutedEventArgs e)

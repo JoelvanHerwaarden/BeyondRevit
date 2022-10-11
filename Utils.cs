@@ -138,17 +138,6 @@ namespace BeyondRevit
             TaskDialog.Show("Beyond Revit", message);
         }
 
-        public static double ToInternalUnits(Document doc, double d)
-        {
-            DisplayUnitType currentType = doc.GetUnits().GetFormatOptions(UnitType.UT_Length).DisplayUnits;
-            return UnitUtils.ConvertToInternalUnits(d, currentType);
-        }
-
-        public static double FromInternalUnits(Document doc, double d)
-        {
-            DisplayUnitType currentType = doc.GetUnits().GetFormatOptions(UnitType.UT_Length).DisplayUnits;
-            return UnitUtils.ConvertFromInternalUnits(d, currentType);
-        }
 
         public static void Uiapp_Idling(object sender, Autodesk.Revit.UI.Events.IdlingEventArgs e)
         {
@@ -244,12 +233,12 @@ namespace BeyondRevit
                 if (filter == null)
                 {
                     result = new Reference(uidoc.Document.GetElement(id));
+
                     return result;
                 }
                 else
                 {
                     bool nothing = true;
-
                     Element element = uidoc.Document.GetElement(id);
                     if (filter.AllowElement(element))
                     {
@@ -316,15 +305,45 @@ namespace BeyondRevit
 
         public static void SketchplaneByView(Autodesk.Revit.DB.View view)
         {
-            Document doc = view.Document;
-            using (Transaction t = new Transaction(doc, "Set Sketchplane"))
+            List<ViewType> forbiddenViewTypes = new List<ViewType>
             {
-                t.Start();
-                Plane plane = PlaneByView(view);
-                SketchPlane sp = SketchPlane.Create(view.Document, plane);
-                view.SketchPlane = sp;
-                t.Commit();
+                ViewType.Detail,
+                ViewType.Schedule,
+                ViewType.ColumnSchedule,
+                ViewType.PanelSchedule,
+                ViewType.DrawingSheet,
+                ViewType.DraftingView,
+                ViewType.Legend
+            };
+            Document doc = view.Document;
+            if (forbiddenViewTypes.Contains(view.ViewType))
+            {
+                return;
             }
+            try
+            {
+                using (Transaction t = new Transaction(doc, "Set Sketchplane"))
+                {
+                    t.Start();
+                    Plane plane = PlaneByView(view);
+                    SketchPlane sp = SketchPlane.Create(view.Document, plane);
+                    view.SketchPlane = sp;
+                    t.Commit();
+                }
+            }
+            catch (Exception)
+            {
+                using (SubTransaction t = new SubTransaction(doc))
+                {
+
+                    t.Start();
+                    Plane plane = PlaneByView(view);
+                    SketchPlane sp = SketchPlane.Create(view.Document, plane);
+                    view.SketchPlane = sp;
+                    t.Commit();
+                }
+            }
+            
 
         }
 
@@ -335,7 +354,104 @@ namespace BeyondRevit
             return plane;
         }
 
+        #region UnitConversion
+        public static double ToInternalUnits(Document doc, double d)
+        {
+            double result = d;
+            if (BeyondRevitVariables.RevitVersion < 2022)
+            {
+                result = ToInternalUnitsBefore2022(doc, d);
+            }
+            else
+            {
+                result = ToInternalUnitsAfter2022(doc, d);
+            }
+            return result;
+        }
 
+        public static double FromInternalUnits(Document doc, double d)
+        {
+            double result = d;
+            if (BeyondRevitVariables.RevitVersion < 2022)
+            {
+                result =  FromInternalUnitsBefore2022(doc, d);
+            }
+            else
+            {
+                result = FromInternalUnitsAfter2022(doc, d);
+            }
+            return result;
+        }
+        private static double FromInternalUnitsBefore2022(Document doc, double d)
+        {
+
+            DisplayUnitType currentType = doc.GetUnits().GetFormatOptions(UnitType.UT_Length).DisplayUnits;
+            return UnitUtils.ConvertFromInternalUnits(d, currentType);
+        }
+        private static double ToInternalUnitsBefore2022(Document doc, double d)
+        {
+            DisplayUnitType currentType = doc.GetUnits().GetFormatOptions(UnitType.UT_Length).DisplayUnits;
+            return UnitUtils.ConvertToInternalUnits(d, currentType);
+        }
+        private static double FromInternalUnitsAfter2022(Document doc, double d)
+        {
+            ForgeTypeId dut = doc.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId();
+            var result = Autodesk.Revit.DB.UnitUtils.ConvertFromInternalUnits(d, dut);
+
+            return result;
+        }
+        private static double ToInternalUnitsAfter2022(Document doc, double d)
+        {
+            ForgeTypeId dut = doc.GetUnits().GetFormatOptions(SpecTypeId.Length).GetUnitTypeId();
+            var result = Autodesk.Revit.DB.UnitUtils.ConvertToInternalUnits(d, dut);
+
+            return result;
+        }
+
+        public class CategorySelectionFilter : ISelectionFilter
+        {
+            public List<ElementId> Categories = null;
+            public bool AllowCategories = true;
+
+            public CategorySelectionFilter(Document doc, List<BuiltInCategory> categories, bool allow = true)
+            {
+                AllowCategories = allow;
+                Categories = new List<ElementId>();
+                foreach (BuiltInCategory category in categories)
+                {
+                    Category cat = Category.GetCategory(doc, category);
+                    Categories.Add(cat.Id);
+                }
+            }
+
+            public bool AllowElement(Element elem)
+            {
+                if (elem is null) return false;
+                if (elem.Category is null) return false;
+                if (AllowCategories)
+                {
+                    if (Categories.Contains(elem.Category.Id))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (!Categories.Contains(elem.Category.Id))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            public bool AllowReference(Reference reference, XYZ position)
+            {
+                return false;
+            }
+
+        }
+        #endregion 
 
     }
 }

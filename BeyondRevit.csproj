@@ -41,24 +41,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AdWindows, Version=3.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Revit_All_Main_Versions_API_x64.2021.1.4\lib\net48\AdWindows.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RevitAPI, Version=21.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>packages\Revit_All_Main_Versions_API_x64.2021.1.4\lib\net48\RevitAPI.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI, Version=21.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>packages\Revit_All_Main_Versions_API_x64.2021.1.4\lib\net48\RevitAPIUI.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -72,18 +54,15 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="UIFramework, Version=21.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>packages\Revit_All_Main_Versions_API_x64.2021.1.4\lib\net48\UIFramework.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddItemsToTemporaryIsolation.cs" />
+    <Compile Include="AerialImageCommand.cs" />
     <Compile Include="BackgroundWorker.cs" />
+    <Compile Include="BeyondRevitVariables.cs" />
     <Compile Include="BRApplication.cs" />
     <Compile Include="BRSynchronize.cs" />
     <Compile Include="BRCommands.cs" />
@@ -99,12 +78,14 @@
     <Compile Include="Hades\PurgeViewTemplates.cs" />
     <Compile Include="Hades\PurgeCurrentWorkset.cs" />
     <Compile Include="Hades\PurgeWorksets.cs" />
+    <Compile Include="Hades\SearchAndDestroy.cs" />
     <Compile Include="Joining.cs" />
     <Compile Include="LinkFamilyParameters.cs" />
     <Compile Include="MatchViewProperties.cs" />
     <Compile Include="MIPOverride.cs" />
     <Compile Include="Phasing.cs" />
     <Compile Include="Resources\StylesCodeBehind.cs" />
+    <Compile Include="WorkplaneTools.cs" />
     <Compile Include="SelectionTools.cs" />
     <Compile Include="GoToBeyondRevit.cs" />
     <Compile Include="UI\AutomaticSync\SyncPropertiesWindow.xaml.cs">
@@ -204,7 +185,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include=".editorconfig" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -222,9 +203,23 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="NUnit">
+      <Version>2.6.3</Version>
+    </PackageReference>
+    <PackageReference Include="Prism">
+      <Version>4.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Revit_All_Main_Versions_API_x64">
+      <Version>2021.1.4</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y $(TargetDir)$(ProjectName).dll "C:\ProgramData\Autodesk\Revit\Addins\2020\BeyondRevit"
-copy /y $(TargetDir)$(ProjectName).Addin "C:\ProgramData\Autodesk\Revit\Addins\2020"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

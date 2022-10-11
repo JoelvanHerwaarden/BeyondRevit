@@ -26,6 +26,7 @@ namespace BeyondRevit
         private static RibbonPanel HadesPanel { get; set; }
         private static RibbonPanel SelectionPanel { get; set; }
         private static RibbonPanel DimensionsPanel { get; set; }
+        private static RibbonPanel SectionboxWorkplanes { get; set; }
         private static RibbonPanel SyncPanel { get; set; }
         private static RibbonPanel ModifyPanel { get; set; }
         private static RibbonPanel QuickCommandPanel { get; set; }
@@ -47,105 +48,16 @@ namespace BeyondRevit
             Window revitWindow = HwndSource.FromHwnd(application.MainWindowHandle).RootVisual as Window;
             BeyondRevit.UI.SplashScreen splashScreen = new BeyondRevit.UI.SplashScreen(revitWindow);
 
+
             //MIPOverride.TrainingWheelsProtocol(application);
 
             splashScreen.ShowSplash();
-
+            BeyondRevitVariables.RevitVersion = double.Parse(application.ControlledApplication.VersionNumber);
             SetupRibbonPanels(application);
 
             #region BeyondRevitPanel
-            PushButton gotoBeyondRevit = CreateRibbonButton("Beyond Revit", "GoToBeyondRevit", "BeyondRevit.GoToBeyondRevit", BeyondRevitPanel, null, "Activate the Beyond Revit Tab.\nYou can assign a shortkey to this command and on executing the short key, Revit will jump to Beyon Revit");
+            //PushButton gotoBeyondRevit = CreateRibbonButton("Beyond Revit", "GoToBeyondRevit", "BeyondRevit.GoToBeyondRevit", BeyondRevitPanel, null, "Activate the Beyond Revit Tab.\nYou can assign a shortkey to this command and on executing the short key, Revit will jump to Beyon Revit");
             #endregion
-            #region SheetPanel
-            OrganizeViewsButton = CreateRibbonButton("Organize Views", "OrganizeViews", "BeyondRevit.Commands.OrganizeViewsOnSheet", SheetPanel, "organizeViews_32.bmp");
-
-            PulldownButtonData dimensionPullDown = new PulldownButtonData("DimensionsPullDown", "Dimensions");
-            CreateStackedRibbonButton(dimensionPullDown,
-                new List<string>() {
-                    "Create Total Dimension",
-                    "Duplicate Dimension with Offset",
-                    "Copy Dimension Overrides",
-                    "Move Small Dimensions",
-                    "Remove Dimension Reference",
-                    "Split Dimensions",
-                    "Merge Dimensions",
-                    "Isolate Dimension Hosts",
-                    "Align First Dimension Distance",
-                    "Auto Dimension" }.ToArray(),
-                new List<string>() {
-                    "CreateTotalDimension",
-                    "DuplicateDimension",
-                    "CopyDimensionOverrides",
-                    "MoveSmallDimensions",
-                    "RemoveDimensionSegment",
-                    "SplitDimension",
-                    "MergeDimensions",
-                    "IsolateDimensionHosts",
-                    "AlignFirstDimension",
-                    "AutoDimension" }.ToArray(),
-                new List<string>() {
-                    "BeyondRevit.Commands.CreateTotalDimension",
-                    "BeyondRevit.Commands.DuplicateDimension",
-                    "BeyondRevit.Commands.CopyDimensionOverrides",
-                    "BeyondRevit.Commands.MoveDimensionEnds",
-                    "BeyondRevit.Commands.RemoveDimensionSegment",
-                    "BeyondRevit.Commands.SplitDimensionLine",
-                    "BeyondRevit.Commands.MergeDimensions",
-                    "BeyondRevit.Commands.IsolateDimensionHosts",
-                    "BeyondRevit.Commands.AlignFirstDimensionbyDistance",
-                    "BeyondRevit.Commands.AutoDimension"}.ToArray(),
-                "dimensions_32.bmp",
-                DimensionsPanel, new List<string>() {
-                    "dimensionTotal_32.bmp",
-                    "dimensionDuplicate_32.bmp",
-                    "dimensionCopyOverrides_32.bmp",
-                    "smalldimensions_32.bmp",
-                    "dimensionRemoveReference_32.bmp",
-                    "dimensionSplit_32.bmp",
-                    "dimensionMerge_32.bmp",
-                    "dimensions_32.bmp",
-                    "alignDimensions_32.bmp",
-                    "autoDimension_32.bmp" }.ToArray());
-
-
-            PulldownButtonData viewportPulldown = new PulldownButtonData("ViewportPulldown", "Viewports");
-            CreateStackedRibbonButton(viewportPulldown,
-                new List<string>() {
-                    "Open Views from Viewports",
-                    "Show Viewport Crop Region",
-                    "Hide Viewport Crop Region",
-                    "Center Viewports Vertically",
-                    "Center Viewports Horizontally",
-                    "Distribute Viewports Vertically",
-                    "Distribute Viewports Vertically"}.ToArray(),
-                new List<string>() {
-                    "OpenViewsFromViewport",
-                    "ShowViewportCropRegion",
-                    "HideViewportCropRegion",
-                    "CenterViewportsVertically",
-                    "CenterViewportsHorizontally",
-                    "DistributeViewportsVertically",
-                    "DistributeViewportsHorizontally" }.ToArray(),
-                new List<string>() {
-                    "BeyondRevit.ViewportCommands.OpenViewportView",
-                    "BeyondRevit.ViewportCommands.ShowCropRegion",
-                    "BeyondRevit.ViewportCommands.HideCropRegion",
-                    "BeyondRevit.ViewportCommands.AlignVerticalTop",
-                    "BeyondRevit.ViewportCommands.AlignHorizontalLeft",
-                    "BeyondRevit.ViewportCommands.DistributeVertical",
-                    "BeyondRevit.ViewportCommands.DistributeHorizontal" }.ToArray(),
-                "ViewportHideCropRegion.bmp",
-                SheetPanel,
-                new List<string>() {
-                    "ViewportOpenViews32.bmp",
-                    "ViewportShowCropRegion32.bmp",
-                    "ViewportHideCropRegion32.bmp",
-                    "ViewportAlignVerticalCenter32.bmp",
-                    "ViewportAlignHorizontalCenter32.bmp",
-                    "ViewportDistributeVertical32.bmp",
-                    "ViewportDistributeHorizontal32.bmp"}.ToArray());
-            #endregion
-            
             #region SelectionPanel
             string[] titles = new List<string>() 
             { 
@@ -155,7 +67,8 @@ namespace BeyondRevit
                 "Select All Types in View", 
                 "Select All Types on the same Sheet", 
                 "Select All Types in the Project" ,
-                "Select All Associated Parts"
+                "Select All Associated Parts",
+                "Select All Sibling Parts"
             }.ToArray();
             string[] buttonNames = new List<string>() 
             { 
@@ -165,7 +78,8 @@ namespace BeyondRevit
                 "Types In View", 
                 "Types on Sheet",
                 "Types In Project",
-                "Associated Parts"
+                "Associated Parts",
+                "Select Sibling Partd"
             }.ToArray();
             string[] commands = new List<string>() 
             {
@@ -176,6 +90,7 @@ namespace BeyondRevit
                 "BeyondRevit.Commands.SelectAllTypesInCurrentSheet",
                 "BeyondRevit.Commands.SelectAllTypesInProject",
                 "BeyondRevit.Commands.SelectAllAssociatedParts",
+                "BeyondRevit.Commands.SelectAllSiblingParts",
             }.ToArray();
             string[] images = new List<string>() 
             {
@@ -185,6 +100,7 @@ namespace BeyondRevit
                 "SelectAllTypesInView32.bmp",
                 "SelectAllTypesOnSheet32.bmp",
                 "SelectAllTypesInProject32.bmp",
+                "SelectAllPartsInProject32.bmp",
                 "SelectAllPartsInProject32.bmp"
             }.ToArray();
             string[] tooltips = new List<string>()
@@ -195,12 +111,12 @@ namespace BeyondRevit
                 "Select all Types related to the FamilyInstances you are selecting in the current View. You can Select multiple FamilyInstances.",
                 "Select all Types related to the FamilyInstances you are selecting which are displayed on the same Sheet as the current view. \nYou can Select multiple FamilyInstances.",
                 "Select all Types related to the FamilyInstances you are selecting in the whole Project. You can Select multiple FamilyInstances.",
-                "Select all Parts which roots go back to the selected elements."
+                "Select all Parts which roots go back to the selected elements.",
+                "Select all Parts which share the same source elements"
             }.ToArray();
             PulldownButtonData selectPullDown = new PulldownButtonData("SelectPullDown", "Select");
             CreateStackedRibbonButton(selectPullDown, titles, buttonNames, commands, "SelectAllInstancesInView32.bmp", SelectionPanel, images, tooltips);
             #endregion
-
             #region SynchronizationPanel
             AutoSyncButton = CreateRibbonButton("Auto Sync", "StartSync", "BeyondRevit.Commands.SyncSubscribeIdleEvent", SyncPanel, "startSync_32.bmp");
             PauzeAutoSyncButton = CreateRibbonButton("Auto Sync", "PauzeSync", "BeyondRevit.Commands.SyncUnSubscribeIdleEvent", SyncPanel, "pauseSync_32.bmp");
@@ -210,7 +126,6 @@ namespace BeyondRevit
             SynchronisationConfig.Current = config;
             application.Idling += BeyondRevitSynchronizerUtils.AutomaticSync;
             #endregion
-
             #region ModifyPanel
 
             PulldownButtonData joinCutPullDown = new PulldownButtonData("joinCutPullDown", "Join/Cut");
@@ -270,7 +185,6 @@ namespace BeyondRevit
             IList<RibbonItem> items = ModifyPanel.AddStackedItems(AlignOffsetButton, MoveOffsetButton, AlignPlusDistanceTextbox);
 
             #endregion
-
             #region QuickCommands
 
             CommandLineButton = CreateRibbonButton("Command Line", "CommandLine", "BeyondRevit.Commands.CommandLine", QuickCommandPanel, "commandLine_32.bmp");
@@ -291,14 +205,144 @@ namespace BeyondRevit
 
             PushButtonData MakeHalftone = CreateQuickButton("Make Halftone", "HalfTone", "BeyondRevit.Commands.MakeHalftone", "Overrides the Selected Elements in the current view with an Halftone override", "MakeElementHalftone16.bmp");
             PushButtonData RemoveOverrides = CreateQuickButton("Remove Overrides", "RemoveOverrides", "BeyondRevit.Commands.RemoveOverrides", "Removes Element Overrides in the Current View", "RemoveElementOverrides16.bmp");
-            QuickCommandPanel.AddStackedItems(MakeHalftone, RemoveOverrides);
+            PushButtonData LinkFamilyParameter = CreateQuickButton("Link Nested Family Parameters", "NestedFamilyParameters", "BeyondRevit.Commands.LinkFamilyParameters", "Automatically associate multiple nested Family parameters.\nIf a parameter with the same name already exists it will be associated.\nIf the parameter name does not yet exist it will create it and associate it.", "linkFamilyParameters16.bmp");
+            QuickCommandPanel.AddStackedItems(MakeHalftone, RemoveOverrides, LinkFamilyParameter);
 
 
             CreateRibbonButton("PhaseBack", "Previous Phase", "BeyondRevit.Commands.GoToPreviousPhase", QuickCommandPanel, "previous_32.bmp");
             CreateRibbonButton("PhaseForward", "Next Phase", "BeyondRevit.Commands.GoToNextPhase", QuickCommandPanel, "next_32.bmp");
 
             #endregion
+            #region SectionBoxWorkplanes
+            PulldownButtonData workplanes = new PulldownButtonData("Workplanes", "Workplanes");
+            CreateStackedRibbonButton(workplanes,
+                new List<string>() {
+                    "Sectionbox Top",
+                    "Sectionbox Bottom",
+                    "Sectionbox Front",
+                    "Sectionbox Back",
+                    "Sectionbox Left",
+                    "Sectionbox Right"}.ToArray(),
+                new List<string>() {
+                    "SectionboxTop",
+                    "SectionboxBottom",
+                    "SectionboxFront",
+                    "SectionboxBack",
+                    "SectionboxLeft",
+                    "SectionboxRight"}.ToArray(),
+                new List<string>() {
+                    "BeyondRevit.WorkplaneCommands.WorkplaneOnTopOfSectionBox",
+                    "BeyondRevit.WorkplaneCommands.WorkplaneOnBottomOfSectionBox",
+                    "BeyondRevit.WorkplaneCommands.WorkplaneOnFrontOfSectionBox",
+                    "BeyondRevit.WorkplaneCommands.WorkplaneOnBackOfSectionBox",
+                    "BeyondRevit.WorkplaneCommands.WorkplaneOnLeftOfSectionBox",
+                    "BeyondRevit.WorkplaneCommands.WorkplaneOnRightOfSectionBox" }.ToArray(),
+                "SectionboxFront32.bmp",
+                SectionboxWorkplanes, new List<string>() {
+                    "SectionboxTop32.bmp",
+                    "SectionboxBottom32.bmp",
+                    "SectionboxFront32.bmp",
+                    "SectionboxBack32.bmp",
+                    "SectionboxLeft32.bmp",
+                    "SectionboxRight32.bmp",
+                }.ToArray());
+            #endregion
+            #region Dimension
+            PulldownButtonData dimensionPullDown = new PulldownButtonData("DimensionsPullDown", "Dimensions");
+            CreateStackedRibbonButton(dimensionPullDown,
+                new List<string>() {
+                    "Create Total Dimension",
+                    "Duplicate Dimension with Offset",
+                    "Copy Dimension Overrides",
+                    "Move Small Dimensions",
+                    "Remove Dimension Reference",
+                    "Split Dimensions",
+                    "Merge Dimensions",
+                    "Isolate Dimension Hosts",
+                    "Align First Dimension Distance",
+                    "Auto Dimension" }.ToArray(),
+                new List<string>() {
+                    "CreateTotalDimension",
+                    "DuplicateDimension",
+                    "CopyDimensionOverrides",
+                    "MoveSmallDimensions",
+                    "RemoveDimensionSegment",
+                    "SplitDimension",
+                    "MergeDimensions",
+                    "IsolateDimensionHosts",
+                    "AlignFirstDimension",
+                    "AutoDimension" }.ToArray(),
+                new List<string>() {
+                    "BeyondRevit.Commands.CreateTotalDimension",
+                    "BeyondRevit.Commands.DuplicateDimension",
+                    "BeyondRevit.Commands.CopyDimensionOverrides",
+                    "BeyondRevit.Commands.MoveDimensionEnds",
+                    "BeyondRevit.Commands.RemoveDimensionSegment",
+                    "BeyondRevit.Commands.SplitDimensionLine",
+                    "BeyondRevit.Commands.MergeDimensions",
+                    "BeyondRevit.Commands.IsolateDimensionHosts",
+                    "BeyondRevit.Commands.AlignFirstDimensionbyDistance",
+                    "BeyondRevit.Commands.AutoDimension"}.ToArray(),
+                "dimensions_32.bmp",
+                DimensionsPanel, new List<string>() {
+                    "dimensionTotal_32.bmp",
+                    "dimensionDuplicate_32.bmp",
+                    "dimensionCopyOverrides_32.bmp",
+                    "smalldimensions_32.bmp",
+                    "dimensionRemoveReference_32.bmp",
+                    "dimensionSplit_32.bmp",
+                    "dimensionMerge_32.bmp",
+                    "dimensions_32.bmp",
+                    "alignDimensions_32.bmp",
+                    "autoDimension_32.bmp" }.ToArray());
+            #endregion
+            #region SheetPanel
+            OrganizeViewsButton = CreateRibbonButton("Organize Views", "OrganizeViews", "BeyondRevit.Commands.OrganizeViewsOnSheet", SheetPanel, "organizeViews_32.bmp");
 
+            
+
+
+            PulldownButtonData viewportPulldown = new PulldownButtonData("ViewportPulldown", "Viewports");
+            CreateStackedRibbonButton(viewportPulldown,
+                new List<string>() {
+                    "Open Views from Viewports",
+                    "Move/Copy Views to another Sheet",
+                    "Show Viewport Crop Region",
+                    "Hide Viewport Crop Region",
+                    "Center Viewports Vertically",
+                    "Center Viewports Horizontally",
+                    "Distribute Viewports Vertically",
+                    "Distribute Viewports Vertically"}.ToArray(),
+                new List<string>() {
+                    "OpenViewsFromViewport",
+                    "MoveViewportsToSheet",
+                    "ShowViewportCropRegion",
+                    "HideViewportCropRegion",
+                    "CenterViewportsVertically",
+                    "CenterViewportsHorizontally",
+                    "DistributeViewportsVertically",
+                    "DistributeViewportsHorizontally" }.ToArray(),
+                new List<string>() {
+                    "BeyondRevit.ViewportCommands.OpenViewportView",
+                    "BeyondRevit.ViewportCommands.MoveViewportsToAnotherSheet",
+                    "BeyondRevit.ViewportCommands.ShowCropRegion",
+                    "BeyondRevit.ViewportCommands.HideCropRegion",
+                    "BeyondRevit.ViewportCommands.AlignVerticalTop",
+                    "BeyondRevit.ViewportCommands.AlignHorizontalLeft",
+                    "BeyondRevit.ViewportCommands.DistributeVertical",
+                    "BeyondRevit.ViewportCommands.DistributeHorizontal" }.ToArray(),
+                "ViewportHideCropRegion.bmp",
+                SheetPanel,
+                new List<string>() {
+                    "ViewportOpenViews32.bmp",
+                    "MoveViewports32.bmp",
+                    "ViewportShowCropRegion32.bmp",
+                    "ViewportHideCropRegion32.bmp",
+                    "ViewportAlignVerticalCenter32.bmp",
+                    "ViewportAlignHorizontalCenter32.bmp",
+                    "ViewportDistributeVertical32.bmp",
+                    "ViewportDistributeHorizontal32.bmp"}.ToArray());
+            #endregion
             #region Hades
             HadesPulldownButton = new PulldownButtonData("HadesPullDown", "Hades");
             CreateStackedRibbonButton(HadesPulldownButton,
@@ -310,7 +354,8 @@ namespace BeyondRevit
                     "Purge Current Sheet",
                     "Purge Worksets" ,
                     "Purge Elements in Current Workset",
-                    "Purge Unused Family Parameters"}.ToArray(),
+                    "Purge Unused Family Parameters",
+                    "Search and Destroy"}.ToArray(),
                 new List<string>() { 
                     "PurgeLinesStyles", 
                     "PurgeViewFilters", 
@@ -319,7 +364,9 @@ namespace BeyondRevit
                     "PurgeSheet",
                     "PurgeWorksets",
                     "PurgeCurrentWorkset",
-                    "PurgeUnusedFamilyParameters"}.ToArray(),
+                    "PurgeUnusedFamilyParameters",
+                    "SearchAndDestroy"
+                }.ToArray(),
                 new List<string>() { 
                     "BeyondRevit.Hades.PurgeImportedLineStyles", 
                     "BeyondRevit.Hades.PurgeViewFilters", 
@@ -328,7 +375,8 @@ namespace BeyondRevit
                     "BeyondRevit.Hades.PurgeCurrentSheet",
                     "BeyondRevit.Hades.PurgeWorksets",
                     "BeyondRevit.Hades.PurgeCurrentWorkset",
-                    "BeyondRevit.Hades.PurgeFamilyParameters"
+                    "BeyondRevit.Hades.PurgeFamilyParameters",
+                    "BeyondRevit.Hades.SearchAndDestroy"
                 }.ToArray(),
                 "hades_32.bmp",
                 HadesPanel,
@@ -340,12 +388,12 @@ namespace BeyondRevit
                     "hades_32.bmp",
                     "hades_32.bmp",
                     "hades_32.bmp",
+                    "hades_32.bmp",
                     "hades_32.bmp" }.ToArray());
             #endregion
-            PostProcessing();
+            //PostProcessing();
             return Result.Succeeded;
         }
-
 
         private static void PostProcessing()
         {
@@ -367,6 +415,7 @@ namespace BeyondRevit
             SelectionPanel = application.CreateRibbonPanel("Beyond Revit", "Selection");
             ModifyPanel = application.CreateRibbonPanel("Beyond Revit", "Modify");
             QuickCommandPanel = application.CreateRibbonPanel("Beyond Revit", "Quick Commands");
+            SectionboxWorkplanes = application.CreateRibbonPanel("Beyond Revit", "Workplanes");
             DimensionsPanel = application.CreateRibbonPanel("Beyond Revit", "Dimensions");
             SheetPanel = application.CreateRibbonPanel("Beyond Revit", "Sheet");
             HadesPanel = application.CreateRibbonPanel("Beyond Revit", "Hades");
@@ -469,7 +518,7 @@ namespace BeyondRevit
         private static adskWindows.RibbonItem FindUIElement(string panelName, string uiElementName)
         {
             string id = string.Format("CustomCtrl_%CustomCtrl_%Beyond Revit%{0}%{1}", panelName, uiElementName);
-            Clipboard.SetText(id);
+            
             adskWindows.RibbonItem result = null;
             adskWindows.RibbonTab beyondRevitRibbon = FindBeyondRevitTab();
             result = beyondRevitRibbon.FindItem(id, true);

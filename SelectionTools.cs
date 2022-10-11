@@ -144,7 +144,7 @@ namespace BeyondRevit.Commands
         }
     }
 
-    
+
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class SelectAllAssociatedParts : IExternalCommand
@@ -154,7 +154,12 @@ namespace BeyondRevit.Commands
             UIDocument uidoc = commandData.Application.ActiveUIDocument;
             Autodesk.Revit.DB.Document doc = uidoc.Document;
             Selection selection = uidoc.Selection;
-            SelectionUtils.PartFilter filter = new SelectionUtils.PartFilter();
+            List<BuiltInCategory> categories = new List<BuiltInCategory>()
+            {
+                BuiltInCategory.OST_Parts
+            };
+
+            Utils.CategorySelectionFilter filter = new Utils.CategorySelectionFilter(doc, categories, false);
             IList<Reference> refs = Utils.GetCurrentSelection(uidoc, filter, "Select Elements");
             IList<ElementId> targetIds = new List<ElementId>();
             List<ElementId> partIds = new List<ElementId>();
@@ -162,15 +167,48 @@ namespace BeyondRevit.Commands
             {
                 partIds.AddRange(PartUtils.GetAssociatedParts(doc, r.ElementId, true, true));
             }
-            
+
             selection.SetElementIds(partIds);
+            return Result.Succeeded;
+        }
+
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class SelectAllSiblingParts : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+            List<BuiltInCategory> categories = new List<BuiltInCategory>()
+            {
+                BuiltInCategory.OST_Parts
+            };
+
+            Utils.CategorySelectionFilter filter = new Utils.CategorySelectionFilter(doc, categories, true);
+            IList<Reference> refs = Utils.GetCurrentSelection(uidoc, filter, "Select Parts");
+            IList<ElementId> targetIds = new List<ElementId>();
+            List<ElementId> selectionIds = new List<ElementId>();
+            foreach (Reference r in refs)
+            {
+                Part part = (Part)doc.GetElement(r);
+                IList<ElementId> sources = SelectionUtils.GetPartSources(part);
+                foreach(ElementId source in sources)
+                {
+                    ICollection<ElementId> siblingParts = PartUtils.GetAssociatedParts(doc, source, true, true);
+                    selectionIds.AddRange(siblingParts);
+                }
+            }
+
+            selection.SetElementIds(selectionIds);
             return Result.Succeeded;
         }
 
     }
     public class SelectionUtils
     {
-
         public static List<ElementId> GetUniqueTypeIds(Document document, IList<Reference> elements)
         {
             List<ElementId> typeList = new List<ElementId>();
@@ -274,27 +312,5 @@ namespace BeyondRevit.Commands
             }
             return sourceElements;
         }
-        internal sealed class PartFilter : ISelectionFilter
-        {
-            public bool AllowElement(Element elem)
-            {
-                if (elem is null) return false;
-
-
-                if (!elem.GetType().ToString().Contains("Part"))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                return false;
-            }
-
-        }
-
     }
 }

@@ -1,0 +1,443 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.8": {
+      "CommonServiceLocator/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {}
+        },
+        "runtime": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {}
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NUnit/2.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/nunit.framework.dll": {}
+        },
+        "runtime": {
+          "lib/nunit.framework.dll": {}
+        }
+      },
+      "Prism/4.1.0": {
+        "type": "package",
+        "dependencies": {
+          "CommonServiceLocator": "1.0.0"
+        },
+        "compile": {
+          "lib/NET40/Microsoft.Expression.Interactions.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.dll": {},
+          "lib/NET40/System.Windows.Interactivity.dll": {}
+        },
+        "runtime": {
+          "lib/NET40/Microsoft.Expression.Interactions.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.dll": {},
+          "lib/NET40/System.Windows.Interactivity.dll": {}
+        }
+      },
+      "Revit_All_Main_Versions_API_x64/2021.1.4": {
+        "type": "package",
+        "compile": {
+          "lib/net48/AdWindows.dll": {},
+          "lib/net48/RevitAPI.dll": {},
+          "lib/net48/RevitAPIUI.dll": {},
+          "lib/net48/UIFramework.dll": {}
+        },
+        "runtime": {
+          "lib/net48/AdWindows.dll": {},
+          "lib/net48/RevitAPI.dll": {},
+          "lib/net48/RevitAPIUI.dll": {},
+          "lib/net48/UIFramework.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.8/win": {
+      "CommonServiceLocator/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {}
+        },
+        "runtime": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {}
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NUnit/2.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/nunit.framework.dll": {}
+        },
+        "runtime": {
+          "lib/nunit.framework.dll": {}
+        }
+      },
+      "Prism/4.1.0": {
+        "type": "package",
+        "dependencies": {
+          "CommonServiceLocator": "1.0.0"
+        },
+        "compile": {
+          "lib/NET40/Microsoft.Expression.Interactions.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.dll": {},
+          "lib/NET40/System.Windows.Interactivity.dll": {}
+        },
+        "runtime": {
+          "lib/NET40/Microsoft.Expression.Interactions.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.dll": {},
+          "lib/NET40/System.Windows.Interactivity.dll": {}
+        }
+      },
+      "Revit_All_Main_Versions_API_x64/2021.1.4": {
+        "type": "package",
+        "compile": {
+          "lib/net48/AdWindows.dll": {},
+          "lib/net48/RevitAPI.dll": {},
+          "lib/net48/RevitAPIUI.dll": {},
+          "lib/net48/UIFramework.dll": {}
+        },
+        "runtime": {
+          "lib/net48/AdWindows.dll": {},
+          "lib/net48/RevitAPI.dll": {},
+          "lib/net48/RevitAPIUI.dll": {},
+          "lib/net48/UIFramework.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.8/win-x64": {
+      "CommonServiceLocator/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {}
+        },
+        "runtime": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {}
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NUnit/2.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/nunit.framework.dll": {}
+        },
+        "runtime": {
+          "lib/nunit.framework.dll": {}
+        }
+      },
+      "Prism/4.1.0": {
+        "type": "package",
+        "dependencies": {
+          "CommonServiceLocator": "1.0.0"
+        },
+        "compile": {
+          "lib/NET40/Microsoft.Expression.Interactions.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.dll": {},
+          "lib/NET40/System.Windows.Interactivity.dll": {}
+        },
+        "runtime": {
+          "lib/NET40/Microsoft.Expression.Interactions.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.dll": {},
+          "lib/NET40/System.Windows.Interactivity.dll": {}
+        }
+      },
+      "Revit_All_Main_Versions_API_x64/2021.1.4": {
+        "type": "package",
+        "compile": {
+          "lib/net48/AdWindows.dll": {},
+          "lib/net48/RevitAPI.dll": {},
+          "lib/net48/RevitAPIUI.dll": {},
+          "lib/net48/UIFramework.dll": {}
+        },
+        "runtime": {
+          "lib/net48/AdWindows.dll": {},
+          "lib/net48/RevitAPI.dll": {},
+          "lib/net48/RevitAPIUI.dll": {},
+          "lib/net48/UIFramework.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.8/win-x86": {
+      "CommonServiceLocator/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {}
+        },
+        "runtime": {
+          "lib/NET35/Microsoft.Practices.ServiceLocation.dll": {}
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "NUnit/2.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/nunit.framework.dll": {}
+        },
+        "runtime": {
+          "lib/nunit.framework.dll": {}
+        }
+      },
+      "Prism/4.1.0": {
+        "type": "package",
+        "dependencies": {
+          "CommonServiceLocator": "1.0.0"
+        },
+        "compile": {
+          "lib/NET40/Microsoft.Expression.Interactions.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.dll": {},
+          "lib/NET40/System.Windows.Interactivity.dll": {}
+        },
+        "runtime": {
+          "lib/NET40/Microsoft.Expression.Interactions.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll": {},
+          "lib/NET40/Microsoft.Practices.Prism.dll": {},
+          "lib/NET40/System.Windows.Interactivity.dll": {}
+        }
+      },
+      "Revit_All_Main_Versions_API_x64/2021.1.4": {
+        "type": "package",
+        "compile": {
+          "lib/net48/AdWindows.dll": {},
+          "lib/net48/RevitAPI.dll": {},
+          "lib/net48/RevitAPIUI.dll": {},
+          "lib/net48/UIFramework.dll": {}
+        },
+        "runtime": {
+          "lib/net48/AdWindows.dll": {},
+          "lib/net48/RevitAPI.dll": {},
+          "lib/net48/RevitAPIUI.dll": {},
+          "lib/net48/UIFramework.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CommonServiceLocator/1.0.0": {
+      "sha512": "RJjv0yxm+Fk/ak/CVMTGr0ng7g/nudkVYos4eQrIDpth3BdE1j7J2ddRm8FXtOoIZbgDqTU6hKq5zoackwL3HQ==",
+      "type": "package",
+      "path": "commonservicelocator/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "commonservicelocator.1.0.0.nupkg.sha512",
+        "commonservicelocator.nuspec",
+        "lib/NET35/Microsoft.Practices.ServiceLocation.XML",
+        "lib/NET35/Microsoft.Practices.ServiceLocation.dll",
+        "lib/NET35/Microsoft.Practices.ServiceLocation.pdb",
+        "lib/SL30/Microsoft.Practices.ServiceLocation.XML",
+        "lib/SL30/Microsoft.Practices.ServiceLocation.dll"
+      ]
+    },
+    "Newtonsoft.Json/11.0.2": {
+      "sha512": "IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
+      "type": "package",
+      "path": "newtonsoft.json/11.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "newtonsoft.json.11.0.2.nupkg.sha512",
+        "newtonsoft.json.nuspec"
+      ]
+    },
+    "NUnit/2.6.3": {
+      "sha512": "zGYW/N4U8H1Y6Xr6aGQZgaDtfpRJSlbx7A9Fg3WNUV3EKEUe1LwjnHw9NH81GVWYzKlOBLZmFp/q90YJwT2vzQ==",
+      "type": "package",
+      "path": "nunit/2.6.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/nunit.framework.dll",
+        "lib/nunit.framework.xml",
+        "license.txt",
+        "nunit.2.6.3.nupkg.sha512",
+        "nunit.nuspec"
+      ]
+    },
+    "Prism/4.1.0": {
+      "sha512": "V4pNkp9iutnJToIkPKeHaVT5M2m9sWTgq2xLHPD51OAg5VNS9oTx4E/vZMdXMcPQwpHbHlF04T8fMLKZTo8S3g==",
+      "type": "package",
+      "path": "prism/4.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/NET40/Microsoft.Expression.Interactions.dll",
+        "lib/NET40/Microsoft.Practices.Prism.Interactivity.dll",
+        "lib/NET40/Microsoft.Practices.Prism.Interactivity.xml",
+        "lib/NET40/Microsoft.Practices.Prism.dll",
+        "lib/NET40/Microsoft.Practices.Prism.xml",
+        "lib/NET40/System.Windows.Interactivity.dll",
+        "lib/SL4/Microsoft.Expression.Interactions.dll",
+        "lib/SL4/Microsoft.Practices.Prism.Interactivity.dll",
+        "lib/SL4/Microsoft.Practices.Prism.Interactivity.xml",
+        "lib/SL4/Microsoft.Practices.Prism.dll",
+        "lib/SL4/Microsoft.Practices.Prism.xml",
+        "lib/SL4/System.Windows.Interactivity.dll",
+        "lib/SL5/Microsoft.Expression.Interactions.dll",
+        "lib/SL5/Microsoft.Practices.Prism.Interactivity.dll",
+        "lib/SL5/Microsoft.Practices.Prism.Interactivity.xml",
+        "lib/SL5/Microsoft.Practices.Prism.dll",
+        "lib/SL5/Microsoft.Practices.Prism.xml",
+        "lib/SL5/System.Windows.Interactivity.dll",
+        "prism.4.1.0.nupkg.sha512",
+        "prism.nuspec"
+      ]
+    },
+    "Revit_All_Main_Versions_API_x64/2021.1.4": {
+      "sha512": "Lf3CERslH3IEN4g/aDdaQFDvSeBMlpEQPwY0CsuthIUageys559XMDKHnlsIf6kyvgSuGmaxdKL7DyAB6E23Mg==",
+      "type": "package",
+      "path": "revit_all_main_versions_api_x64/2021.1.4",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "License.txt",
+        "ReadMe.txt",
+        "Revit.png",
+        "lib/net48/AdWindows.dll",
+        "lib/net48/RevitAPI.dll",
+        "lib/net48/RevitAPI.xml",
+        "lib/net48/RevitAPIUI.dll",
+        "lib/net48/RevitAPIUI.xml",
+        "lib/net48/UIFramework.dll",
+        "revit_all_main_versions_api_x64.2021.1.4.nupkg.sha512",
+        "revit_all_main_versions_api_x64.nuspec",
+        "tools/install.ps1"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.8": [
+      "NUnit >= 2.6.3",
+      "Newtonsoft.Json >= 11.0.2",
+      "Prism >= 4.1.0",
+      "Revit_All_Main_Versions_API_x64 >= 2021.1.4"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\907335\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\907335\\Documents\\GitHub\\BeyondRevit\\BeyondRevit.csproj",
+      "projectName": "BeyondRevit",
+      "projectPath": "C:\\Users\\907335\\Documents\\GitHub\\BeyondRevit\\BeyondRevit.csproj",
+      "packagesPath": "C:\\Users\\907335\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\907335\\Documents\\GitHub\\BeyondRevit\\obj\\",
+      "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\907335\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net48"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net48": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "net48": {
+        "dependencies": {
+          "NUnit": {
+            "target": "Package",
+            "version": "[2.6.3, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[11.0.2, )"
+          },
+          "Prism": {
+            "target": "Package",
+            "version": "[4.1.0, )"
+          },
+          "Revit_All_Main_Versions_API_x64": {
+            "target": "Package",
+            "version": "[2021.1.4, )"
+          }
+        }
+      }
+    },
+    "runtimes": {
+      "win": {
+        "#import": []
+      },
+      "win-x64": {
+        "#import": []
+      },
+      "win-x86": {
+        "#import": []
+      }
+    }
+  }
+}

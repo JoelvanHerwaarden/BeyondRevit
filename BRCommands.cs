@@ -23,6 +23,8 @@ using static System.Drawing.Printing.PrinterSettings;
 using Newtonsoft.Json;
 using System.Reflection;
 using System.Collections;
+using Autodesk.Revit.DB.Events;
+using Autodesk.Revit.ApplicationServices;
 
 namespace BeyondRevit.Commands
 {
@@ -64,15 +66,35 @@ namespace BeyondRevit.Commands
                         transaction.Start(); 
                         Material material = window.SelectedItems[0];
                         OverrideGraphicSettings overrides = new OverrideGraphicSettings();
-                        overrides.SetSurfaceForegroundPatternId(material.SurfaceForegroundPatternId);
-                        overrides.SetSurfaceForegroundPatternColor(material.SurfaceForegroundPatternColor);
-                        overrides.SetSurfaceBackgroundPatternId(material.SurfaceBackgroundPatternId);
-                        overrides.SetSurfaceBackgroundPatternColor(material.SurfaceBackgroundPatternColor);
 
-                        overrides.SetCutForegroundPatternId(material.CutForegroundPatternId);
-                        overrides.SetCutForegroundPatternColor(material.CutForegroundPatternColor);
-                        overrides.SetCutBackgroundPatternId(material.CutBackgroundPatternId);
-                        overrides.SetCutBackgroundPatternColor(material.CutBackgroundPatternColor);
+                        FillPatternElement surfaceForegroundPattern = (FillPatternElement)doc.GetElement(material.SurfaceForegroundPatternId);
+                        if(surfaceForegroundPattern != null && surfaceForegroundPattern.GetFillPattern().Target == FillPatternTarget.Drafting)
+                        {
+                            overrides.SetSurfaceForegroundPatternId(material.SurfaceForegroundPatternId);
+                            overrides.SetSurfaceForegroundPatternColor(material.SurfaceForegroundPatternColor);
+                        }
+
+                        FillPatternElement surfaceBackgroundPattern = (FillPatternElement)doc.GetElement(material.SurfaceBackgroundPatternId);
+                        if (surfaceBackgroundPattern != null && surfaceBackgroundPattern.GetFillPattern().Target == FillPatternTarget.Drafting)
+                        {
+                            overrides.SetSurfaceBackgroundPatternId(material.SurfaceBackgroundPatternId);
+                            overrides.SetSurfaceBackgroundPatternColor(material.SurfaceBackgroundPatternColor);
+                        }
+
+                        FillPatternElement cutForegroundPattern = (FillPatternElement)doc.GetElement(material.CutForegroundPatternId);
+                        if (cutForegroundPattern != null && cutForegroundPattern.GetFillPattern().Target == FillPatternTarget.Drafting)
+                        {
+                            overrides.SetCutForegroundPatternId(material.CutForegroundPatternId);
+                            overrides.SetCutForegroundPatternColor(material.CutForegroundPatternColor);
+                        }
+
+                        FillPatternElement cutBackgroundPattern = (FillPatternElement)doc.GetElement(material.CutBackgroundPatternId);
+                        if (cutBackgroundPattern != null && cutBackgroundPattern.GetFillPattern().Target == FillPatternTarget.Drafting)
+                        {
+                            overrides.SetCutBackgroundPatternId(material.CutBackgroundPatternId);
+                            overrides.SetCutBackgroundPatternColor(material.CutBackgroundPatternColor);
+                        }
+
 
                         foreach (Reference reference in references)
                         {
@@ -88,7 +110,7 @@ namespace BeyondRevit.Commands
                     return Result.Succeeded;
                 }
             }
-            catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+            catch (Autodesk.Revit.Exceptions.OperationCanceledException)
             {
                 return Result.Succeeded;
             }
@@ -402,7 +424,9 @@ namespace BeyondRevit.Commands
                     meters.SetFormatOptions(UnitType.UT_Length, new FormatOptions(DisplayUnitType.DUT_METERS));
                     doc.SetUnits(meters);
 
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
                     string baseUrl = @"https://www.google.nl/maps/@52.1311596,4.6390818,14z";
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
                     BasePoint projectBasepoint = new FilteredElementCollector(doc).OfClass(typeof(BasePoint)).ToElements()[1] as BasePoint;
                     double X = Utils.FeetToM(projectBasepoint.get_Parameter(BuiltInParameter.BASEPOINT_EASTWEST_PARAM).AsDouble());
                     double Y = Utils.FeetToM(projectBasepoint.get_Parameter(BuiltInParameter.BASEPOINT_NORTHSOUTH_PARAM).AsDouble());
@@ -416,7 +440,7 @@ namespace BeyondRevit.Commands
                     string str1 = "https://streetsmart.cyclomedia.com/streetsmart?mq=";
                     string str2 = "&msrs=EPSG:28992";
                     string url = str1 + num2.ToString() + ";" + num4.ToString() + ";" + num3.ToString() + ";" + num5.ToString() + str2;
-                    Clipboard.SetText(url);
+                    
                     TaskDialog.Show("Beyond Revit", "Url Copied");
                     Process.Start(url);
                     doc.SetUnits(currentUnits);
@@ -528,7 +552,6 @@ namespace BeyondRevit.Commands
             {
                 client.DownloadFile(requestUrl, filepath);
             }
-            Clipboard.SetText(requestUrl);
             return filepath;
         }
 
@@ -958,7 +981,6 @@ namespace BeyondRevit.Commands
             double max = values.Max();
             double min = values.Min();
             double dif = Math.Round(max - min, 2);
-            Clipboard.SetText(dif.ToString());
             Utils.Show(string.Format("Height Difference = {0}", dif));
             return Result.Succeeded;
         }
@@ -1320,7 +1342,6 @@ namespace BeyondRevit.Commands
                 string familyFilePath = ImportCADToFamily(famDoc, CadFilePath);
                 if (familyFilePath != null)
                 {
-                    Clipboard.SetText(familyFilePath);
                     if (LoadAndPlaceFamily(document, familyFilePath))
                     {
                         using (Transaction t = new Transaction(document, "Finish Copy To CAD"))
@@ -1476,7 +1497,7 @@ namespace BeyondRevit.Commands
                 }
                 t.Commit();
             }
-            return true;
+            return result;
         }
 
         private void CleanUp(string evalName)
@@ -1973,7 +1994,6 @@ namespace BeyondRevit.Commands
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             string path = Path.GetTempPath();
-            Clipboard.SetText(path);
             Process.Start(path);
             return Result.Succeeded;
         }
@@ -2537,7 +2557,7 @@ namespace BeyondRevit.Commands
                             }
                         }
                     }
-                    catch(Exception except)
+                    catch
                     {
                     }
                 }
@@ -2556,7 +2576,7 @@ namespace BeyondRevit.Commands
                         }
                     }
 
-                    catch (Exception except)
+                    catch 
                     {
                     }
                 }
@@ -2658,7 +2678,7 @@ namespace BeyondRevit.Commands
                         }
                     }
                 }
-                catch (Exception except)
+                catch
                 {
                 }
             }
@@ -2677,7 +2697,7 @@ namespace BeyondRevit.Commands
                     }
                 }
 
-                catch (Exception except)
+                catch
                 {
                 }
             }
@@ -3544,7 +3564,6 @@ namespace BeyondRevit.Commands
                 }
             }
         }
-
     }
 
 
@@ -3626,14 +3645,13 @@ namespace BeyondRevit.Commands
                     Parameter target = targetelement.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);
                     target.Set(source.AsString());
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
                 trans.Commit();
             }
             goto startSelecting;
-            return Result.Succeeded;
         }
     }
     [Transaction(TransactionMode.Manual)]
@@ -3665,7 +3683,7 @@ namespace BeyondRevit.Commands
                         }
                     }
                 }
-                catch (Autodesk.Revit.Exceptions.OperationCanceledException e)
+                catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
@@ -3701,7 +3719,6 @@ namespace BeyondRevit.Commands
                         viewTemplate.SetWorksetVisibility(worksetId, visibility);
                     }
                 }
-                
 
                 trans.Commit();
             }
@@ -3709,6 +3726,219 @@ namespace BeyondRevit.Commands
         }
     }
 
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CopyWorksetOverridesBetweenViewports : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+            Reference sourceReference = selection.PickObject(ObjectType.Element, "Select Viewport");
+            IList<Reference> references = selection.PickObjects(ObjectType.Element, "Select Viewports");
+            using (Transaction trans = new Transaction(doc, "Copy workset Overrides"))
+            {
+                trans.Start();
+                Viewport sourceViewport = (Viewport)doc.GetElement(sourceReference);
+                View sourceView = (View)doc.GetElement(sourceViewport.ViewId);
+
+                foreach (Reference targetReference in references)
+                {
+                    Viewport targetViewport = (Viewport)doc.GetElement(targetReference);
+                    View targetView = (View)doc.GetElement(targetViewport.ViewId);
+                    ICollection<WorksetId> worksets = new FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksetIds();
+                    foreach (WorksetId worksetId in worksets)
+                    {
+                        WorksetVisibility visibility = sourceView.GetWorksetVisibility(worksetId);
+                        targetView.SetWorksetVisibility(worksetId, visibility);
+                    }
+                }
+
+                trans.Commit();
+            }
+            return Result.Succeeded;
+        }
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CopyTagText : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+            Reference reference = selection.PickObject(ObjectType.Element, new TagFilter(), "Select Tag to copy text");
+            IndependentTag tagElement = (IndependentTag)doc.GetElement(reference);
+            string tagText = tagElement.TagText;
+            Clipboard.SetText(tagText);
+            return Result.Succeeded;
+        }
+
+        internal class TagFilter : ISelectionFilter
+        {
+            public bool AllowElement(Element elem)
+            {
+                if (elem.GetType() == typeof(IndependentTag))
+                {
+                    return true;
+                }
+                else { return false; }
+            }
+
+            public bool AllowReference(Reference reference, XYZ position)
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class SelectRebarWithSameNumber : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+            Reference reference = selection.PickObject(ObjectType.Element, "Select Rebar Element");
+            Element element = doc.GetElement(reference);
+            Parameter p = element.LookupParameter("2D_Rebar_Number");
+            FilteredElementCollector collector = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DetailComponents);
+            List<ElementId> ids = new List<ElementId>();
+            foreach (Element e in collector.ToElements())
+            {
+                Parameter parameter = e.LookupParameter("2D_Rebar_Number");
+                if (parameter != null)
+                {
+                    if (parameter.AsString() == p.AsString())
+                    {
+                        ids.Add(e.Id);
+                    }
+                }
+
+            }
+            selection.SetElementIds(ids);
+
+            return Result.Succeeded;
+        }
+
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class AlignStructuralFramings : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+            List<BuiltInCategory> category = new List<BuiltInCategory>() { BuiltInCategory.OST_StructuralFraming };
+
+            Reference reference = selection.PickObject(ObjectType.Element, new Utils.CategorySelectionFilter(doc, category), "Select Guide Structural Framing");
+            IList<Reference> references = selection.PickObjects(ObjectType.Element, new Utils.CategorySelectionFilter(doc, category), "Select Structural Framings to Align");
+            
+            using(Transaction transaction = new Transaction(doc, "Align Structural Framings"))
+            {
+                transaction.Start();
+                FamilyInstance guideBeam = (FamilyInstance)doc.GetElement(reference);
+                XYZ guideDirection = GetFamilyDirection(guideBeam);
+                foreach (Reference beamRef in references)
+                {
+                    FamilyInstance targetBeam = (FamilyInstance)doc.GetElement(beamRef);
+                    XYZ direction = GetFamilyDirection(targetBeam);
+                    double dotProduct = direction.DotProduct(guideDirection);
+                    if (dotProduct < 0)
+                    {
+                        LocationCurve curve = (LocationCurve)targetBeam.Location;
+                        curve.Curve = curve.Curve.CreateReversed();
+                    }
+                }
+                transaction.Commit();
+
+            }
+
+            XYZ v1 = new XYZ(1, 0, 0);
+            XYZ v2 = new XYZ(-1, 0, 0);
+            double dot = v1.DotProduct(v2);
+            if (dot < 0)
+            {
+
+            }
+
+            return Result.Succeeded;
+        }
+
+        private static XYZ GetFamilyDirection(FamilyInstance family)
+        {
+            LocationCurve location = (LocationCurve)family.Location;
+            Line directionLine = Line.CreateBound(location.Curve.GetEndPoint(0), location.Curve.GetEndPoint(1));
+            XYZ guideDirection = directionLine.Direction.Normalize();
+
+            return guideDirection;
+        }
+
+    }
+
+
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class _PreviewFamily : IExternalCommand
+    {
+        List<ElementId> _added_element_ids = new List<ElementId>();
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.ApplicationServices.Application app = commandData.Application.Application;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            Selection selection = uidoc.Selection;
+            FilteredElementCollector collector
+      = new FilteredElementCollector(doc);
+
+            collector.OfCategory(BuiltInCategory.OST_Site);
+            collector.OfClass(typeof(FamilySymbol));
+
+            FamilySymbol symbol = collector.FirstElement() as FamilySymbol;
+
+            _added_element_ids.Clear();
+
+            app.DocumentChanged
+              += new EventHandler<DocumentChangedEventArgs>(
+                OnDocumentChanged);
+            try
+            {
+
+                uidoc.PromptForFamilyInstancePlacement(symbol);
+            }
+            catch (OperationCanceledException)
+            {
+                
+            }
+            app.DocumentChanged
+              -= new EventHandler<DocumentChangedEventArgs>(
+                OnDocumentChanged);
+
+            int n = _added_element_ids.Count;
+
+            TaskDialog.Show(
+              "Place Family Instance",
+              string.Format(
+                "{0} element{1} added.", n,
+                ((1 == n) ? "" : "s")));
+
+            return Result.Succeeded;
+        }
+
+        void OnDocumentChanged(object sender, DocumentChangedEventArgs e)
+        {
+            _added_element_ids.AddRange(e.GetAddedElementIds());
+        }
+
+    }
 
 }
 

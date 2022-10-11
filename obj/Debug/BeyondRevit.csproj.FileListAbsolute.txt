@@ -55,8 +55,6 @@ C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\BeyondRevit.Addin
 C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\BeyondRevit.dll.config
 C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\BeyondRevit.dll
 C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\BeyondRevit.pdb
-C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\Newtonsoft.Json.dll
-C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\Newtonsoft.Json.xml
 C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\UI\AutomaticSync\SyncPropertiesWindow.baml
 C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\UI\GenericDropdown\GenericDropdownWindow.baml
 C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\UI\CommandLine\CommandLineWindow.baml
@@ -72,5 +70,17 @@ C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\BeyondRevit.g.resources
 C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\BeyondRevit.Properties.Resources.resources
 C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\BeyondRevit.csproj.GenerateResource.cache
 C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\BeyondRevit.csproj.CoreCompileInputs.cache
-C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\BeyondRevit.csproj.CopyComplete
 C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\BeyondRevit.pdb
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\Newtonsoft.Json.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\nunit.framework.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\Microsoft.Expression.Interactions.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\Microsoft.Practices.Prism.Interactivity.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\Microsoft.Practices.Prism.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\AdWindows.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\RevitAPI.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\RevitAPIUI.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\bin\Debug\UIFramework.dll
+C:\Users\907335\Documents\GitHub\BeyondRevit\obj\Debug\BeyondRevit.csproj.CopyComplete

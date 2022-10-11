@@ -21,26 +21,34 @@ namespace BeyondRevit.CenterElementCommands
             Autodesk.Revit.DB.Document doc = uidoc.Document;
             Selection selection = uidoc.Selection;
 
-            //Select Start and End Point. Calculate Mid Point
-            Reference referenceToCenter = selection.PickObject(ObjectType.Element, "Select Object to Center");
-            Utils.SketchplaneByView(doc.ActiveView);
-            XYZ start = selection.PickPoint("Pick the First Point");
-            XYZ end = selection.PickPoint("Pick the First Point");
-            XYZ mid = Line.CreateBound(start, end).Evaluate(0.5, true);
-
-            //Get Element Location
-            Element element = doc.GetElement(referenceToCenter);
-            XYZ elementLocation = CenterElementUtils.GetElementLocation(element);
-
-            //Project Points
-            XYZ newLocation = CenterElementUtils.Get2DPointInView(doc.ActiveView, mid);
-            XYZ oldLocation = CenterElementUtils.Get2DPointInView(doc.ActiveView, elementLocation);
-
-            using (Transaction transaction = new Transaction(doc, "Center Element Between Points"))
+            try
             {
-                transaction.Start();
-                ElementTransformUtils.MoveElement(doc, element.Id, newLocation.Subtract(oldLocation));
-                transaction.Commit();
+                using (Transaction transaction = new Transaction(doc, "Center Element Between Points"))
+                {
+                    transaction.Start();
+                    //Select Start and End Point. Calculate Mid Point
+                    Reference referenceToCenter = selection.PickObject(ObjectType.Element, "Select Object to Center");
+                    Utils.SketchplaneByView(doc.ActiveView);
+                    XYZ start = selection.PickPoint("Pick the First Point");
+                    XYZ end = selection.PickPoint("Pick the First Point");
+                    XYZ mid = Line.CreateBound(start, end).Evaluate(0.5, true);
+
+                    //Get Element Location
+                    Element element = doc.GetElement(referenceToCenter);
+                    XYZ elementLocation = CenterElementUtils.GetElementLocation(element);
+
+                    //Project Points
+                    XYZ newLocation = CenterElementUtils.Get2DPointInView(doc.ActiveView, mid);
+                    XYZ oldLocation = CenterElementUtils.Get2DPointInView(doc.ActiveView, elementLocation);
+
+                    ElementTransformUtils.MoveElement(doc, element.Id, newLocation.Subtract(oldLocation));
+                    transaction.Commit();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+
+                return Result.Cancelled;
             }
             return Result.Succeeded;
         }
@@ -55,28 +63,36 @@ namespace BeyondRevit.CenterElementCommands
             Autodesk.Revit.DB.Document doc = uidoc.Document;
             Selection selection = uidoc.Selection;
 
-            //Select Start and End Point. Calculate Mid Point
-            Reference referenceToCenter = selection.PickObject(ObjectType.Element, "Select Object to Center");
-            Utils.SketchplaneByView(doc.ActiveView);
-            XYZ start = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the First Point"));
-            XYZ end = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the Second Point"));
-            Line line = Line.CreateBound(start, end);
-            XYZ mid = line.Evaluate(0.5, true);
-
-            //Get Element Location
-            Element element = doc.GetElement(referenceToCenter);
-            XYZ elementLocation = CenterElementUtils.Get2DPointInView(doc.ActiveView, CenterElementUtils.GetElementLocation(element));
-
-            //Project Points
-            XYZ projectionPlaneOrigin = CenterElementUtils.Get2DPointInView(doc.ActiveView, mid);
-            Plane projectionPlane = Plane.CreateByNormalAndOrigin(line.Direction, projectionPlaneOrigin);
-            XYZ newLocation = CenterElementUtils.Get2DPointInPlane(projectionPlane, elementLocation);
-
-            using (Transaction transaction = new Transaction(doc, "Center Element Between Points"))
+            try
             {
-                transaction.Start();
-                ElementTransformUtils.MoveElement(doc, element.Id, newLocation.Subtract(elementLocation));
-                transaction.Commit();
+                using (Transaction transaction = new Transaction(doc, "Center Element Between Points"))
+                {
+                    transaction.Start();
+                    //Select Start and End Point. Calculate Mid Point
+                    Reference referenceToCenter = selection.PickObject(ObjectType.Element, "Select Object to Center");
+                    Utils.SketchplaneByView(doc.ActiveView);
+                    XYZ start = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the First Point"));
+                    XYZ end = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the Second Point"));
+                    Line line = Line.CreateBound(start, end);
+                    XYZ mid = line.Evaluate(0.5, true);
+
+                    //Get Element Location
+                    Element element = doc.GetElement(referenceToCenter);
+                    XYZ elementLocation = CenterElementUtils.Get2DPointInView(doc.ActiveView, CenterElementUtils.GetElementLocation(element));
+
+                    //Project Points
+                    XYZ projectionPlaneOrigin = CenterElementUtils.Get2DPointInView(doc.ActiveView, mid);
+                    Plane projectionPlane = Plane.CreateByNormalAndOrigin(line.Direction, projectionPlaneOrigin);
+                    XYZ newLocation = CenterElementUtils.Get2DPointInPlane(projectionPlane, elementLocation);
+
+                    ElementTransformUtils.MoveElement(doc, element.Id, newLocation.Subtract(elementLocation));
+                    transaction.Commit();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+
+                return Result.Cancelled;
             }
             return Result.Succeeded;
         }
@@ -91,19 +107,20 @@ namespace BeyondRevit.CenterElementCommands
             Autodesk.Revit.DB.Document doc = uidoc.Document;
             Selection selection = uidoc.Selection;
 
-            //Select Start and End Point. Calculate Mid Point
-            IList<Reference> references = selection.PickObjects(ObjectType.Element, "Select Elements to Redistribute");
-            Utils.SketchplaneByView(doc.ActiveView);
-            List<double> range = CenterElementUtils.CreateRange(0, 1, references.Count);
-            XYZ start = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the First Point"));
-            XYZ end = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the Second Point"));
-            Line line = Line.CreateBound(start, end);
             try
             {
                 using (Transaction transaction = new Transaction(doc, "Center Element Between Points"))
                 {
                     transaction.Start();
-                    for(int i = 0; i < references.Count; i++)
+                    
+                    //Select Start and End Point. Calculate Mid Point
+                    IList<Reference> references = selection.PickObjects(ObjectType.Element, "Select Elements to Redistribute");
+                    Utils.SketchplaneByView(doc.ActiveView);
+                    List<double> range = CenterElementUtils.CreateRange(0, 1, references.Count);
+                    XYZ start = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the First Point"));
+                    XYZ end = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the Second Point"));
+                    Line line = Line.CreateBound(start, end);
+                    for (int i = 0; i < references.Count; i++)
                     {
                         Element element = doc.GetElement(references[i]);
                         XYZ elementLocation = CenterElementUtils.Get2DPointInView(doc.ActiveView, CenterElementUtils.GetElementLocation(element));
@@ -131,21 +148,23 @@ namespace BeyondRevit.CenterElementCommands
             Autodesk.Revit.DB.Document doc = uidoc.Document;
             Selection selection = uidoc.Selection;
 
-            //Select Start and End Point. Calculate Mid Point
-            IList<Reference> references = selection.PickObjects(ObjectType.Element, "Select Elements to Redistribute");
-            Utils.SketchplaneByView(doc.ActiveView);
-            List<double> range = CenterElementUtils.CreateRange(0, 1, references.Count+2);
-            range.Remove(range[references.Count +1]);
-            range.Remove(range[0]);
-
-            XYZ start = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the First Point"));
-            XYZ end = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the Second Point"));
-            Line line = Line.CreateBound(start, end);
+            
             try
             {
                 using (Transaction transaction = new Transaction(doc, "Center Element Between Points"))
                 {
                     transaction.Start();
+
+                    //Select Start and End Point. Calculate Mid Point
+                    IList<Reference> references = selection.PickObjects(ObjectType.Element, "Select Elements to Redistribute");
+                    Utils.SketchplaneByView(doc.ActiveView);
+                    List<double> range = CenterElementUtils.CreateRange(0, 1, references.Count + 2);
+                    range.Remove(range[references.Count + 1]);
+                    range.Remove(range[0]);
+
+                    XYZ start = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the First Point"));
+                    XYZ end = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick the Second Point"));
+                    Line line = Line.CreateBound(start, end);
                     for (int i = 0; i < references.Count; i++)
                     {
                         Element element = doc.GetElement(references[i]);
@@ -175,43 +194,52 @@ namespace BeyondRevit.CenterElementCommands
             Autodesk.Revit.DB.Document doc = uidoc.Document;
             Selection selection = uidoc.Selection;
 
-            //Select Elements
-            IList<Reference> refs = Utils.GetCurrentSelection(uidoc, null, "Select Elements");
-            IList<ElementId> elementIds = new List<ElementId>();
-            foreach (Reference r in refs)
+
+            try
             {
-                elementIds.Add(r.ElementId);
+                using (Transaction transaction = new Transaction(doc, "Align Elements With Offset"))
+                {
+                    transaction.Start();
+
+                    //Select Elements
+                    IList<Reference> refs = Utils.GetCurrentSelection(uidoc, null, "Select Elements");
+                    IList<ElementId> elementIds = new List<ElementId>();
+                    foreach (Reference r in refs)
+                    {
+                        elementIds.Add(r.ElementId);
+                    }
+
+                    //Select Ref Point
+                    Utils.SketchplaneByView(doc.ActiveView);
+                    XYZ refPoint = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick Point to Align"));
+
+                    //Compute Plane By Face
+                    Reference refFace = selection.PickObject(ObjectType.Face, "Select Face");
+                    GeometryObject geoObject = doc.GetElement(refFace).GetGeometryObjectFromReference(refFace);
+                    PlanarFace face = geoObject as PlanarFace;
+
+                    XYZ normal = face.ComputeNormal(new UV(0.5, 0.5));
+                    XYZ origin = face.Evaluate(new UV(0.5, 0.5));
+                    Plane facePlane = Plane.CreateByNormalAndOrigin(normal, origin);
+
+                    //Get New Location
+                    facePlane.Project(refPoint, out UV newLocationUV, out double distance);
+                    XYZ newLocation = CenterElementUtils.UVToXYZInPlane(facePlane, newLocationUV);
+                    if (CenterElementUtils.GetOffsetValue(out double offset))
+                    {
+                        double alignmentDistance = newLocation.DistanceTo(refPoint) - Utils.ToInternalUnits(doc, offset);
+                        ElementTransformUtils.MoveElements(doc, elementIds, (newLocation.Subtract(refPoint).Normalize().Multiply(alignmentDistance)));
+                        transaction.Commit();
+                    }
+                    else
+                    {
+                        transaction.RollBack();
+                    }
+                }
             }
-
-            //Select Ref Point
-            Utils.SketchplaneByView(doc.ActiveView);
-            XYZ refPoint = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick Point to Align"));
-
-            //Compute Plane By Face
-            Reference refFace = selection.PickObject(ObjectType.Face, "Select Face");
-            GeometryObject geoObject = doc.GetElement(refFace).GetGeometryObjectFromReference(refFace);
-            PlanarFace face = geoObject as PlanarFace;
-
-            XYZ normal = face.ComputeNormal(new UV(0.5, 0.5));
-            XYZ origin = face.Evaluate(new UV(0.5, 0.5));
-            Plane facePlane = Plane.CreateByNormalAndOrigin(normal, origin);
-
-            //Get New Location
-            facePlane.Project(refPoint, out UV newLocationUV, out double distance);
-            XYZ newLocation = CenterElementUtils.UVToXYZInPlane(facePlane, newLocationUV);
-            using (Transaction transaction = new Transaction(doc, "Align Elements With Offset"))
+            catch (OperationCanceledException)
             {
-                transaction.Start();
-                if (CenterElementUtils.GetOffsetValue(out double offset))
-                {
-                    double alignmentDistance = newLocation.DistanceTo(refPoint) - Utils.ToInternalUnits(doc, offset);
-                    ElementTransformUtils.MoveElements(doc, elementIds, (newLocation.Subtract(refPoint).Normalize().Multiply(alignmentDistance)));
-                    transaction.Commit();
-                }
-                else
-                {
-                    transaction.RollBack();
-                }
+                return Result.Cancelled;
             }
             return Result.Succeeded;
         }
@@ -227,22 +255,23 @@ namespace BeyondRevit.CenterElementCommands
             Selection selection = uidoc.Selection;
             try
             {
-                //Select Elements
-                IList<Reference> refs = Utils.GetCurrentSelection(uidoc, null, "Select Elements");
-                IList<ElementId> elementIds = new List<ElementId>();
-                foreach (Reference r in refs)
-                {
-                    elementIds.Add(r.ElementId);
-                }
-
-                //Select Ref Point
-                Utils.SketchplaneByView(doc.ActiveView);
-                XYZ startPoint = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick Startpoint"));
-                XYZ endPoint = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick Startpoint"));
-
+                
                 using (Transaction transaction = new Transaction(doc, "Move Elements With Offset"))
                 {
                     transaction.Start();
+                    //Select Elements
+                    IList<Reference> refs = Utils.GetCurrentSelection(uidoc, null, "Select Elements");
+                    IList<ElementId> elementIds = new List<ElementId>();
+                    foreach (Reference r in refs)
+                    {
+                        elementIds.Add(r.ElementId);
+                    }
+
+                    //Select Ref Point
+                    Utils.SketchplaneByView(doc.ActiveView);
+                    XYZ startPoint = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick Startpoint"));
+                    XYZ endPoint = CenterElementUtils.Get2DPointInView(doc.ActiveView, selection.PickPoint("Pick Startpoint"));
+
                     if (CenterElementUtils.GetOffsetValue(out double offset))
                     {
                         double alignmentDistance = endPoint.DistanceTo(startPoint) - Utils.ToInternalUnits(doc, offset);

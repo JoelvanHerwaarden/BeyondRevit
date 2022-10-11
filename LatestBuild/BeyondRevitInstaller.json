@@ -1,0 +1,42 @@
+{
+  "Title": "BeyondRevit",
+  "Instructions": "This is the Installation for the Revit Addin BeyondRevit.\nClose all Revit applications before starting",
+  "Actions": [
+    {
+      "SourceFile": "BeyondRevit.dll",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2020\\BeyondRevit"
+    },
+    {
+      "SourceFile": "Resources",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2020\\BeyondRevit"
+    },
+    {
+      "SourceFile": "BeyondRevit.Addin",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2020"
+    },
+    {
+      "SourceFile": "BeyondRevit.dll",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BeyondRevit"
+    },
+    {
+      "SourceFile": "Resources",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BeyondRevit"
+    },
+    {
+      "SourceFile": "BeyondRevit.Addin",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021"
+    },
+    {
+      "SourceFile": "BeyondRevit.dll",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2022\\BeyondRevit"
+    },
+    {
+      "SourceFile": "Resources",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2022\\BeyondRevit"
+    },
+    {
+      "SourceFile": "BeyondRevit.Addin",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2022"
+    }
+  ]
+}

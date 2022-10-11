@@ -10,7 +10,7 @@ using Autodesk.Revit.UI.Selection;
 using BeyondRevit.UI;
 using Autodesk.Revit.Creation;
 
-namespace BeyondRevit
+namespace BeyondRevit.Commands
 {
 
     [Transaction(TransactionMode.Manual)]
@@ -22,7 +22,6 @@ namespace BeyondRevit
             UIDocument uiDocument = commandData.Application.ActiveUIDocument;
             Autodesk.Revit.DB.Document document = uiDocument.Document;
 
-
             if (!document.IsFamilyDocument)
             {
                 Utils.Show("This command can only run in a Family Document");
@@ -30,14 +29,16 @@ namespace BeyondRevit
             }
 
             Selection selection = uiDocument.Selection;
-            SelectElement:
             using(Transaction transaction = new Transaction(document, "Link Family Parameters"))
             {
                 transaction.Start();
+#pragma warning disable CS0168 // Variable is declared but never used
                 try
                 {
-                    Reference referenceElement = selection.PickObject(ObjectType.Element, "Select Family Instance which parameter you want to link");
+                    
+                    Reference referenceElement = Utils.GetCurrentSelectionSingleElement(uiDocument, null, "Select Family Instance which parameter you want to link");
                     Element element = document.GetElement(referenceElement);
+                    
                     Dictionary<string, dynamic> parameters = FamilyParameterUtils.GetEditableParametersFromElement(element);
                     GenericDropdownWindow window = new GenericDropdownWindow("Select parameters", "Select Parameter which you want to Link", parameters, Utils.RevitWindow(commandData), true);
                     window.ShowDialog();
@@ -54,6 +55,7 @@ namespace BeyondRevit
                 {
                     return Result.Succeeded;
                 }
+#pragma warning restore CS0168 // Variable is declared but never used
                 transaction.Commit();
             }
             return Result.Succeeded;
@@ -74,14 +76,17 @@ namespace BeyondRevit
                 }
             }
             ElementType type = (ElementType)element.Document.GetElement(element.GetTypeId());
-
-            foreach (Parameter p in type.Parameters)
+            if (type != null)
             {
-                if (!p.IsReadOnly & p.Definition.ParameterType != ParameterType.Invalid)
+                foreach (Parameter p in type.Parameters)
                 {
-                    Result.Add(p.Definition.Name, p);
+                    if (!p.IsReadOnly & p.Definition.ParameterType != ParameterType.Invalid)
+                    {
+                        Result.Add(p.Definition.Name, p);
+                    }
                 }
             }
+            
 
             return Result;
         }
