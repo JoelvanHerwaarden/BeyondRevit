@@ -1,0 +1,55 @@
+{
+  "Title": "Uninstall Beyond Revit",
+  "Instructions": "This is the Uninstallation for the Revit Addin BeyondRevit.\nClose all Revit applications before starting",
+  "ClosingInstructions": "Uninstallation is done. You can close the Program",
+  "Actions": [
+    {
+      "SourceFile": "BeyondRevit.dll",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2020\\BeyondRevit",
+      "ActionType": "Uninstall"
+    },
+    {
+      "SourceFile": "Resources",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2020\\BeyondRevit",
+      "ActionType": "Uninstall"
+    },
+    {
+      "SourceFile": "BeyondRevit.Addin",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2020",
+      "ActionType": "Uninstall"
+    },
+    {
+      "SourceFile": "BeyondRevit.dll",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BeyondRevit",
+      "ActionType": "Uninstall"
+    },
+    {
+      "SourceFile": "Resources",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021\\BeyondRevit",
+      "ActionType": "Uninstall"
+    },
+    {
+      "SourceFile": "BeyondRevit.Addin",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2021",
+      "ActionType": "Uninstall"
+    },
+    {
+      "SourceFile": "BeyondRevit.dll",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2022\\BeyondRevit",
+      "ActionType": "Uninstall"
+    },
+    {
+      "SourceFile": "Resources",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2022\\BeyondRevit",
+      "ActionType": "Uninstall"
+    },
+    {
+      "SourceFile": "BeyondRevit.Addin",
+      "TargetDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2022",
+      "ActionType": "Uninstall"
+    }
+  ],
+  "ProgramsWhichNeedToBeClosed": [
+    "Revit"
+  ]
+}
