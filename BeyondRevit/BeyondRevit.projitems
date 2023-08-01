@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>bb8810fc-d617-413f-911d-d9a8c2658678</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>BeyondRevit</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AddItemsToTemporaryIsolation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AerialImageCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Apollo\ApolloTestCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Apollo\ApolloCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Apollo\ChatGPTEndPoints.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Apollo\ChatWindow.xaml.cs">
+      <DependentUpon>ChatWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)BackgroundWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BadgerCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BeyondRevitVariables.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BRApplication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BRCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BRSynchronize.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CenterElementCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dimensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DrawCurveUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GoToBeyondRevit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\HadesUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeImportedDWG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\IHadesCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Joining.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LinkFamilyParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MatchViewProperties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParameterChecker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Phasing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProjectTabs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeAll.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeCurrentSheet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeCurrentWorkset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeFamilyParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeImportedLineStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeMaterials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeScopeboxes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeViewFilters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeViewsNotOnSheet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeViewTemplates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeWorksets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RandomFactGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\StylesCodeBehind.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scopeboxes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hades\SearchAndDestroy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SelectionTools.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TrainingWheelsProtocol.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\AerialDimension\AerialDimensionPrompt.xaml.cs">
+      <DependentUpon>AerialDimensionPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\AutomaticSync\SyncPropertiesWindow.xaml.cs">
+      <DependentUpon>SyncPropertiesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\GenericDropdown\GenericDropdownWindow.xaml.cs">
+      <DependentUpon>GenericDropdownWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Badger\BadgerWindow.xaml.cs">
+      <DependentUpon>BadgerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\ManageTabs\ManageTabsWindow.xaml.cs">
+      <DependentUpon>ManageTabsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\OrganizeViews\OrganizeViewsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\OrganizeViews\OrganizeViewsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\OrganizeViews\OrganizeViewsWindow.xaml.cs">
+      <DependentUpon>OrganizeViewsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\SplashWindow\SplashScreen.xaml.cs">
+      <DependentUpon>SplashScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Utils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewportTools.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorkplaneTools.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Apollo\ChatWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Resources\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\AerialDimension\AerialDimensionPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\AutomaticSync\SyncPropertiesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\GenericDropdown\GenericDropdownWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\Badger\BadgerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\ManageTabs\ManageTabsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\OrganizeViews\OrganizeViewsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\SplashWindow\SplashScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Resources\AddElementsTempIsolate16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\alignDimensions_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\AlignElevations16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\AlignOffset16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\autoDimension_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\CenterElementBetweenPoints16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\CenterElementBetweenPointsPerpendicular16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\commandConsole_32.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\commandLine_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\DetachScopebox16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\dimensionCopyOverrides_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\dimensionDuplicate_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\dimensionMerge_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\dimensionRemoveReference_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\dimensionSplit_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\dimensions_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\dimensionTotal_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\FlipHorizontal16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\FlipVertical16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\hades_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\JoinCut32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\linkFamilyParameters16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\MakeElementHalftone16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\MoveAlign32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\MoveOffset16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\MoveViewports32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\next_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\organizeViews_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\organizeViews_32.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\pauseSync_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\previous_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\RemoveElementOverrides16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Rotate18016.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SectionboxBack32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SectionboxBottom32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SectionboxFront32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SectionboxLeft32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SectionboxRight32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SectionboxTop32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SelectAllInstancesInProject32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SelectAllInstancesInView32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SelectAllInstancesOnSheet32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SelectAllPartsInProject32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SelectAllPartsInView32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SelectAllTypesInProject32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SelectAllTypesInView32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\SelectAllTypesOnSheet32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\selectInstancesInView_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\smalldimensions_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\StackTagHeads16.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\startSync_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\syncSettings_32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\ViewportAlignHorizontalCenter32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\ViewportAlignVerticalCenter32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\ViewportDistributeHorizontal32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\ViewportDistributeVertical32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\ViewportHideCropRegion.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\ViewportHideCropRegion32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\ViewportOpenViews32.bmp" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\ViewportShowCropRegion32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)BeyondRevit.Addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Resources\MoveViewports32.pdn" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\SectionboxRight32.pdn" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\Selection.pdn" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\Viewport32.pdn" />
+  </ItemGroup>
+</Project>

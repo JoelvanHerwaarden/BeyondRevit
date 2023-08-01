@@ -1,0 +1,10 @@
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\BeyondRevit2024.csproj.AssemblyReference.cache
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\Styles.g.cs
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\AerialDimensionPrompt.g.cs
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\SyncPropertiesWindow.g.cs
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\GenericDropdownWindow.g.cs
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\ManageTabsWindow.g.cs
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\OrganizeViewsWindow.g.cs
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\SplashScreen.g.cs
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\BeyondRevit2024_MarkupCompile.cache
+C:\Users\907335\Documents\source\BeyondRevit2024\obj\Release\BeyondRevit2024_MarkupCompile.lref
