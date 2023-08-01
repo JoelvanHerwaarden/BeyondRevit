@@ -1,0 +1,9 @@
+﻿<Application x:Class="EZInstaller.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:EZInstaller"
+             StartupUri="EZInstallerWindow.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

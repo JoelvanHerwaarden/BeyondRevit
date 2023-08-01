@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZInstaller", "EZInstaller.csproj", "{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD8E9A93-D6EF-4B40-B4F0-749D14AA1A37}
+	EndGlobalSection
+EndGlobal

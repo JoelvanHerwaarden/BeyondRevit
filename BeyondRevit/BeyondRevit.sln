@@ -13,19 +13,44 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeyondRevit2023", "..\Beyon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeyondRevit2024", "..\BeyondRevit2024\BeyondRevit2024.csproj", "{139F7309-6C29-4B3C-A310-F8A8B1F86F96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeyondRevitInstaller", "..\BeyondRevitInstaller\BeyondRevitInstaller.csproj", "{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		BeyondRevit|Any CPU = BeyondRevit|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8A8FE229-C088-431A-A14D-C2C589D9C743}.BeyondRevit|Any CPU.ActiveCfg = Revit2021|Any CPU
 		{8A8FE229-C088-431A-A14D-C2C589D9C743}.BeyondRevit|Any CPU.Build.0 = Revit2021|Any CPU
+		{8A8FE229-C088-431A-A14D-C2C589D9C743}.Debug|Any CPU.ActiveCfg = Revit2021|Any CPU
+		{8A8FE229-C088-431A-A14D-C2C589D9C743}.Debug|Any CPU.Build.0 = Revit2021|Any CPU
+		{8A8FE229-C088-431A-A14D-C2C589D9C743}.Release|Any CPU.ActiveCfg = Revit2021|Any CPU
+		{8A8FE229-C088-431A-A14D-C2C589D9C743}.Release|Any CPU.Build.0 = Revit2021|Any CPU
 		{5C1D44EE-32E0-4B2F-886A-33CF32265ECF}.BeyondRevit|Any CPU.ActiveCfg = Revit2022|Any CPU
 		{5C1D44EE-32E0-4B2F-886A-33CF32265ECF}.BeyondRevit|Any CPU.Build.0 = Revit2022|Any CPU
+		{5C1D44EE-32E0-4B2F-886A-33CF32265ECF}.Debug|Any CPU.ActiveCfg = Revit2022|Any CPU
+		{5C1D44EE-32E0-4B2F-886A-33CF32265ECF}.Debug|Any CPU.Build.0 = Revit2022|Any CPU
+		{5C1D44EE-32E0-4B2F-886A-33CF32265ECF}.Release|Any CPU.ActiveCfg = Revit2022|Any CPU
+		{5C1D44EE-32E0-4B2F-886A-33CF32265ECF}.Release|Any CPU.Build.0 = Revit2022|Any CPU
 		{A527A396-B4DA-4D71-B38A-43380EE78EC9}.BeyondRevit|Any CPU.ActiveCfg = Revit2023|Any CPU
 		{A527A396-B4DA-4D71-B38A-43380EE78EC9}.BeyondRevit|Any CPU.Build.0 = Revit2023|Any CPU
+		{A527A396-B4DA-4D71-B38A-43380EE78EC9}.Debug|Any CPU.ActiveCfg = Revit2023|Any CPU
+		{A527A396-B4DA-4D71-B38A-43380EE78EC9}.Debug|Any CPU.Build.0 = Revit2023|Any CPU
+		{A527A396-B4DA-4D71-B38A-43380EE78EC9}.Release|Any CPU.ActiveCfg = Revit2023|Any CPU
+		{A527A396-B4DA-4D71-B38A-43380EE78EC9}.Release|Any CPU.Build.0 = Revit2023|Any CPU
 		{139F7309-6C29-4B3C-A310-F8A8B1F86F96}.BeyondRevit|Any CPU.ActiveCfg = Revit2024|Any CPU
 		{139F7309-6C29-4B3C-A310-F8A8B1F86F96}.BeyondRevit|Any CPU.Build.0 = Revit2024|Any CPU
+		{139F7309-6C29-4B3C-A310-F8A8B1F86F96}.Debug|Any CPU.ActiveCfg = Revit2024|Any CPU
+		{139F7309-6C29-4B3C-A310-F8A8B1F86F96}.Debug|Any CPU.Build.0 = Revit2024|Any CPU
+		{139F7309-6C29-4B3C-A310-F8A8B1F86F96}.Release|Any CPU.ActiveCfg = Revit2024|Any CPU
+		{139F7309-6C29-4B3C-A310-F8A8B1F86F96}.Release|Any CPU.Build.0 = Revit2024|Any CPU
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.BeyondRevit|Any CPU.ActiveCfg = BeyondRevitInstaller|Any CPU
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.BeyondRevit|Any CPU.Build.0 = BeyondRevitInstaller|Any CPU
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.Debug|Any CPU.ActiveCfg = BeyondRevitInstaller|Any CPU
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.Release|Any CPU.ActiveCfg = BeyondRevitInstaller|Any CPU
+		{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}.Release|Any CPU.Build.0 = BeyondRevitInstaller|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

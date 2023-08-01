@@ -95,7 +95,7 @@
   <Import Project="..\BeyondRevit\BeyondRevit.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y "$(TargetDir)$(ProjectName).dll"  "C:\ProgramData\Autodesk\Revit\Addins\2021\BeyondRevit\$(ProjectName).dll"
-copy /y "$(TargetDir)BeyondRevit.Addin"  "C:\ProgramData\Autodesk\Revit\Addins\2021\BeyondRevit.Addin"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
