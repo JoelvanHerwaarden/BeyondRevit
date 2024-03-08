@@ -11,21 +11,47 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AddItemsToTemporaryIsolation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AerialImageCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Apollo\ApolloTestCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Apollo\ApolloCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Apollo\ChatGPTEndPoints.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Apollo\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)AutoDimension\CreateDimensionCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundWorker.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BadgerCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\BatcherModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\BatcherUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\BatchUnloadLinksAndSyncCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\CloudExportNWCAndDWGAndSynchroAndRevitCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\CloudOpenRevitModelsUI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\LocalExportCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\LocalExportRevitCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\LocalExportDWGAndSynchroAndRevitCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\CloudExportDWGAndSynchroAndRevitCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\CloudSynchroAndRevitCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\IBadgerScript.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\RTVUIDocumentOpenCloseWorksetsCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\SyncAllOpenModelsCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\RTVUIDocumentOpenCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\RTVSynchroExportCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Batcher\SaveModelAsBadgerModelCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BeyondRevitVariables.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BRApplication.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BRCommands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BRSynchronize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CenterElementCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MoveCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RevitFilePaths.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SectionToolsCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dimensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DrawCurveUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DWGToGenericModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gaia\GaiaCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gaia\GaiaMainWindow.xaml.cs">
+      <DependentUpon>GaiaMainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Gaia\GaiaViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GoToBeyondRevit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hades\HadesUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeImportedDWG.cs" />
@@ -48,10 +74,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeViewTemplates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hades\PurgeWorksets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RandomFactGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoveConstraintsCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\StylesCodeBehind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scopeboxes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hades\SearchAndDestroy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectionTools.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RenamingTools.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TagAlignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TrainingWheelsProtocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\AerialDimension\AerialDimensionPrompt.xaml.cs">
       <DependentUpon>AerialDimensionPrompt.xaml</DependentUpon>
@@ -59,11 +88,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\AutomaticSync\SyncPropertiesWindow.xaml.cs">
       <DependentUpon>SyncPropertiesWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\BreaklinesWindow\BreaklinesWindow.xaml.cs">
+      <DependentUpon>BreaklinesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\CropViewWindow\CropViewWindow.xaml.cs">
+      <DependentUpon>CropViewWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UI\GenericDropdown\GenericDropdownWindow.xaml.cs">
       <DependentUpon>GenericDropdownWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)UI\Badger\BadgerWindow.xaml.cs">
-      <DependentUpon>BadgerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UI\ManageTabs\ManageTabsWindow.xaml.cs">
       <DependentUpon>ManageTabsWindow.xaml</DependentUpon>
@@ -73,15 +105,28 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\OrganizeViews\OrganizeViewsWindow.xaml.cs">
       <DependentUpon>OrganizeViewsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\SectioningTools\CreateSectionsAlongCurveControl.xaml.cs">
+      <DependentUpon>CreateSectionsAlongCurveControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\SectioningTools\SectioningToolsExternalEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\SectioningTools\SectioningToolsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\SectioningTools\SectioningToolsWindow.xaml.cs">
+      <DependentUpon>SectioningToolsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UI\SplashWindow\SplashScreen.xaml.cs">
       <DependentUpon>SplashScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Utils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewportTools.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkplaneTools.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorksetTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Apollo\ChatWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Gaia\GaiaMainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -97,11 +142,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)UI\GenericDropdown\GenericDropdownWindow.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)UI\BreaklinesWindow\BreaklinesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)UI\Badger\BadgerWindow.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)UI\CropViewWindow\CropViewWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\GenericDropdown\GenericDropdownWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -110,6 +159,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)UI\OrganizeViews\OrganizeViewsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\SectioningTools\CreateSectionsAlongCurveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\SectioningTools\SectioningToolsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

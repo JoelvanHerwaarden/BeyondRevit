@@ -24,7 +24,6 @@ namespace BeyondRevit.Commands
             List<ElementId> idsToSelect = SelectionUtils.GetAllInstances(doc, typesToSelect);
             uidoc.Selection.SetElementIds(idsToSelect);
             return Result.Succeeded;
-
         }
     }
 
@@ -206,6 +205,103 @@ namespace BeyondRevit.Commands
             return Result.Succeeded;
         }
 
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class SelectAllGroupInstances : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document doc = uidoc.Document;
+            List<BuiltInCategory> categories = new List<BuiltInCategory>() { BuiltInCategory.OST_IOSModelGroups };
+            var groupInstanceFilter = new Utils.CategorySelectionFilter(doc, categories);
+            IList<Reference> sourceElements = Utils.GetCurrentSelection(commandData.Application.ActiveUIDocument, groupInstanceFilter, "Select Groups");
+            List<ElementId> allElementsInSelectedGroupTypes = new List<ElementId>();
+            
+            List<ElementId> groupIds = SelectionUtils.GetUniqueTypeIds(doc, sourceElements);
+            List<ElementId> groupsPlacedInTheModel = SelectionUtils.GetAllInstances(doc, groupIds);
+            foreach(ElementId elementId in groupsPlacedInTheModel)
+            {
+                Group group = (Group)doc.GetElement(elementId);
+                allElementsInSelectedGroupTypes.AddRange(group.GetMemberIds());
+            }
+
+            uidoc.Selection.SetElementIds(allElementsInSelectedGroupTypes);
+            return Result.Succeeded;
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class SelectAllGroupInstancesInCurrentView : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document doc = uidoc.Document;
+
+            View currentView = doc.ActiveView;
+            List<BuiltInCategory> categories = new List<BuiltInCategory>() { BuiltInCategory.OST_IOSModelGroups };
+            var groupInstanceFilter = new Utils.CategorySelectionFilter(doc, categories);
+            IList<Reference> sourceElements = Utils.GetCurrentSelection(commandData.Application.ActiveUIDocument, groupInstanceFilter, "Select Groups");
+            List<ElementId> allElementsInSelectedGroupTypes = new List<ElementId>();
+
+            List<ElementId> groupIds = SelectionUtils.GetUniqueTypeIds(doc, sourceElements);
+            List<ElementId> groupsPlacedInTheModel = SelectionUtils.GetAllInstances(doc, groupIds, new List<View>() { currentView }) ;
+            foreach (ElementId elementId in groupsPlacedInTheModel)
+            {
+                Group group = (Group)doc.GetElement(elementId);
+                allElementsInSelectedGroupTypes.AddRange(group.GetMemberIds());
+            }
+
+            uidoc.Selection.SetElementIds(allElementsInSelectedGroupTypes);
+            return Result.Succeeded;
+
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class SelectAllGroupInstancesInCurrentSheet : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document doc = uidoc.Document;
+            View currentView = doc.ActiveView;
+            ViewSheet viewSheet = null;
+            if (currentView.ViewType == ViewType.DrawingSheet)
+            {
+                viewSheet = (ViewSheet)currentView;
+            }
+            else
+            {
+                viewSheet = SelectionUtils.GetSheetFromView(currentView);
+            }
+            if (viewSheet != null)
+            {
+                IList<View> viewsOnSheet = SelectionUtils.GetViewsOnSheet(viewSheet);
+
+                List<BuiltInCategory> categories = new List<BuiltInCategory>() { BuiltInCategory.OST_IOSModelGroups };
+                var groupInstanceFilter = new Utils.CategorySelectionFilter(doc, categories);
+                IList<Reference> sourceElements = Utils.GetCurrentSelection(commandData.Application.ActiveUIDocument, groupInstanceFilter, "Select Groups");
+                List<ElementId> allElementsInSelectedGroupTypes = new List<ElementId>();
+
+                List<ElementId> groupIds = SelectionUtils.GetUniqueTypeIds(doc, sourceElements);
+                List<ElementId> groupsPlacedInTheModel = SelectionUtils.GetAllInstances(doc, groupIds, viewsOnSheet);
+                foreach (ElementId elementId in groupsPlacedInTheModel)
+                {
+                    Group group = (Group)doc.GetElement(elementId);
+                    allElementsInSelectedGroupTypes.AddRange(group.GetMemberIds());
+                }
+
+                uidoc.Selection.SetElementIds(allElementsInSelectedGroupTypes);
+            }
+            return Result.Succeeded;
+        }
     }
     public class SelectionUtils
     {

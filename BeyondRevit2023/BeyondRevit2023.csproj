@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Revit2023|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '2023|AnyCPU' ">
     <OutputPath>bin\Revit2023\</OutputPath>
     <DefineConstants>TRACE;Revit2023</DefineConstants>
     <Optimize>true</Optimize>
@@ -22,7 +22,7 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Revit2023|x86'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '2023|x86' ">
     <OutputPath>bin\x86\Revit2023\</OutputPath>
     <DefineConstants>TRACE;Revit2023</DefineConstants>
     <Optimize>true</Optimize>
@@ -73,6 +73,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TagAlignmentTool">
+      <HintPath>..\BeyondRevit\Resources\TagAlignmentTool.dll</HintPath>
+    </Reference>
     <Reference Include="UIFramework, Version=23.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <HintPath>..\BeyondRevit\packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\UIFramework.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
@@ -89,10 +92,10 @@
   <Import Project="..\BeyondRevit\BeyondRevit.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>@echo "$(SolutionDir)LatestBuild\2023\$(ProjectName).dll"
-copy /y "$(TargetDir)BeyondRevit.dll"  "C:\ProgramData\Autodesk\Revit\Addins\2023\BeyondRevit\BeyondRevit.dll"
-copy /y "$(TargetDir)BeyondRevit.Addin"  "C:\ProgramData\Autodesk\Revit\Addins\2023\BeyondRevit.Addin"
-</PostBuildEvent>
+    <PostBuildEvent>echo $(SolutionDir)BeyondRevitTestingGround
+copy /y "$(TargetDir)BeyondRevit.dll" "$(SolutionDir)BeyondRevitTestingGround\BeyondRevit$(Configuration).dll"
+copy /y "$(SolutionDir)BeyondRevitTestingGround\BeyondRevit$(Configuration).dll"  "C:\ProgramData\Autodesk\Revit\Addins\$(Configuration)\BeyondRevit\BeyondRevit.dll"
+copy /y "$(TargetDir)BeyondRevit.Addin"  "C:\ProgramData\Autodesk\Revit\Addins\$(Configuration)\BeyondRevit.Addin"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>

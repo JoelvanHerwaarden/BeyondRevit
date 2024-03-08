@@ -1,0 +1,25 @@
+﻿<Window
+    x:Class="BeyondRevit.UI.SectioningToolsWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BeyondRevit.UI"
+             mc:Ignorable="d" Width="600" Height="650" WindowStartupLocation="CenterOwner" Title="Beyond Revit" Background="{DynamicResource MainBackground}">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/BeyondRevit;component/Resources/Styles.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Grid Background="{StaticResource MainBackground}">
+		<TabControl>
+			<TabItem  FontSize="16" Header="Create Along Curve" Background="{StaticResource MainBackground}">
+				<local:CreateSectionsAlongCurveControl x:Name="SectionAlongCurve" Margin="10"/>
+			</TabItem>
+			<TabItem FontSize="16" Header="Modify Crop Views"/>
+			<TabItem FontSize="16" Header="Place Section on Sheet"/>
+		</TabControl>
+	</Grid>
+</Window>

@@ -21,30 +21,26 @@ namespace BeyondRevit
             return resources;
         }
 
-        private void Button_MouseEnter(object sender, MouseEventArgs e)
+        private void PrimaryButton_MouseEnter(object sender, MouseEventArgs e)
         {
             Button button = (Button)sender;
             Brush background = button.Background;
             Brush foreground = button.Foreground;
-            button.FontWeight = FontWeights.SemiBold;
             if (foreground.IsFrozen)
             {
                 foreground = foreground.Clone();
             }
-            foreground.Opacity = 0;
             button.Foreground = background;
             button.Background = foreground;
         }
-        private void Button_MouseLeave(object sender, MouseEventArgs e)
+        private void PrimaryButton_MouseLeave(object sender, MouseEventArgs e)
         {
             Button button = (Button)sender;
-            button.FontWeight = FontWeights.Light;
             Brush foreground = button.Background;
             if (foreground.IsFrozen)
             {
                 foreground = foreground.Clone();
             }
-            foreground.Opacity = 1;
             Brush background = button.Foreground;
             button.Foreground = foreground;
             button.Background = background;
@@ -56,6 +52,12 @@ namespace BeyondRevit
             System.Windows.Forms.Clipboard.SetText(text);
             Utils.Show("Copied " + text);
 
+        }
+
+        private void GiveFocusToCell_Event(object sender, RoutedEventArgs e)
+        {
+            DataGrid dg = sender as DataGrid;
+            dg.BeginEdit();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using BeyondRevit.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,11 +33,86 @@ namespace BeyondRevit.ViewportCommands
 
         }
 
+        public static Dictionary<string, Curve> GetViewportCurves(Viewport viewport)
+        {
+            Document doc = viewport.Document;
+            View view = doc.GetElement(viewport.ViewId) as View;
+            CurveLoop curveloop = view.GetCropRegionShapeManager().GetCropShape().First();
+            List<Curve> curves = new List<Curve>();
+            CurveLoopIterator iter = curveloop.GetCurveLoopIterator();
+            while (iter.MoveNext())
+            {
+                Curve c = iter.Current as Curve;
+                curves.Add(c);
+            }
+
+            Dictionary<string, Curve> result = new Dictionary<string, Curve>()
+            {
+                {"Left", curves[0] },
+                {"Top",  curves[1] },
+                {"Right",  curves[2] },
+                {"Bottom",  curves[3] },
+            };
+            return result;
+        }
+
+        public static Dictionary<string, dynamic> GetSheetDictionary(Document document)
+        {
+            IList<Element> sheets = new FilteredElementCollector(document).OfClass(typeof(ViewSheet)).WhereElementIsNotElementType().ToElements();
+            Dictionary<string, dynamic> sheetDictionary = new Dictionary<string, dynamic>();
+            foreach (ViewSheet sheet in sheets)
+            {
+                string key = string.Format("{0} - {1} ({2})", sheet.SheetNumber, sheet.Name, sheet.Id.ToString());
+                sheetDictionary.Add(key, sheet);
+            }
+            return sheetDictionary;
+
+        }
+
+        internal class BRViewport
+        {
+            public string DetailNumber { get; }
+            public ElementId ViewportType { get; }
+            public ElementId View { get; }
+            public XYZ Position { get; }
+            public Document Document { get; }
+            public BRViewport(Viewport viewport, bool createCopy = false)
+            {
+                List<ViewType> CopyableViewTypes = new List<ViewType>()
+                {
+                        ViewType.Schedule,
+                        ViewType.ColumnSchedule,
+                        ViewType.PanelSchedule,
+                        ViewType.DraftingView,
+                        ViewType.Legend
+                };
+                View = viewport.ViewId;
+                Position = viewport.GetBoxCenter();
+                Document = viewport.Document;
+                DetailNumber = viewport.LookupParameter("Detail Number").AsString();
+
+
+                if (createCopy)
+                {
+                    View v = (View)viewport.Document.GetElement(this.View);
+                    this.View = v.Duplicate(ViewDuplicateOption.WithDetailing);
+                }
+
+                View view = (View)Document.GetElement(this.View);
+                ViewportType = viewport.GetTypeId();
+                if (!CopyableViewTypes.Contains(view.ViewType) && createCopy == false)
+                {
+                    Document.Delete(viewport.Id);
+                }
+
+            }
+        }
+
         public static Dictionary<string, double> GetVerticalBounds(IList<XYZ> points)
         {
             var verticalBounds = new Dictionary<string, double>();
             List<double> values = new List<double>();
-            foreach(XYZ p in points)
+            foreach (XYZ p in points)
             {
                 values.Add(p.Y);
             }
@@ -71,11 +147,51 @@ namespace BeyondRevit.ViewportCommands
         public static IList<XYZ> GetViewportPoints(IList<Viewport> viewports)
         {
             IList<XYZ> points = new List<XYZ>();
-            foreach(Viewport vp in viewports)
+            foreach (Viewport vp in viewports)
             {
                 points.Add(vp.GetBoxCenter());
             }
             return points;
+        }
+
+        public static IList<FamilySymbol> GetBreakLineSymbols(Document document, out FamilySymbol defaultSymbol)
+        {
+            List<string> searchWords = new List<string>()
+            {
+                "afbreeklijn",
+                "afbreek",
+                "breakline",
+                "break"
+            };
+            IList<Element> breakLinesFamilies = new FilteredElementCollector(document)
+                .OfClass(typeof(Family))
+                .ToElements()
+                .Where(f => ((Family)f).FamilyPlacementType == FamilyPlacementType.CurveBasedDetail)
+                .ToList();
+
+            IList<FamilySymbol> symbols = new List<FamilySymbol>(); 
+            foreach(Family f in breakLinesFamilies)
+            {
+                foreach(ElementId id in f.GetFamilySymbolIds())
+                {
+                    symbols.Add(document.GetElement(id) as FamilySymbol);
+                }
+            }
+
+            defaultSymbol = null;
+            foreach (string word in searchWords)
+            {
+                foreach (FamilySymbol element in symbols)
+                {
+                    if (element.Name.ToLower().Contains(word.ToLower()))
+                    {
+                        defaultSymbol = element;
+                        break;
+                    }
+                }
+                if (defaultSymbol != null) { break; }
+            }
+            return symbols;
         }
     }
 
@@ -108,7 +224,6 @@ namespace BeyondRevit.ViewportCommands
             Document document = uidoc.Document;
             Selection selection = uidoc.Selection;
             ViewportFilter filter = new ViewportFilter();
-            //IList<Reference> references = selection.PickObjects(ObjectType.Element, filter, "Select Viewport");
             IList<Reference> references = Utils.GetCurrentSelection(uidoc, filter, "Select Viewport");
             foreach (Reference reference in references)
             {
@@ -339,14 +454,14 @@ namespace BeyondRevit.ViewportCommands
             IList<Viewport> viewportList = ViewportToolsUtils.SelectViewports(document, selection);
             IList<Viewport> sortedViewports = viewportList.OrderBy(x => x.GetBoxCenter().X).ToList();
             IList<XYZ> points = ViewportToolsUtils.GetViewportPoints(viewportList);
-            Dictionary<string, double> bounds = ViewportToolsUtils.GetHorizontalBounds(points);
+            Dictionary<string, double> bounds = ViewportToolsUtils.GetVerticalBounds(points);
             using (Transaction transaction = new Transaction(document, "Align Viewports Horizontal Center"))
             {
                 transaction.Start();
                 foreach (Viewport vp in viewportList)
                 {
                     XYZ current = vp.GetBoxCenter();
-                    XYZ newCenter = new XYZ(current.X, bounds["Min"], current.Z) ;
+                    XYZ newCenter = new XYZ(current.X, bounds["Min"], current.Z);
                     vp.SetBoxCenter(newCenter);
                 }
                 transaction.Commit();
@@ -419,7 +534,7 @@ namespace BeyondRevit.ViewportCommands
             Document document = uiDocument.Document;
             Selection selection = uiDocument.Selection;
             IList<Viewport> viewportList = ViewportToolsUtils.SelectViewports(document, selection);
-            BeyondRevit.UI.GenericDropdownWindow selectSheet = new UI.GenericDropdownWindow("Select Sheet", "Select Sheet", GetSheetDictionary(document), Utils.RevitWindow(commandData), false);
+            BeyondRevit.UI.GenericDropdownWindow selectSheet = new UI.GenericDropdownWindow("Select Sheet", "Select Sheet", ViewportToolsUtils.GetSheetDictionary(document), Utils.RevitWindow(commandData), false);
             selectSheet.ShowDialog();
             if (selectSheet.Cancelled)
             {
@@ -431,7 +546,7 @@ namespace BeyondRevit.ViewportCommands
                 ViewSheet targetSheet = selectSheet.SelectedItems.FirstOrDefault();
                 foreach (Viewport vp in viewportList)
                 {
-                    BRViewport brViewport = new BRViewport(vp);
+                    ViewportToolsUtils.BRViewport brViewport = new ViewportToolsUtils.BRViewport(vp);
                     Viewport newViewport = Viewport.Create(document, targetSheet.Id, brViewport.View, brViewport.Position);
                     newViewport.ChangeTypeId(brViewport.ViewportType);
                     newViewport.LookupParameter("Detail Number").Set(brViewport.DetailNumber);
@@ -442,48 +557,153 @@ namespace BeyondRevit.ViewportCommands
             return Result.Succeeded;
         }
 
-        public Dictionary<string, dynamic> GetSheetDictionary(Document document)
+    }
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CopyViewportsToAnotherSheet : IExternalCommand
+    {
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            IList<Element> sheets = new FilteredElementCollector(document).OfClass(typeof(ViewSheet)).WhereElementIsNotElementType().ToElements();
-            Dictionary<string, dynamic> sheetDictionary = new Dictionary<string, dynamic>();
-            foreach(ViewSheet sheet in sheets)
+            UIDocument uiDocument = commandData.Application.ActiveUIDocument;
+            Document document = uiDocument.Document;
+            Selection selection = uiDocument.Selection;
+            IList<Viewport> viewportList = ViewportToolsUtils.SelectViewports(document, selection);
+            BeyondRevit.UI.GenericDropdownWindow selectSheet = new UI.GenericDropdownWindow("Select Sheet", "Select Sheet", ViewportToolsUtils.GetSheetDictionary(document), Utils.RevitWindow(commandData), false);
+            selectSheet.ShowDialog();
+            if (selectSheet.Cancelled)
             {
-                string key = string.Format("{0} - {1} ({2})", sheet.SheetNumber, sheet.Name, sheet.Id.ToString());
-                sheetDictionary.Add(key, sheet);
+                return Result.Cancelled;
             }
-            return sheetDictionary;
-
-        }
-
-        internal class BRViewport
-        {
-            public string DetailNumber { get; }
-            public ElementId ViewportType { get; }
-            public ElementId View { get; }
-            public XYZ Position { get; }
-            public Document Document { get; }
-            public BRViewport(Viewport viewport)
+            using (Transaction transaction = new Transaction(document, "Move Viewport to Other Sheet"))
             {
-                List<ViewType> CopyableViewTypes = new List<ViewType>()
+                transaction.Start();
+                ViewSheet targetSheet = selectSheet.SelectedItems.FirstOrDefault();
+                foreach (Viewport vp in viewportList)
                 {
-                    ViewType.Schedule,
-                    ViewType.ColumnSchedule,
-                    ViewType.PanelSchedule,
-                    ViewType.DraftingView,
-                    ViewType.Legend
-                };
-                View = viewport.ViewId;
-                Position = viewport.GetBoxCenter();
-                Document = viewport.Document;
-                DetailNumber = viewport.LookupParameter("Detail Number").AsString();
+                    ViewportToolsUtils.BRViewport brViewport = new ViewportToolsUtils.BRViewport(vp, true);
+                    Viewport newViewport = Viewport.Create(document, targetSheet.Id, brViewport.View, brViewport.Position);
+                    newViewport.ChangeTypeId(brViewport.ViewportType);
+                    //try
+                    //{
 
-                View view = (View)Document.GetElement(this.View);
-                ViewportType = viewport.GetTypeId();
-                if (!CopyableViewTypes.Contains(view.ViewType))
+                    //    newViewport.LookupParameter("Detail Number").Set(brViewport.DetailNumber);
+                    //}
+                    //catch { }
+                }
+
+                transaction.Commit();
+            }
+            return Result.Succeeded;
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ExtendCropRegionCommand : IExternalCommand
+    {
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uiDocument = commandData.Application.ActiveUIDocument;
+            Document document = uiDocument.Document;
+            Selection selection = uiDocument.Selection;
+            IList<Viewport> viewportList = ViewportToolsUtils.SelectViewports(document, selection);
+
+            CropViewWindow window = new CropViewWindow(Utils.RevitWindow(commandData));
+            window.ShowDialog();
+
+            using (Transaction transaction = new Transaction(document, "Modify Crop Region"))
+            {
+                transaction.Start();
+
+                transaction.Commit();
+            }
+            return Result.Succeeded;
+        }
+        private static void StretchViewport(Viewport viewport, double top, double bottom, double left, double right)
+        {
+            Document doc = viewport.Document;
+            View view = (View)doc.GetElement(viewport.ViewId);
+            XYZ horizontalDirection = view.RightDirection;
+            XYZ verticalDirection = view.UpDirection;
+            List<Curve> horizontalCurves = new List<Curve>();
+            List<Curve> verticalCurves = new List<Curve>();
+
+            foreach(CurveLoop curveLoop in view.GetCropRegionShapeManager().GetCropShape())
+            {
+                foreach(Curve curve in curveLoop)
                 {
-                    Document.Delete(viewport.Id);
+                    XYZ dir = curve.Evaluate(0.5, true);
+                    if (Math.Abs(horizontalDirection.DotProduct(dir)) > 0.9)
+                    {
+                        horizontalCurves.Add(curve);
+                    }
+                    else
+                    {
+                        verticalCurves.Add(curve);
+                    }
                 }
             }
+
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CreateBreakLines : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uiDocument = commandData.Application.ActiveUIDocument;
+            Document document = uiDocument.Document;
+            Selection selection = uiDocument.Selection;
+            IList<Viewport> viewportList = ViewportToolsUtils.SelectViewports(document, selection);
+            IList<FamilySymbol> breakLineFamilies = ViewportToolsUtils.GetBreakLineSymbols(document, out FamilySymbol defaultElement);
+
+            BreaklinesWindow BLWindow = new BreaklinesWindow(Utils.RevitWindow(commandData), defaultElement, breakLineFamilies);
+            BLWindow.ShowDialog();
+
+            if (BLWindow.Cancelled)
+            {
+                return Result.Cancelled;
+            }
+            
+            using(Transaction t = new Transaction(document, "Create Breaklines"))
+            {
+                t.Start();
+                foreach (Viewport viewport in viewportList)
+                {
+                    View view = (View)document.GetElement(viewport.ViewId);
+                    Dictionary<string, Curve> curves = ViewportToolsUtils.GetViewportCurves(viewport);
+                    if (BLWindow.TopBreakLine)
+                    {
+                        Curve curve = curves["Top"];
+                        Line line = Line.CreateBound(curve.GetEndPoint(1), curve.GetEndPoint(0));
+                        document.Create.NewFamilyInstance(line, BLWindow.BreakLineFamily, view);
+                    }
+                    if (BLWindow.RightBreakLine)
+                    {
+                        Curve curve = curves["Right"];
+                        Line line = Line.CreateBound(curve.GetEndPoint(1), curve.GetEndPoint(0));
+                        document.Create.NewFamilyInstance(line, BLWindow.BreakLineFamily, view);
+                    }
+                    if (BLWindow.BottomBreakLine)
+                    {
+                        Curve curve = curves["Bottom"];
+                        Line line = Line.CreateBound(curve.GetEndPoint(1), curve.GetEndPoint(0));
+                        document.Create.NewFamilyInstance(line, BLWindow.BreakLineFamily, view);
+                    }
+                    if (BLWindow.LeftBreakLine)
+                    {
+                        Curve curve = curves["Left"];
+                        Line line = Line.CreateBound(curve.GetEndPoint(1), curve.GetEndPoint(0));
+                        document.Create.NewFamilyInstance(line, BLWindow.BreakLineFamily, view);
+                    }
+                }
+                t.Commit();
+            }
+            return Result.Succeeded;
         }
     }
 }

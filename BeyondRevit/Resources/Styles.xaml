@@ -3,28 +3,21 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:BeyondRevit.UI">
 	<!-- Main Theme Color -->
-	<SolidColorBrush x:Key="MainBackground" Color="#004040"/>
-	<SolidColorBrush x:Key="LightGrayBackground" Color="#F0F0F0"/>
-	<SolidColorBrush x:Key="RHDHVPrimaryBlue" Color="#00567D"/>
-	<SolidColorBrush x:Key="RHDHVPrimaryGreen" Color="#a5c100"/>
-	<SolidColorBrush x:Key="RHDHVPrimaryLightBlue" Color="#0086A8"/>
-	<SolidColorBrush x:Key="RHDHVOrange" Color="#f49600"/>
-	<SolidColorBrush x:Key="RHDHVRed" Color="#e41f18"/>
-	<SolidColorBrush x:Key="RHDHVPurple" Color="#821066"/>
-	<SolidColorBrush x:Key="RHDHVYellow" Color="#ffd923"/>
-	<SolidColorBrush x:Key="RHDHVGreen" Color="#72981b"/>
-	<SolidColorBrush x:Key="WhatsappGreen" Color="#00BFA5"/>
+	<SolidColorBrush x:Key="MainBackground" Color="#e8ebee"/>
+	<SolidColorBrush x:Key="ContentBackground" Color="White"/>
+	<SolidColorBrush x:Key="FontColor" Color="DarkSlateGray"/>
+	<SolidColorBrush x:Key="PrimaryButtonColor" Color="DodgerBlue"/>
 	<!-- RoundedButton-->
 	<Style x:Key="RoundButton" TargetType="Button">
-		<Setter Property="Background" Value="{StaticResource WhatsappGreen}"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="{StaticResource PrimaryButtonColor}"/>
+		<Setter Property="Foreground" Value="{StaticResource ContentBackground}"/>
 		<Setter Property="Height" Value="40"/>
-		<Setter Property="FontWeight" Value="Light"/>
-		<Setter Property="FontSize" Value="16"/>
+		<Setter Property="FontWeight" Value="DemiBold"/>
+		<Setter Property="FontSize" Value="14"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Button">
-					<Border CornerRadius="18" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="{StaticResource MainBackground}">
+					<Border CornerRadius="20" Background="{TemplateBinding Background}" BorderThickness="0">
 						<Border.Effect>
 							<DropShadowEffect BlurRadius="10" Color="Gray" Opacity="100" Direction="270" ShadowDepth="2"/>
 						</Border.Effect>
@@ -33,13 +26,13 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<EventSetter Event="MouseEnter" Handler="Button_MouseEnter"/>
-		<EventSetter Event="MouseLeave" Handler="Button_MouseLeave"/>
+		<EventSetter Event="MouseEnter" Handler="PrimaryButton_MouseEnter"/>
+		<EventSetter Event="MouseLeave" Handler="PrimaryButton_MouseLeave"/>
 	</Style>
 	<!-- RoundedButton-->
 	<Style x:Key="DotButton" TargetType="Button">
-		<Setter Property="Background" Value="{StaticResource WhatsappGreen}"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="{StaticResource PrimaryButtonColor}"/>
+		<Setter Property="Foreground" Value="{StaticResource FontColor}"/>
 		<Setter Property="Height" Value="50"/>
 		<Setter Property="Width" Value="50"/>
 		<Setter Property="FontWeight" Value="DemiBold"/>
@@ -50,7 +43,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Button">
-					<Border CornerRadius="25" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="{StaticResource MainBackground}">
+					<Border CornerRadius="25" Background="{TemplateBinding Background}" BorderThickness="0" >
 						<Border.Effect>
 							<DropShadowEffect BlurRadius="10" Color="Gray" Opacity="100" Direction="270" ShadowDepth="2"/>
 						</Border.Effect>
@@ -59,34 +52,62 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<EventSetter Event="MouseEnter" Handler="Button_MouseEnter"/>
-		<EventSetter Event="MouseLeave" Handler="Button_MouseLeave"/>
+		<EventSetter Event="MouseEnter" Handler="PrimaryButton_MouseEnter"/>
+		<EventSetter Event="MouseLeave" Handler="PrimaryButton_MouseLeave"/>
 		<EventSetter Event="Click" Handler="DotButton_Click"/>
 	</Style>
-	
+
+	<Style x:Key="BackgroundBorder" TargetType="Border">
+		<Setter Property="Margin" Value="10"/>
+		<Setter Property="Background" Value="{StaticResource ContentBackground}"/>
+		<Setter Property="CornerRadius" Value="20"/>
+	</Style>
+
 	<Style x:Key="DataGrid" TargetType="DataGrid">
-		<Setter Property="Background" Value="{StaticResource LightGrayBackground}"/>
+		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="CanUserResizeRows" Value="False"/>
 		<Setter Property="RowHeaderWidth" Value="0"/>
+		<Setter Property="SelectionMode" Value="Single"/>
 		<Setter Property="FontSize" Value="16"/>
 		<Setter Property="FontWeight" Value="Light"/>
+		<Setter Property="VerticalGridLinesBrush" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource MainBackground}"/>
+		<EventSetter Event="MouseLeftButtonUp" Handler="GiveFocusToCell_Event"/>
 		<Setter Property="ColumnHeaderStyle">
 			<Setter.Value>
-				<Style TargetType="DataGridColumnHeader">
-					<Setter Property="Height" Value="25"/>
-					<Setter Property="Background" Value="{StaticResource WhatsappGreen}"/>
-					<Setter Property="FontSize" Value="15"/>
+				<Style TargetType="{x:Type DataGridColumnHeader}" >
+					<Setter Property="Background" Value="Transparent" />
+					<Setter Property="Foreground" Value="{StaticResource FontColor}" />
+					<Setter Property="BorderBrush" Value="{StaticResource MainBackground}" />
+					<Setter Property="BorderThickness" Value="0,0,0,1"/>
+					<Setter Property="Margin" Value="0" />
+					<Setter Property="Padding" Value="8,0,0,0"/>
+					<Setter Property="Height" Value="32" />
+					<Setter Property="Width" Value="auto"/>
+					<Setter Property="FontSize" Value="14"/>
+					<Setter Property="FontWeight" Value="DemiBold"/>
 					<Setter Property="HorizontalContentAlignment" Value="Left"/>
-					<Setter Property="Padding" Value="10,0,0,0"/>
-					<Setter Property="Foreground" Value="White"/>
-					<Setter Property="FontWeight" Value="Light"/>
-					<Setter Property="BorderBrush" Value="{StaticResource MainBackground}"/>
 				</Style>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="VerticalGridLinesBrush" Value="{StaticResource RHDHVPrimaryBlue}"/>
-		<Setter Property="AlternatingRowBackground" Value="#EDEDED"/>
-		<Setter Property="BorderBrush" Value="{StaticResource MainBackground}"/>
+		<Setter Property="CellStyle">
+			<Setter.Value>
+				<Style TargetType="{x:Type DataGridCell}" >
+					<Setter Property="Background" Value="Transparent" />
+					<Setter Property="Foreground" Value="{StaticResource FontColor}" />
+					<Setter Property="BorderBrush" Value="{StaticResource MainBackground}" />
+					<Setter Property="Margin" Value="8,8,0,0"  />
+					<Setter Property="Height" Value="28" />
+					<Setter Property="Width" Value="auto"/>
+					<Setter Property="FontSize" Value="14"/>
+					<Setter Property="BorderThickness" Value="0"/>
+					<Setter Property="HorizontalContentAlignment" Value="Left"/>
+					<Setter Property="VerticalContentAlignment" Value="Center"/>
+					<Setter Property="VerticalAlignment" Value="Center"/>
+				</Style>
+			</Setter.Value>
+		</Setter>
 	</Style>
 
 	<Style x:Key="BannerTextbox" TargetType="TextBox">
@@ -95,13 +116,13 @@
 		<Setter Property="FontWeight" Value="Light"/>
 		<Setter Property="IsEnabled" Value="True"/>
 		<Setter Property="Height" Value="25"/>
-		<Setter Property="Background" Value="{StaticResource WhatsappGreen}"/>
+		<Setter Property="Background" Value="{StaticResource PrimaryButtonColor}"/>
 		<Setter Property="FontSize" Value="15"/>
 		<Setter Property="HorizontalContentAlignment" Value="Left"/>
 		<Setter Property="Padding" Value="10,0,0,0"/>
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="FontWeight" Value="Light"/>
-		<Setter Property="BorderBrush" Value="{StaticResource WhatsappGreen}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource MainBackground}"/>
 	</Style>
 
 	<Style x:Key="TabItem" TargetType="{x:Type TabItem}">
@@ -112,7 +133,7 @@
 						<Border 
                                 Name="Border"
                                 Margin="0,0,-4,0" 
-                                Background="{StaticResource WhatsappGreen}"
+                                Background="{StaticResource PrimaryButtonColor}"
                                 BorderBrush="{StaticResource  MainBackground}" 
                                 BorderThickness="1,1,1,1" 
                                 CornerRadius="10,10,0,0" >
@@ -127,19 +148,27 @@
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsSelected" Value="True">
 							<Setter Property="Panel.ZIndex" Value="100" />
-							<Setter TargetName="Border" Property="Background" Value="{StaticResource WhatsappGreen}" />
+							<Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryButtonColor}" />
 							<Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
 						</Trigger>
 						<Trigger Property="IsEnabled" Value="False">
-							<Setter TargetName="Border" Property="Background" Value="{StaticResource WhatsappGreen}" />
-							<Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource WhatsappGreen}" />
+							<Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryButtonColor}" />
+							<Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryButtonColor}" />
 							<Setter Property="Foreground" Value="White" />
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="Background" Value="{StaticResource WhatsappGreen}"/>
+		<Setter Property="Background" Value="{StaticResource PrimaryButtonColor}"/>
 		<Setter Property="Foreground" Value="White"/>
 	</Style>
+	<Style x:Key="InstructionLabel" TargetType="Label">
+		<Setter Property="FontSize" Value="16"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Foreground" Value="{StaticResource FontColor}"/>
+		<Setter Property="Margin" Value="10,0,10,0"/>
+	</Style>
+	
+	
 </ResourceDictionary>

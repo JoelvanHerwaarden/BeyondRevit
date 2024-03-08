@@ -32,10 +32,8 @@ namespace BeyondRevit.Commands
             using(Transaction transaction = new Transaction(document, "Link Family Parameters"))
             {
                 transaction.Start();
-#pragma warning disable CS0168 // Variable is declared but never used
                 try
                 {
-                    
                     Reference referenceElement = Utils.GetCurrentSelectionSingleElement(uiDocument, null, "Select Family Instance which parameter you want to link");
                     Element element = document.GetElement(referenceElement);
                     
@@ -51,11 +49,10 @@ namespace BeyondRevit.Commands
                         }
                     }
                 }
-                catch(OperationCanceledException e)
+                catch(OperationCanceledException)
                 {
                     return Result.Succeeded;
                 }
-#pragma warning restore CS0168 // Variable is declared but never used
                 transaction.Commit();
             }
             return Result.Succeeded;
@@ -71,15 +68,23 @@ namespace BeyondRevit.Commands
             int version = int.Parse(element.Document.Application.VersionNumber);
             foreach (Parameter p in element.Parameters)
             {
-
-                Result.Add(string.Format("{0} (Instance) - {1}", p.Definition.Name, p.Id.ToString()) , p);
+                string key = string.Format("{0} (Instance) - {1}", p.Definition.Name, p.Id.ToString());
+                if (!Result.ContainsKey(key))
+                {
+                    Result.Add(key, p);
+                }
             }
             ElementType type = (ElementType)element.Document.GetElement(element.GetTypeId());
             if (type != null)
             {
                 foreach (Parameter p in type.Parameters)
                 {
-                    Result.Add(string.Format("{0} (Type) - {1}", p.Definition.Name, p.Id.ToString()), p);
+
+                    string key = string.Format("{0} (Instance) - {1}", p.Definition.Name, p.Id.ToString());
+                    if (!Result.ContainsKey(key))
+                    {
+                        Result.Add(key, p);
+                    }
                 }
             }
 
@@ -89,54 +94,52 @@ namespace BeyondRevit.Commands
 
         public static FamilyParameter CreateFamilyParameterByParameter(Autodesk.Revit.DB.Document familyDocument, Parameter parameter, Category category = null)
         {
+
             FamilyManager manager = familyDocument.FamilyManager;
             MakeSureThereIsDefaultType(manager);
             bool instance = true;
-            if(typeof(ElementType).IsAssignableFrom(parameter.Element.GetType()))
+
+            if (typeof(ElementType).IsAssignableFrom(parameter.Element.GetType()))
             {
                 instance = false;
             }
             FamilyParameter famparameter = GetFamilyParameterByName(familyDocument, parameter);
             if (famparameter == null)
             {
+                #if Revit2021
                 famparameter = manager.AddParameter(parameter.Definition.Name, parameter.Definition.ParameterGroup, category, instance);
-                //if (category == null)
-                //{
-                //    famparameter = manager.AddParameter(parameter.Definition.Name, parameter.Definition.ParameterGroup, parameter.Definition.ParameterType, instance);
-
-                //}
-                //else
-                //{
-                    
-                //}
-
+                #else
+                famparameter = manager.AddParameter(parameter.Definition.Name, parameter.Definition.GetGroupTypeId(), parameter.Definition.GetDataType(), instance);
+                #endif
             }
+            
             StorageType storageType = parameter.StorageType;
             switch (storageType)
             {
                 case StorageType.Double:
-                    dynamic value = parameter.AsDouble();
+                    dynamic value = (double)parameter.AsDouble();
                     if (value != null)
                     {
-                        manager.Set(famparameter, value);
+                        
+                        manager.Set(famparameter,value);
                     }
                     break;
                 case StorageType.Integer:
-                    value = parameter.AsInteger();
+                    value = (int)parameter.AsInteger();
                     if (value != null)
                     {
                         manager.Set(famparameter, value);
                     }
                     break;
                 case StorageType.ElementId:
-                    value = parameter.AsElementId();
+                    value = (ElementId)parameter.AsElementId();
                     if (value != null)
                     {
                         manager.Set(famparameter, value);
                     }
                     break;
                 case StorageType.String:
-                    value = parameter.AsString();
+                    value = (string)parameter.AsString();
                     if (value != null)
                     {
                         manager.Set(famparameter, value);
@@ -158,11 +161,6 @@ namespace BeyondRevit.Commands
                 {
                     result = famParameter;
                     break;
-                    //if (famParameter.Definition.ParameterType == parameter.Definition.ParameterType &
-                    //    famParameter.Definition.ParameterGroup == parameter.Definition.ParameterGroup)
-                    //{
-                    //    break;
-                    //}
                 }
             }
             return result;

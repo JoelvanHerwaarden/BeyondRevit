@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BeyondRevit.UI"
         mc:Ignorable="d"
-        Title="Automatic Synchronization Settings" Height="410.455" Width="375" WindowStartupLocation="CenterScreen" Background="{DynamicResource ResourceKey=MainBackground}">
+        Title="Automatic Synchronization Settings" Height="340" MinHeight="340" MaxHeight="340" Width="450" WindowStartupLocation="CenterScreen" Background="{DynamicResource ResourceKey=MainBackground}">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -13,38 +13,92 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Window.Resources>
-	<Grid Margin="0,0,0,0">
+	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
+			<RowDefinition Height="15"/>
+			<RowDefinition Height="70"/>
+			<RowDefinition Height="70"/>
+			<RowDefinition Height="70"/>
 			<RowDefinition Height="60"/>
 		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
+		
+		<Border Style="{StaticResource BackgroundBorder}" Grid.ColumnSpan="2" Grid.Column="1"  Grid.Row="1">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="70"/>
+				</Grid.ColumnDefinitions>
+				<Label Content="Save interval in Minutes" FontSize="16" VerticalContentAlignment="Center" Margin="15,0,0,0" Foreground="{DynamicResource FontColor}"/>
+
+				<TextBox x:Name="SaveInterval" Foreground="{DynamicResource FontColor}" 
+					 Margin="0,0,15,0"
+					 BorderThickness="0"
+					 VerticalContentAlignment="Center" 
+					 HorizontalContentAlignment="Left"
+					 Height="25"  
+					 Grid.Column="2"
+					 FontSize="14"
+					 Text="60" 
+					 Cursor="IBeam"
+					 FontWeight="DemiBold" 
+					 TextChanged="NumberCheck_TextChanged"/>
+			</Grid>
+			
+		</Border>
+		<Border Style="{StaticResource BackgroundBorder}" Grid.ColumnSpan="2" Grid.Column="1"  Grid.Row="2">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="70"/>
+				</Grid.ColumnDefinitions>
+				<Label Content="Reload from Central interval in minutes" FontSize="16" VerticalContentAlignment="Center" Margin="15,0,0,0" Foreground="{DynamicResource FontColor}"/>
+
+				<TextBox x:Name="ReloadInterval" Foreground="{DynamicResource FontColor}" 
+					 Margin="0,0,15,0"
+					 BorderThickness="0"
+					 VerticalContentAlignment="Center" 
+					 HorizontalContentAlignment="Left"
+					 Height="25"  
+					 Grid.Column="2"
+					 FontSize="14"
+					 Text="60" 
+					 Cursor="IBeam"
+					 FontWeight="DemiBold" 
+					 TextChanged="NumberCheck_TextChanged"/>
+			</Grid>
+
+		</Border>
+		<Border Style="{StaticResource BackgroundBorder}" Grid.ColumnSpan="2" Grid.Column="1"  Grid.Row="3">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="70"/>
+				</Grid.ColumnDefinitions>
+				<Label Content="Synchronization interval in minutes" FontSize="16" VerticalContentAlignment="Center" Margin="15,0,0,0" Foreground="{DynamicResource FontColor}"/>
+
+				<TextBox x:Name="SyncInterval" Foreground="{DynamicResource FontColor}" 
+					 Margin="0,0,15,0"
+					 BorderThickness="0"
+					 VerticalContentAlignment="Center" 
+					 HorizontalContentAlignment="Left"
+					 Height="25"  
+					 Grid.Column="2"
+					 FontSize="14"
+					 Text="60" 
+					 Cursor="IBeam"
+					 FontWeight="DemiBold" 
+					 TextChanged="NumberCheck_TextChanged"/>
+			</Grid>
+
+		</Border>
+
 		<Button Style="{StaticResource RoundButton}" 
 				Content="Save Sync Settings" 
-				Margin="0,0,10,10" 
-				Height="40"
+				Margin="10" 
 				HorizontalAlignment="Right" 
-				Width="153"
-				Click="Button_Click" Grid.Row="3" VerticalAlignment="Bottom"/>
-		<StackPanel>
-			<TextBox Style="{StaticResource ResourceKey=BannerTextbox}" 
-				 Text="Interval until next Save in Minutes" 
-				 Margin="10,10,10,0" 
-				 VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-			<TextBox x:Name="SaveInterval" Foreground="{StaticResource MainBackground}" Margin="30,10,30,20" FontSize="15" Text="60" FontWeight="DemiBold" TextChanged="NumberCheck_TextChanged"/>
-			<TextBox Style="{StaticResource ResourceKey=BannerTextbox}" 
-				 Text="Interval until next Reload from Central in minutes" 
-				 Margin="10,10,10,0" 
-				 VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-			<TextBox x:Name="ReloadInterval" Foreground="{StaticResource MainBackground}" Margin="30,10,30,20" FontSize="15" Text="60" FontWeight="DemiBold" TextChanged="NumberCheck_TextChanged"/>
-			<TextBox Style="{StaticResource ResourceKey=BannerTextbox}" 
-				 Text="Interval until next Synchronization in minutes" 
-				 Margin="10,10,10,0" 
-				 VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-			<TextBox x:Name="SyncInterval" Foreground="{StaticResource MainBackground}" Margin="30,10,30,20" FontSize="15" Text="60" FontWeight="DemiBold" TextChanged="NumberCheck_TextChanged"/>
-
-		</StackPanel>
+				FontSize="15"
+				Width="150"
+				Click="Button_Click" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"/>
 	</Grid>
+
 </Window>

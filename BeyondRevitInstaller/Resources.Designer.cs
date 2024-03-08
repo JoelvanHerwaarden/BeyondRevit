@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BeyondRevitInstaller {
+namespace EZInstaller {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace BeyondRevitInstaller {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BeyondRevitInstaller.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EZInstaller.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,81 @@ namespace BeyondRevitInstaller {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AddElementsTempIsolate16 {
+            get {
+                object obj = ResourceManager.GetObject("AddElementsTempIsolate16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap alignDimensions_32 {
+            get {
+                object obj = ResourceManager.GetObject("alignDimensions_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AlignElevations16 {
+            get {
+                object obj = ResourceManager.GetObject("AlignElevations16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AlignOffset16 {
+            get {
+                object obj = ResourceManager.GetObject("AlignOffset16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap autoDimension_32 {
+            get {
+                object obj = ResourceManager.GetObject("autoDimension_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap badger {
+            get {
+                object obj = ResourceManager.GetObject("badger", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap badgerSynchro {
+            get {
+                object obj = ResourceManager.GetObject("badgerSynchro", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] _2DRebar4Revit {
+        internal static byte[] BeyondRevit {
             get {
-                object obj = ResourceManager.GetObject("_2DRebar4Revit", resourceCulture);
+                object obj = ResourceManager.GetObject("BeyondRevit", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -73,9 +143,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] _2DRebar4Revit2021 {
+        internal static byte[] BeyondRevit2021 {
             get {
-                object obj = ResourceManager.GetObject("_2DRebar4Revit2021", resourceCulture);
+                object obj = ResourceManager.GetObject("BeyondRevit2021", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -83,9 +153,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] _2DRebar4Revit2022 {
+        internal static byte[] BeyondRevit2022 {
             get {
-                object obj = ResourceManager.GetObject("_2DRebar4Revit2022", resourceCulture);
+                object obj = ResourceManager.GetObject("BeyondRevit2022", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -93,9 +163,19 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] _2DRebar4Revit2023 {
+        internal static byte[] BeyondRevit2023 {
             get {
-                object obj = ResourceManager.GetObject("_2DRebar4Revit2023", resourceCulture);
+                object obj = ResourceManager.GetObject("BeyondRevit2023", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] BeyondRevit2024 {
+            get {
+                object obj = ResourceManager.GetObject("BeyondRevit2024", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -103,9 +183,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BarEnd_16 {
+        internal static System.Drawing.Bitmap CenterElementBetweenPoints16 {
             get {
-                object obj = ResourceManager.GetObject("BarEnd_16", resourceCulture);
+                object obj = ResourceManager.GetObject("CenterElementBetweenPoints16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +193,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BarEnd_32 {
+        internal static System.Drawing.Bitmap CenterElementBetweenPointsPerpendicular16 {
             get {
-                object obj = ResourceManager.GetObject("BarEnd_32", resourceCulture);
+                object obj = ResourceManager.GetObject("CenterElementBetweenPointsPerpendicular16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +203,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BarLayer_32 {
+        internal static System.Drawing.Bitmap commandConsole_32 {
             get {
-                object obj = ResourceManager.GetObject("BarLayer_32", resourceCulture);
+                object obj = ResourceManager.GetObject("commandConsole_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +213,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BarTag_16 {
+        internal static System.Drawing.Bitmap commandLine_32 {
             get {
-                object obj = ResourceManager.GetObject("BarTag_16", resourceCulture);
+                object obj = ResourceManager.GetObject("commandLine_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,9 +223,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BarTag_32 {
+        internal static System.Drawing.Bitmap DetachScopebox16 {
             get {
-                object obj = ResourceManager.GetObject("BarTag_32", resourceCulture);
+                object obj = ResourceManager.GetObject("DetachScopebox16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,9 +233,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bendingSchedule_16 {
+        internal static System.Drawing.Bitmap dimensionCopyOverrides_32 {
             get {
-                object obj = ResourceManager.GetObject("bendingSchedule_16", resourceCulture);
+                object obj = ResourceManager.GetObject("dimensionCopyOverrides_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,9 +243,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bendingSchedule_32 {
+        internal static System.Drawing.Bitmap dimensionDuplicate_32 {
             get {
-                object obj = ResourceManager.GetObject("bendingSchedule_32", resourceCulture);
+                object obj = ResourceManager.GetObject("dimensionDuplicate_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -173,9 +253,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bendingSchedule_excel_32 {
+        internal static System.Drawing.Bitmap dimensionMerge_32 {
             get {
-                object obj = ResourceManager.GetObject("bendingSchedule_excel_32", resourceCulture);
+                object obj = ResourceManager.GetObject("dimensionMerge_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -183,9 +263,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bendingSchedule_html_32 {
+        internal static System.Drawing.Bitmap dimensionRemoveReference_32 {
             get {
-                object obj = ResourceManager.GetObject("bendingSchedule_html_32", resourceCulture);
+                object obj = ResourceManager.GetObject("dimensionRemoveReference_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -193,9 +273,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bug_16 {
+        internal static System.Drawing.Bitmap dimensions_32 {
             get {
-                object obj = ResourceManager.GetObject("bug_16", resourceCulture);
+                object obj = ResourceManager.GetObject("dimensions_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -203,9 +283,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CopyNumberRebars_32 {
+        internal static System.Drawing.Bitmap dimensionSplit_32 {
             get {
-                object obj = ResourceManager.GetObject("CopyNumberRebars_32", resourceCulture);
+                object obj = ResourceManager.GetObject("dimensionSplit_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -213,9 +293,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CreateSectionRebar_32 {
+        internal static System.Drawing.Bitmap dimensionTotal_32 {
             get {
-                object obj = ResourceManager.GetObject("CreateSectionRebar_32", resourceCulture);
+                object obj = ResourceManager.GetObject("dimensionTotal_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -223,9 +303,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CreateSectionRebarNØ_32 {
+        internal static System.Drawing.Bitmap DWGToFamily32 {
             get {
-                object obj = ResourceManager.GetObject("CreateSectionRebarNØ_32", resourceCulture);
+                object obj = ResourceManager.GetObject("DWGToFamily32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -233,9 +313,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CreateSectionRebarØK_32 {
+        internal static System.Drawing.Bitmap filledRegionsMaterial32 {
             get {
-                object obj = ResourceManager.GetObject("CreateSectionRebarØK_32", resourceCulture);
+                object obj = ResourceManager.GetObject("filledRegionsMaterial32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -243,9 +323,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CreateSingleBar_32 {
+        internal static System.Drawing.Bitmap filledRegionsShaded32 {
             get {
-                object obj = ResourceManager.GetObject("CreateSingleBar_32", resourceCulture);
+                object obj = ResourceManager.GetObject("filledRegionsShaded32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -253,9 +333,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap feature_16 {
+        internal static System.Drawing.Bitmap FlipHorizontal16 {
             get {
-                object obj = ResourceManager.GetObject("feature_16", resourceCulture);
+                object obj = ResourceManager.GetObject("FlipHorizontal16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -263,9 +343,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap FlatPlacing_32 {
+        internal static System.Drawing.Bitmap FlipVertical16 {
             get {
-                object obj = ResourceManager.GetObject("FlatPlacing_32", resourceCulture);
+                object obj = ResourceManager.GetObject("FlipVertical16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -273,9 +353,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap help_16 {
+        internal static System.Drawing.Bitmap funfact_16 {
             get {
-                object obj = ResourceManager.GetObject("help_16", resourceCulture);
+                object obj = ResourceManager.GetObject("funfact_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -283,9 +363,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap HorizontalPlacing_32 {
+        internal static System.Drawing.Bitmap hades_32 {
             get {
-                object obj = ResourceManager.GetObject("HorizontalPlacing_32", resourceCulture);
+                object obj = ResourceManager.GetObject("hades_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -293,9 +373,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mandrelImage {
+        internal static System.Drawing.Bitmap JoinCut32 {
             get {
-                object obj = ResourceManager.GetObject("mandrelImage", resourceCulture);
+                object obj = ResourceManager.GetObject("JoinCut32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -303,9 +383,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap rebarAnnotationImage {
+        internal static System.Drawing.Bitmap linkFamilyParameters16 {
             get {
-                object obj = ResourceManager.GetObject("rebarAnnotationImage", resourceCulture);
+                object obj = ResourceManager.GetObject("linkFamilyParameters16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -313,9 +393,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap RebarBrowser_32 {
+        internal static System.Drawing.Bitmap linkFamilyParameters32 {
             get {
-                object obj = ResourceManager.GetObject("RebarBrowser_32", resourceCulture);
+                object obj = ResourceManager.GetObject("linkFamilyParameters32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -323,9 +403,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap rebarImage_32 {
+        internal static System.Drawing.Bitmap MakeElementHalftone16 {
             get {
-                object obj = ResourceManager.GetObject("rebarImage_32", resourceCulture);
+                object obj = ResourceManager.GetObject("MakeElementHalftone16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -333,9 +413,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap relations_32 {
+        internal static System.Drawing.Bitmap ManageTabs_32 {
             get {
-                object obj = ResourceManager.GetObject("relations_32", resourceCulture);
+                object obj = ResourceManager.GetObject("ManageTabs_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -343,9 +423,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap RenumberRebars_32 {
+        internal static System.Drawing.Bitmap MoveAlign32 {
             get {
-                object obj = ResourceManager.GetObject("RenumberRebars_32", resourceCulture);
+                object obj = ResourceManager.GetObject("MoveAlign32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -353,9 +433,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ResetRebarNumbers_32 {
+        internal static System.Drawing.Bitmap MoveOffset16 {
             get {
-                object obj = ResourceManager.GetObject("ResetRebarNumbers_32", resourceCulture);
+                object obj = ResourceManager.GetObject("MoveOffset16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -363,9 +443,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap selection {
+        internal static System.Drawing.Bitmap MoveViewports32 {
             get {
-                object obj = ResourceManager.GetObject("selection", resourceCulture);
+                object obj = ResourceManager.GetObject("MoveViewports32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -373,9 +453,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap SetFavorite_32 {
+        internal static System.Drawing.Bitmap next_32 {
             get {
-                object obj = ResourceManager.GetObject("SetFavorite_32", resourceCulture);
+                object obj = ResourceManager.GetObject("next_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -383,9 +463,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap SetPreferedSectionBar_16 {
+        internal static System.Drawing.Bitmap organizeViews_32 {
             get {
-                object obj = ResourceManager.GetObject("SetPreferedSectionBar_16", resourceCulture);
+                object obj = ResourceManager.GetObject("organizeViews_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -393,9 +473,9 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap settings_32 {
+        internal static System.Drawing.Bitmap organizeViews_321 {
             get {
-                object obj = ResourceManager.GetObject("settings_32", resourceCulture);
+                object obj = ResourceManager.GetObject("organizeViews_321", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -403,9 +483,369 @@ namespace BeyondRevitInstaller {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap VerticalPlacing_32 {
+        internal static System.Drawing.Bitmap pauseSync_32 {
             get {
-                object obj = ResourceManager.GetObject("VerticalPlacing_32", resourceCulture);
+                object obj = ResourceManager.GetObject("pauseSync_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap previous_32 {
+            get {
+                object obj = ResourceManager.GetObject("previous_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RemoveElementOverrides16 {
+            get {
+                object obj = ResourceManager.GetObject("RemoveElementOverrides16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Rotate18016 {
+            get {
+                object obj = ResourceManager.GetObject("Rotate18016", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SectionboxBack32 {
+            get {
+                object obj = ResourceManager.GetObject("SectionboxBack32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SectionboxBottom32 {
+            get {
+                object obj = ResourceManager.GetObject("SectionboxBottom32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SectionboxFront32 {
+            get {
+                object obj = ResourceManager.GetObject("SectionboxFront32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SectionboxLeft32 {
+            get {
+                object obj = ResourceManager.GetObject("SectionboxLeft32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SectionboxRight32 {
+            get {
+                object obj = ResourceManager.GetObject("SectionboxRight32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SectionboxTop32 {
+            get {
+                object obj = ResourceManager.GetObject("SectionboxTop32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllGroupInstancesInProject32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllGroupInstancesInProject32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllGroupInstancesInView32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllGroupInstancesInView32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllGroupInstancesOnSheet32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllGroupInstancesOnSheet32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllInstancesInProject32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllInstancesInProject32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllInstancesInView32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllInstancesInView32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllInstancesOnSheet32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllInstancesOnSheet32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllPartsInProject32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllPartsInProject32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllPartsInView32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllPartsInView32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllTypesInProject32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllTypesInProject32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllTypesInView32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllTypesInView32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectAllTypesOnSheet32 {
+            get {
+                object obj = ResourceManager.GetObject("SelectAllTypesOnSheet32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap selectInstancesInView_32 {
+            get {
+                object obj = ResourceManager.GetObject("selectInstancesInView_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sheetFilters32 {
+            get {
+                object obj = ResourceManager.GetObject("sheetFilters32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap smalldimensions_32 {
+            get {
+                object obj = ResourceManager.GetObject("smalldimensions_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap StackTagHeads16 {
+            get {
+                object obj = ResourceManager.GetObject("StackTagHeads16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap startSync_32 {
+            get {
+                object obj = ResourceManager.GetObject("startSync_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap syncSettings_32 {
+            get {
+                object obj = ResourceManager.GetObject("syncSettings_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Viewport_CreateBreakLines32 {
+            get {
+                object obj = ResourceManager.GetObject("Viewport_CreateBreakLines32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ViewportAlignHorizontalCenter32 {
+            get {
+                object obj = ResourceManager.GetObject("ViewportAlignHorizontalCenter32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ViewportAlignVerticalCenter32 {
+            get {
+                object obj = ResourceManager.GetObject("ViewportAlignVerticalCenter32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ViewportDistributeHorizontal32 {
+            get {
+                object obj = ResourceManager.GetObject("ViewportDistributeHorizontal32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ViewportDistributeVertical32 {
+            get {
+                object obj = ResourceManager.GetObject("ViewportDistributeVertical32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ViewportHideCropRegion {
+            get {
+                object obj = ResourceManager.GetObject("ViewportHideCropRegion", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ViewportHideCropRegion32 {
+            get {
+                object obj = ResourceManager.GetObject("ViewportHideCropRegion32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ViewportOpenViews32 {
+            get {
+                object obj = ResourceManager.GetObject("ViewportOpenViews32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ViewportShowCropRegion32 {
+            get {
+                object obj = ResourceManager.GetObject("ViewportShowCropRegion32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap worksetFilters32 {
+            get {
+                object obj = ResourceManager.GetObject("worksetFilters32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

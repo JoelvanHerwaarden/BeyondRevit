@@ -5,24 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BeyondRevit.UI"
         mc:Ignorable="d"
-        Title="SplashScreen" Height="450" Width="800" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="None" Background="Transparent" ResizeMode="NoResize">
+        Title="SplashScreen" Height="450" Width="800" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="None" Background="{DynamicResource MainBackground}" ResizeMode="NoResize">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/BeyondRevit;component/Resources/Styles.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+	
 	<Grid>
 		<StackPanel Panel.ZIndex="3" VerticalAlignment="Center">
-            <Label Content="Beyond Revit" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="100" Foreground="DarkSlateGray" FontWeight="ExtraLight" FontFamily="Segoe UI" Panel.ZIndex="3" />
-            <Label Content="Did you know?" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" Foreground="DarkSlateGray" FontWeight="Bold" FontFamily="Segoe UI" Panel.ZIndex="3" />
-            <TextBlock x:Name="FactLabel" Text="" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Foreground="DarkSlateGray" FontWeight="Normal" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="20"  Panel.ZIndex="3" />
+            <Label Content="Beyond Revit" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="100" Foreground="{DynamicResource MainBackground}" FontWeight="ExtraLight" FontFamily="Segoe UI" Panel.ZIndex="3" />
+            <Label Content="Did you know?" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" Foreground="{DynamicResource MainBackground}" FontWeight="Bold" FontFamily="Segoe UI" Panel.ZIndex="3" />
+            <TextBlock x:Name="FactLabel" Text="" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Foreground="{DynamicResource MainBackground}" FontWeight="Normal" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="20"  Panel.ZIndex="3" />
 		</StackPanel>
 		<Border>
 			<Border.Background>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+					<GradientStop Color="#ff7b42" Offset="0"/>
+					<GradientStop Color="#f7665e" Offset="1" />
+				</LinearGradientBrush>
+			</Border.Background>
+
+		</Border>
+		<!--<Border>
+			<Border.Background>
 				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="Azure" Offset="0.4" />
+					<GradientStop Color="Azure" Offset="0.4" />
 					<GradientStop Color="LightBlue" Offset="1.1" />
 				</LinearGradientBrush>
 			</Border.Background>
-			<Border.CornerRadius>
-				<CornerRadius BottomLeft="0" BottomRight="0" TopLeft="0" TopRight="0"/>
-			</Border.CornerRadius>
-			
-		</Border>
+
+		</Border>-->
     </Grid>
 </Window>

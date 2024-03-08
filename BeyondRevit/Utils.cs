@@ -20,6 +20,42 @@ namespace BeyondRevit
 {
     public class Utils
     {
+        public static void RawCreateProjectParameter(Autodesk.Revit.ApplicationServices.Application app, Document document, string name, bool visible, CategorySet cats, BuiltInParameterGroup group, bool inst)
+        {
+#if Revit2021
+            
+            ParameterType type = ParameterType.Text;
+#else
+            ForgeTypeId type = SpecTypeId.String.Text;
+#endif
+            IList <Element> parameters = new FilteredElementCollector(document).OfClass(typeof(SharedParameterElement)).Where(e => e.Name == name).ToList();
+            if(parameters.Count > 0)
+            {
+                return;
+            }
+            string oriFile = app.SharedParametersFilename;
+            string tempFile = Path.GetTempFileName() + ".txt";
+            using (File.Create(tempFile)) { }
+            app.SharedParametersFilename = tempFile;
+
+            var defOptions = new ExternalDefinitionCreationOptions(name, type)
+            {
+                Visible = visible
+            };
+            ExternalDefinition def = app.OpenSharedParameterFile().Groups.Create("TemporaryDefintionGroup").Definitions.Create(defOptions) as ExternalDefinition;
+
+            app.SharedParametersFilename = oriFile;
+            File.Delete(tempFile);
+
+            Autodesk.Revit.DB.Binding binding = app.Create.NewTypeBinding(cats);
+            if (inst) binding = app.Create.NewInstanceBinding(cats);
+
+            BindingMap map = (new UIApplication(app)).ActiveUIDocument.Document.ParameterBindings;
+            if (!map.Insert(def, binding, group))
+            {
+                Utils.Show($"Failed to create Project parameter '{name}' :(");
+            }
+        }
         public static Dictionary<string, dynamic> SortDictionary(Dictionary<string, dynamic> dictionary)
         {
             Dictionary<string, dynamic> result = new Dictionary<string, dynamic>();
@@ -328,8 +364,9 @@ namespace BeyondRevit
             return result;
         }
 
-        public static void SketchplaneByView(Autodesk.Revit.DB.View view)
+        public static SketchPlane SketchplaneByView(Autodesk.Revit.DB.View view)
         {
+            SketchPlane result = null;
             List<ViewType> forbiddenViewTypes = new List<ViewType>
             {
                 ViewType.Detail,
@@ -343,7 +380,7 @@ namespace BeyondRevit
             Document doc = view.Document;
             if (forbiddenViewTypes.Contains(view.ViewType))
             {
-                return;
+                return null;
             }
             try
             {
@@ -353,6 +390,7 @@ namespace BeyondRevit
                     Plane plane = PlaneByView(view);
                     SketchPlane sp = SketchPlane.Create(view.Document, plane);
                     view.SketchPlane = sp;
+                    result = sp;
                     t.Commit();
                 }
             }
@@ -365,9 +403,11 @@ namespace BeyondRevit
                     Plane plane = PlaneByView(view);
                     SketchPlane sp = SketchPlane.Create(view.Document, plane);
                     view.SketchPlane = sp;
+                    result = sp;
                     t.Commit();
                 }
             }
+            return result;
             
 
         }
@@ -377,6 +417,20 @@ namespace BeyondRevit
 
             Plane plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin);
             return plane;
+        }
+        public static string SetupFile(string filepath)
+        {
+            string directory = Path.GetDirectoryName(filepath);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            if (!File.Exists(filepath))
+            {
+                FileStream fs = File.Create(filepath);
+                fs.Close();
+            };
+            return filepath;
         }
 
 #region UnitConversion
@@ -473,7 +527,89 @@ namespace BeyondRevit
             }
 
         }
-#endregion
+
+        public class TypeSelectionFilter : ISelectionFilter
+        {
+            public List<Type> Types = null;
+            public bool AllowTypes = true;
+
+            public TypeSelectionFilter(Document doc, List<Type> types, bool allow = true)
+            {
+                AllowTypes = allow;
+                Types = types;
+            }
+
+            public bool AllowElement(Element elem)
+            {
+                if (elem is null) return false;
+                if (elem.Category is null) return false;
+                if (AllowTypes)
+                {
+                    if (Types.Contains(elem.GetType()))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (!Types.Contains(elem.GetType()))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            public bool AllowReference(Reference reference, XYZ position)
+            {
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// A Element Filter class where you create the class with a Set of Elements. The Filter will filter out all the other elements.
+        /// e.g. Select all the Generic models in a View and create this filter with them. Then use this filter in a FilteredElementCollector 
+        /// in the same view and you will get all the elements except the generic models.
+        /// </summary>
+        public class ElementCloudSelectionFilter : ISelectionFilter
+        {
+            public IList<ElementId> Elements = null;
+            public bool AllowTypes = true;
+
+            /// <summary>
+            /// Create a Exclusion Filter for a Set of Elements. All elements will pass if they are not in the Exclusion List.
+            /// </summary>
+            /// <param name="doc"></param>
+            /// <param name="elementsToExclude"> Elements to Exclude </param>
+            public ElementCloudSelectionFilter(Document doc, IList<Element> elementsToExclude)
+            {
+                Elements = new List<ElementId>();
+                foreach (Element reference in elementsToExclude)
+                {
+                    Elements.Add(reference.Id); 
+                }
+            }
+
+            public bool AllowElement(Element elem)
+            {
+
+                if (elem is null) return false;
+                if (elem.Category is null) return false;
+                if (!Elements.Contains(elem.Id))
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            public bool AllowReference(Reference reference, XYZ position)
+            {
+                return false;
+            }
+
+        }
+        #endregion
 
     }
 }

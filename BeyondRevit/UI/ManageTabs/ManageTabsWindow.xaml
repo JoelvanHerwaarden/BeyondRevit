@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BeyondRevit.UI"
         mc:Ignorable="d"
-        Title="Manage Addin Tabs" Height="400" Width="250" WindowStartupLocation="CenterScreen" Background="{DynamicResource ResourceKey=MainBackground}">
+        Title="Manage Addin Tabs" Height="600" Width="400" WindowStartupLocation="CenterScreen" Background="{DynamicResource ResourceKey=MainBackground}">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -13,22 +13,28 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Window.Resources>
-	<Grid Margin="0,0,0,0">
-		<Button Style="{StaticResource RoundButton}" 
+	<Grid >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50" />
+			<RowDefinition Height= "*" />
+			<RowDefinition Height="60" />
+		</Grid.RowDefinitions>
+		<Label Content="Select Tabs to Hide" FontSize="16" VerticalContentAlignment="Center" Margin="10,0,10,0" Foreground="{StaticResource FontColor}" Grid.ColumnSpan="3" />
+
+		<Button Grid.Row="2" Style="{StaticResource RoundButton}" 
 				IsDefault="True"
 				Content="OK" 
-				Margin="0,0,10,10" 
+				Margin="0,0,25,10" 
 				Height="40"
 				HorizontalAlignment="Right" 
-				Width="153"
+				Width="100"
 				Click="Button_Click" VerticalAlignment="Bottom"/>
-		<ScrollViewer Margin="10,47,10,55" VerticalScrollBarVisibility="Hidden">
-
-
-			<StackPanel x:Name="stackPanel" x:FieldModifier="public"/>
-		</ScrollViewer>
-		<TextBox Style="{StaticResource BannerTextbox}" 
-				 Margin="10,17,10,0"
-				 Text="Select Tabs to Hide" Height="25" VerticalAlignment="Top"/>
+		<Border Style="{StaticResource BackgroundBorder}" Grid.Row="1">
+			<ScrollViewer Grid.Row="1" Margin="0" VerticalScrollBarVisibility="Hidden">
+					<StackPanel x:Name="stackPanel" x:FieldModifier="public"/>
+				</ScrollViewer>
+				
+		</Border>
+		
 	</Grid>
 </Window>

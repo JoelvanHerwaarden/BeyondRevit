@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using BeyondRevit.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace BeyondRevit.Hades
         {
             Document doc = commandData.Application.ActiveUIDocument.Document;
             IList<ElementId> unplacedViews = PurgeUnplacedViewsUtils.GetUnplacedViews(doc);
+            IList<dynamic> unplacedViewsToDelete = new List<dynamic>();
+
             if (unplacedViews.Count == 0)
             {
                 if (prompt)
@@ -39,19 +42,36 @@ namespace BeyondRevit.Hades
 
                 if (result == TaskDialogResult.Yes)
                 {
-                    using (Transaction t = new Transaction(doc, "Purging Unplaced Views"))
+                    unplacedViewsToDelete = (List<dynamic>)unplacedViews;
+                    
+                }
+                else if (result == TaskDialogResult.Retry) 
+                {
+                    Dictionary<string, dynamic> map = new Dictionary<string, dynamic>();
+                    foreach(ElementId id in unplacedViews)
                     {
-                        t.Start();
-                        foreach (ElementId id in unplacedViews)
-                        {
-                            try
-                            {
-                                doc.Delete(id);
-                            }
-                            catch { }
-                        }
-                        t.Commit();
+                        View v = (View)doc.GetElement(id);
+                        map.Add(v.Name + " - " +v.Id, id);   
                     }
+                    GenericDropdownWindow window = new GenericDropdownWindow("Select Views", "Select unused views to delete", map, Utils.RevitWindow(commandData), true);
+                    window.ShowDialog();
+                    if (!window.Cancelled)
+                    {
+                        unplacedViewsToDelete = window.SelectedItems;
+                    }
+                }
+                using (Transaction t = new Transaction(doc, "Purging Unplaced Views"))
+                {
+                    t.Start();
+                    foreach (ElementId id in unplacedViewsToDelete)
+                    {
+                        try
+                        {
+                            doc.Delete(id);
+                        }
+                        catch { }
+                    }
+                    t.Commit();
                 }
             }
         }

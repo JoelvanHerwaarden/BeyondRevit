@@ -17,32 +17,37 @@
 			<RowDefinition/>
 			<RowDefinition Height="60"/>
 		</Grid.RowDefinitions>
-		<DataGrid Grid.Row="0" Margin="10" 
-				  ItemsSource="{Binding Views}"
+
+		<Border Style="{StaticResource BackgroundBorder}">
+
+			<DataGrid Grid.Row="0" Margin="15" 
+					  
+				ItemsSource="{Binding Views}"
 				  AutoGenerateColumns="False"
 				  Style="{StaticResource DataGrid}">
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="Original View Name"
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Original View Name"
 									IsReadOnly="True"
 									Binding="{Binding Path=ViewName, Mode=OneTime}" 
 									Width="*" 
-									Foreground="Gray"/>
+									Foreground="{StaticResource FontColor}"/>
 
-				<DataGridTextColumn Header="New View Name"
+					<DataGridTextColumn Header="New View Name"
 									IsReadOnly="False"
 									Binding="{Binding Path=ViewName, Mode=TwoWay}" 
 									Width="*"/>
-				<DataGridTextColumn Header="View Title"
+					<DataGridTextColumn Header="View Title"
 									IsReadOnly="False"
 									Binding="{Binding Path=ViewTitle, Mode=TwoWay}" 
 									Width="*"/>
-				<DataGridTextColumn Header="View Number"
+					<DataGridTextColumn Header="View Number"
 									IsReadOnly="False"
 									Binding="{Binding Path=ViewNumber, Mode=TwoWay}" 
 									Width="*"/>
-			</DataGrid.Columns>
-		</DataGrid>
-		<Button Grid.Row="1" Style="{StaticResource RoundButton}" Content="Submit" Margin="0,10,10,10" HorizontalAlignment="Right" Width="120" Click="Button_Click"/>
-		<Button Grid.Row="1" Style="{StaticResource RoundButton}" Content="Check Sheet" Margin="10,10,0,10" Click="Pan_Click" HorizontalAlignment="Left" Visibility="Hidden"  Width="120"/>
+				</DataGrid.Columns>
+			</DataGrid>
+		</Border>
+		<Button Grid.Row="1" Style="{StaticResource RoundButton}" Content="Submit" Margin="10" HorizontalAlignment="Right" Width="120" Click="Button_Click"/>
+		<Button Grid.Row="1" Style="{StaticResource RoundButton}" Content="Check Sheet" Margin="10" Click="Pan_Click" HorizontalAlignment="Left" Visibility="hidden"  Width="120"/>
 	</Grid>
 </Window>

@@ -1025,18 +1025,6 @@ namespace BeyondRevit.Commands
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class BirdToolsHack : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            //Utils.Show(BirdTagAlignmentTool.entt.ToString());
-            //BirdTagAlignmentTool.entt = 1;
-            return Result.Succeeded;
-        }
-    }
-
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
     public class AlignTagsAndNotes : IExternalCommand
     {
         internal sealed class SelectionFilterElevationTags : ISelectionFilter
@@ -1225,31 +1213,6 @@ namespace BeyondRevit.Commands
         }
     }
 
-    [Transaction(TransactionMode.Manual)]
-    [Regeneration(RegenerationOption.Manual)]
-    public class IsolateCurrentWorkset : IExternalCommand
-    {
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
-        {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document document = uidoc.Document;
-            WorksetTable table = document.GetWorksetTable();
-            WorksetId activeId = table.GetActiveWorksetId();
-
-            using (Transaction transaction = new Transaction(document, "Create Connections"))
-            {
-                transaction.Start();
-                ElementWorksetFilter worksetFilter = new ElementWorksetFilter(activeId);
-                View activeView = document.ActiveView;
-                FilteredElementCollector collector = new FilteredElementCollector(document, activeView.Id).WherePasses(worksetFilter);
-                List<ElementId> elementsInWorkset = collector.ToElementIds().ToList();
-                activeView.IsolateElementsTemporary(elementsInWorkset);
-            }
-            return Result.Succeeded;
-        }
-
-    }
-
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -1323,7 +1286,9 @@ namespace BeyondRevit.Commands
 
     
 
-    
+
+
+
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -2393,6 +2358,103 @@ namespace BeyondRevit.Commands
             return Result.Succeeded;
         }
     }
+
+    //[Transaction(TransactionMode.Manual)]
+    //[Regeneration(RegenerationOption.Manual)]
+    //public class SelectAdaptivePoints : IExternalCommand
+    //{
+    //    public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+    //    {
+    //        UIDocument uidoc = commandData.Application.ActiveUIDocument;
+    //        Autodesk.Revit.DB.Document doc = uidoc.Document;
+    //        Utils.GetCurrentSelection(uidoc, new Utils.CategorySelectionFilter(doc,
+    //            new List<BuiltInCategory>() { BuiltInCategory.OST_GenericModel }, true),
+    //            "Select Adaptive Components");
+    //        GenericDropdownWindow window = new GenericDropdownWindow("Select Adaptive Points", "Select Adaptive Points", map, Utils.RevitWindow(commandData), false);
+    //        window.ShowDialog();
+    //        if (window.Cancelled)
+    //        {
+    //            return Result.Cancelled;
+    //        }
+    //        return Result.Succeeded;
+    //    }
+    //}
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CopyViewSettings : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Autodesk.Revit.DB.Document doc = uidoc.Document;
+            View targetView = doc.ActiveView;
+            IList<Element> views = new FilteredElementCollector(doc).OfClass(typeof(View)).ToElements();
+            Dictionary<string, dynamic> map = new Dictionary<string, dynamic>();
+            foreach (View view in views)
+            {
+                map.Add(view.Name + " - " + view.Id.ToString(), view);
+            }
+            GenericDropdownWindow window = new GenericDropdownWindow("Copy View Settings", "Select Source View", map, Utils.RevitWindow(commandData), false);
+            window.ShowDialog();
+            if (window.Cancelled)
+            {
+                return Result.Cancelled;
+            }
+            View sourceView = window.SelectedItems.First() as View;
+            if (sourceView.ViewTemplateId != ElementId.InvalidElementId)
+            {
+                sourceView = (View)doc.GetElement(sourceView.ViewTemplateId);
+            }
+            using (Transaction trans = new Transaction(doc, "Copy workset Overrides"))
+            {
+                trans.Start();
+                foreach (Category cat in doc.Settings.Categories)
+                {
+                    if (targetView.CanCategoryBeHidden(cat.Id))
+                    {
+                        targetView.SetCategoryHidden(cat.Id, sourceView.GetCategoryHidden(cat.Id));
+                        targetView.SetCategoryOverrides(cat.Id, sourceView.GetCategoryOverrides(cat.Id));
+                    }
+                }
+                foreach (ElementId filterId in sourceView.GetFilters())
+                {
+                    targetView.SetFilterOverrides(filterId, sourceView.GetFilterOverrides(filterId));
+                    targetView.SetFilterVisibility(filterId, sourceView.GetFilterVisibility(filterId));
+                    targetView.SetIsFilterEnabled(filterId, sourceView.GetIsFilterEnabled(filterId));
+                }
+                try
+                {
+
+                    targetView.SetViewDisplayModel(sourceView.GetViewDisplayModel());
+                }
+                catch { }
+                try
+                {
+
+                    targetView.SetSketchyLines(sourceView.GetSketchyLines());
+                }
+                catch { }
+                try
+                {
+
+                    targetView.SetDepthCueing(sourceView.GetDepthCueing());
+                }
+                catch { }
+                ICollection<WorksetId> worksets = new FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToWorksetIds();
+                foreach (WorksetId worksetId in worksets)
+                {
+                    WorksetVisibility visibility = sourceView.GetWorksetVisibility(worksetId);
+                    targetView.SetWorksetVisibility(worksetId, visibility);
+                }
+
+                trans.Commit();
+            }
+            return Result.Succeeded;
+        }
+    }
+
+
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class CopyTagText : IExternalCommand
@@ -2426,6 +2488,7 @@ namespace BeyondRevit.Commands
             }
         }
     }
+
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]

@@ -183,10 +183,14 @@ namespace BeyondRevit.Commands
         public static void SaveAllDocuments(UIApplication app)
         {
             DocumentSet documents = app.Application.Documents;
+            
             SaveOptions saveOptions = new SaveOptions();
             foreach (Document doc in documents)
             {
-                doc.Save(saveOptions);
+                if (doc.PathName != "" && !doc.IsLinked)
+                {
+                    doc.Save(saveOptions);
+                }
             }
         }
 
@@ -200,7 +204,7 @@ namespace BeyondRevit.Commands
             };
             foreach (Document doc in documents)
             {
-                if (doc.IsWorkshared)
+                if (doc.IsWorkshared && !doc.IsLinked)
                 {
                     doc.SynchronizeWithCentral(transOptions, options);
                 }
@@ -213,7 +217,7 @@ namespace BeyondRevit.Commands
             ReloadLatestOptions options = new ReloadLatestOptions();
             foreach (Document doc in documents)
             {
-                if (doc.IsWorkshared && !doc.HasAllChangesFromCentral())
+                if (doc.IsWorkshared && !doc.HasAllChangesFromCentral() && !doc.IsLinked)
                 {
                     doc.ReloadLatest(options);
                 }

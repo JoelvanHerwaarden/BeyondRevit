@@ -25,7 +25,8 @@ namespace EZInstaller
         public EZInstallerWindow()
         {
             InitializeComponent();
-            EZInstallerViewModel viewmodel = new EZInstallerViewModel("2DRebar4Revit", "You hereby agree that you will only use the 2DRebar4Revit add-in, which is developed by HaskoningDHV Nederland b.v. (further mentioned as “RHDHV”), for the “'Oosterweel” Project.\n\nDuring project you are allowed to use the Addin for free to make reinforcement drawings. 2DRebar4Revit may therefore only be used for this project.\n\nYou acknowledge our intellectual property rights to 2DRebar4Revit. These property rights are and shall remain vested in us, and you shall refrain from any action that could prejudice these rights.\n\nRHDHV cannot be held liable in any way for the operation of 2DRebar4Revit, nor for the results produced with 2DRebar4Revit, because you use 2DRebar4Revit under the delivery condition 'actual state in which the service is then' ('as is').\n\nOur liability in the event of a shortcoming attributable to us is limited to a maximum amount of €10,000.", true, new List<string>() { "Revit"});
+            bool showDisclaimer = false;
+            EZInstallerViewModel viewmodel = new EZInstallerViewModel("Beyond Revit", "", showDisclaimer, new List<string>() { "Revit"});
             this.DataContext = viewmodel;
             this.StartView.DataContext = viewmodel;
             this.InstallationView.DataContext = viewmodel;
@@ -35,7 +36,14 @@ namespace EZInstaller
                 this.NextButton.Visibility = Visibility.Hidden;
                 this.KillProgramsButton.Visibility = Visibility.Visible;
             }
-            Status = 0;
+            if (showDisclaimer)
+            {
+                Status = 0;
+            }
+            else
+            {
+                Status = 1;
+            }
         }
 
         private async void NextButton_Click(object sender, RoutedEventArgs e)
@@ -52,6 +60,7 @@ namespace EZInstaller
                     break;
 
                 case 1:
+                    this.StartView.Visibility = Visibility.Hidden;
                     this.LicenseView.Visibility = Visibility.Hidden;
                     this.licenseLabel.FontWeight = FontWeights.Light;
                     this.installationLabel.FontWeight = FontWeights.DemiBold;

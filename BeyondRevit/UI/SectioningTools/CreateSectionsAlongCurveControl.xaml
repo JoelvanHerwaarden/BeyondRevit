@@ -1,0 +1,101 @@
+﻿<UserControl
+    x:Class="BeyondRevit.UI.CreateSectionsAlongCurveControl"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="using:BeyondRevit.UI"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/BeyondRevit;component/Resources/Styles.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid Background="White">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="60"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="60"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Label Style="{StaticResource InstructionLabel}" Content="Nothing Selected" Grid.Column="1"/>
+		<Button Style="{StaticResource RoundButton}" HorizontalAlignment="Left" Margin="10" Width="150" Content="Select Section Path" Grid.Column="0"/>
+		<Label Style="{StaticResource InstructionLabel}" Grid.Row="1" Content="View name prefix"/>
+		<Label Style="{StaticResource InstructionLabel}" Grid.Row="2" Content="Starting Number"/>
+		<Label Style="{StaticResource InstructionLabel}" Grid.Row="3" Content="Section Frequency"/>
+		<TextBox Grid.Row="1" Text="{Binding ViewNamePrefix}" x:Name="ViewNamePrefixTextbox" Grid.Column="1" MaxLines="1" Margin="10,5,10,5" />
+		<TextBox Grid.Row="2" x:Name="StartingNumberTextbox" Grid.Column="1" MaxLines="1" Margin="10,5,10,5" PreviewTextInput="NumbersOnlyInput"/>
+		<TextBox Grid.Row="3" x:Name="RequencyTextbox" Grid.Column="1" MaxLines="1" Margin="10,5,10,5" PreviewTextInput="NumbersOnlyInput"/>
+		<Grid Margin="10,0,10,0" Grid.Row="4" Grid.RowSpan="2" Grid.ColumnSpan="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="30*"/>
+				<ColumnDefinition Width="30*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="35"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+				<Label Content="Width Left" VerticalAlignment="Center" Foreground="{StaticResource FontColor}"/>
+				<TextBox x:Name="WidthLeftTextbox" MaxLines="1" Width="100" Text="1000" Margin="20,5,0,5" HorizontalContentAlignment="Center" PreviewTextInput="NumbersOnlyInput"/>
+			</StackPanel>
+			<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+				<Label Content="Width Right" VerticalAlignment="Center" Foreground="{StaticResource FontColor}"/>
+				<TextBox x:Name="WidthRightTextbox" MaxLines="1" Width="100" Text="1000"  Margin="20,5,0,5" HorizontalContentAlignment="Center" PreviewTextInput="NumbersOnlyInput"/>
+			</StackPanel>
+			<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+				<Label Content="Top Offset" VerticalAlignment="Center" Foreground="{StaticResource FontColor}">
+					<Label.LayoutTransform>
+						<RotateTransform Angle="-90" />
+					</Label.LayoutTransform>
+				</Label>
+				<TextBox x:Name="TopOffsetTextbox" MaxLines="1" Width="100" Text="1000" Margin="0,0,0,0" HorizontalContentAlignment="Center" PreviewTextInput="NumbersOnlyInput">
+					<TextBox.LayoutTransform>
+						<RotateTransform Angle="-90" />
+					</TextBox.LayoutTransform>
+				</TextBox>
+			</StackPanel>
+			<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+				<Label Content="Bottom Offset" VerticalAlignment="Center" Foreground="{StaticResource FontColor}">
+					<Label.LayoutTransform>
+						<RotateTransform Angle="-90" />
+					</Label.LayoutTransform>
+				</Label>
+				<TextBox x:Name="BottomOffsetTextbox" MaxLines="1" Width="100" Text="1000" Margin="0,0,0,0" HorizontalContentAlignment="Center" PreviewTextInput="NumbersOnlyInput">
+					<TextBox.LayoutTransform>
+						<RotateTransform Angle="-90" />
+					</TextBox.LayoutTransform>
+				</TextBox>
+			</StackPanel>
+
+			<Border Grid.Row="1" Grid.Column="1" BorderBrush="DodgerBlue" BorderThickness="3,3,1,1"/>
+			<Border Grid.Row="1" Grid.Column="2" BorderBrush="DodgerBlue" BorderThickness="1,3,3,1"/>
+			<Border Grid.Row="2" Grid.Column="1" BorderBrush="DodgerBlue" BorderThickness="3,1,1,3"/>
+			<Border Grid.Row="2" Grid.Column="2" BorderBrush="DodgerBlue" BorderThickness="1,1,3,3"/>
+			<Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Panel.ZIndex="5" Background="red" Width="15" Height="15" CornerRadius="7.5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			<Label Content="Curve Center" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+		</Grid>
+		<Label Style="{StaticResource InstructionLabel}" Grid.Row="6" Content="View Depth"/>
+		<TextBox Grid.Row="6" x:Name="ViewDepthTextbox" Grid.Column="1" MaxLines="1" Margin="10,5,10,5" PreviewTextInput="NumbersOnlyInput"/>
+		<Label Style="{StaticResource InstructionLabel}" Grid.Row="7" Content="Flip Section Path"/>
+		<CheckBox Grid.Row="7" Grid.Column="1" x:Name="FlipSectionPath" VerticalContentAlignment="Center" Margin="10"/>
+		<Label Style="{StaticResource InstructionLabel}" Grid.Row="8" Content="Flip Section viewing direction"/>
+		<CheckBox Grid.Row="8" Grid.Column="1" x:Name="FlipSectionDirection" VerticalContentAlignment="Center" Margin="10"/>
+
+		<Button Style="{StaticResource RoundButton}" Width="150" Grid.Column="1" Grid.Row="9" HorizontalAlignment="Right" Content="Create" Margin="10" Click="Button_Click"/>
+	</Grid>
+</UserControl>

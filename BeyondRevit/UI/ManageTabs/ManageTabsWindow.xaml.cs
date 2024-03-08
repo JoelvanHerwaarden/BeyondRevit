@@ -68,8 +68,9 @@ namespace BeyondRevit.UI
                 {
                     Content = tab.Name,
                     IsChecked = check,
+                    FontSize=14,
                     Foreground = (Brush)new BrushConverter().ConvertFrom(" #00BFA5"),
-                    Margin = new Thickness(10),
+                    Margin = new Thickness(20,20,20,0),
                     FontWeight = FontWeights.DemiBold
                 };
                 stackPanel.Children.Add(cb);

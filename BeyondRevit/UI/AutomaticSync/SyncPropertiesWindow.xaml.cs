@@ -25,9 +25,12 @@ namespace BeyondRevit.UI
         {
             InitializeComponent();
             BeyondRevit.Commands.SynchronisationConfig config = BeyondRevit.Commands.SynchronisationConfig.Current;
-            this.SaveInterval.Text = config.SaveInterval.ToString();
-            this.ReloadInterval.Text = config.ReloadLatestInterval.ToString();
-            this.SyncInterval.Text = config.SyncInterval.ToString();
+            if (config != null)
+            {
+                this.SaveInterval.Text = config.SaveInterval.ToString();
+                this.ReloadInterval.Text = config.ReloadLatestInterval.ToString();
+                this.SyncInterval.Text = config.SyncInterval.ToString();
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -35,14 +38,22 @@ namespace BeyondRevit.UI
             try
             {
                 BeyondRevit.Commands.SynchronisationConfig config = BeyondRevit.Commands.SynchronisationConfig.Current;
-                int saveInt = int.Parse(this.SaveInterval.Text);
-                int reloadInt = int.Parse(this.ReloadInterval.Text);
-                int syncInt = int.Parse(this.SyncInterval.Text);
-                config.SaveInterval = saveInt;
-                config.ReloadLatestInterval = reloadInt;
-                config.SyncInterval = syncInt;
-                config.UpdateSettings();
-                config.SaveConfigSettings();
+                if(config != null)
+                {
+                    int saveInt = int.Parse(this.SaveInterval.Text);
+                    int reloadInt = int.Parse(this.ReloadInterval.Text);
+                    int syncInt = int.Parse(this.SyncInterval.Text);
+                    config.SaveInterval = saveInt;
+                    config.ReloadLatestInterval = reloadInt;
+                    config.SyncInterval = syncInt;
+                    config.UpdateSettings();
+                    config.SaveConfigSettings();
+                }
+                else
+                {
+                    Utils.Show("Settings could not be saved");
+                }
+                
                 this.Close();
             }
             catch

@@ -247,6 +247,8 @@ namespace BeyondRevit.Commands
     }
 
 
+
+
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class SwitchJoinOrder : IExternalCommand

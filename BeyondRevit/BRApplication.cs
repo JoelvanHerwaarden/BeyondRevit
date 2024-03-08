@@ -23,14 +23,16 @@ namespace BeyondRevit
     {
         private static string BeyondRevitVersion = "2.0";
         private static RibbonPanel BeyondRevitPanel { get; set; }
+        private static RibbonPanel BatcherPanel { get; set; }
         private static RibbonPanel SheetPanel { get; set; }
         private static RibbonPanel HadesPanel { get; set; }
         private static RibbonPanel FactsPanel { get; set; }
         private static RibbonPanel SelectionPanel { get; set; }
-        private static RibbonPanel DimensionsPanel { get; set; }
+        private static RibbonPanel AnnotationsPanel { get; set; }
         private static RibbonPanel SectionboxWorkplanes { get; set; }
         private static RibbonPanel SyncPanel { get; set; }
         private static RibbonPanel ModifyPanel { get; set; }
+        private static RibbonPanel FamiliesPanel { get; set; }
         private static RibbonPanel QuickCommandPanel { get; set; }
         public static PushButton CommandLineButton { get; set; }
         public static PushButton OrganizeViewsButton { get; set; }
@@ -60,6 +62,68 @@ namespace BeyondRevit
             #region BeyondRevitPanel
             PushButton gotoBeyondRevit = CreateRibbonButton("Beyond Revit", "GoToBeyondRevit", "BeyondRevit.GoToBeyondRevit", BeyondRevitPanel, null, "Activate the Beyond Revit Tab.\nYou can assign a shortkey to this command and on executing the short key, Revit will jump to Beyon Revit");
             #endregion
+            #region BatcherPanel
+            string[] batchertitles = new List<string>()
+            {
+                "Batch Open Models (RTV)",
+                "Batch Export Synchro Files (RTV)",
+                "Batch Sync All Open Models"
+            }.ToArray();
+            string[] batcherbuttonNames = new List<string>()
+            {
+                "BatchOpenRTV",
+                "BatcherSynchroRTV",
+                "BatcherSyncOpenModels"
+            }.ToArray();
+            string[] batchercommands = new List<string>()
+            {
+                "BeyondRevit.Batcher.RTVUIDocumentOpenCommand",
+                "BeyondRevit.Batcher.RTVSynchroExportCommand",
+                "BeyondRevit.Batcher.SyncAllOpenModelsCommand"
+            }.ToArray();
+            string[] batcherimages = new List<string>()
+            {
+                "badger.bmp",
+                "badgerSynchro.bmp",
+                "badger.bmp"
+            }.ToArray();
+            string[] batchertooltips = new List<string>()
+            {
+                "Open Multiple Models using Batch settings made with RTV Tools",
+                "Export Multiple Models to an SPX File for Synchro 4D using Batch settings made with RTV Tools",
+                "Save and Sync All Open Revit Models"
+            }.ToArray();
+            PulldownButtonData batcherPullDown = new PulldownButtonData("BatcherPullDown", "Batcher");
+            CreateStackedRibbonButton(batcherPullDown, batchertitles, batcherbuttonNames, batchercommands, "badger.bmp", BatcherPanel, batcherimages, batchertooltips);
+            #endregion
+            #region Familiespanel
+            PulldownButtonData familiesPulldown = new PulldownButtonData("families", "Families");
+
+            CreateStackedRibbonButton(familiesPulldown,
+                new List<string>() {
+                    "DWG To Generic Model",
+                    "DWG To Generic Model (Section View Only)",
+                    "DWG To Generic Model (Top View Only)",
+                    "Link Nested Family Parameters"}.ToArray(),
+                new List<string>() 
+                {   "DWGToGenericModel",
+                    "DWGToGenericModelSectionsOnly",
+                    "DWGToGenericModelPlanOnly",
+                    "LinkFamilyParameter", }.ToArray(),
+                new List<string>() {
+                    "BeyondRevit.Commands.DWGToGenericModel",
+                    "BeyondRevit.Commands.DWGToGenericModelSectionsOnly",
+                    "BeyondRevit.Commands.DWGToGenericModelPlanOnly",
+                    "BeyondRevit.Commands.LinkFamilyParameters",}.ToArray(),
+                "DWGToFamily32.bmp",
+                FamiliesPanel,
+                new List<string>() {
+                    "DWGToFamily32.bmp",
+                    "DWGToFamily32.bmp",
+                    "DWGToFamily32.bmp",
+                    "linkFamilyParameters32.bmp",}.ToArray());
+
+            #endregion
             #region SelectionPanel
             string[] titles = new List<string>() 
             { 
@@ -70,7 +134,10 @@ namespace BeyondRevit
                 "Select All Types on the same Sheet", 
                 "Select All Types in the Project" ,
                 "Select All Associated Parts",
-                "Select All Sibling Parts"
+                "Select All Sibling Parts",
+                "Select All Group Instances in View",
+                "Select All Group Instances on the same Sheet",
+                "Select All Group Instances in the Project" ,
             }.ToArray();
             string[] buttonNames = new List<string>() 
             { 
@@ -81,7 +148,10 @@ namespace BeyondRevit
                 "Types on Sheet",
                 "Types In Project",
                 "Associated Parts",
-                "Select Sibling Partd"
+                "Select Sibling Partd",
+                "GroupInstances In View",
+                "GroupInstances on Sheet",
+                "GroupInstances In Project",
             }.ToArray();
             string[] commands = new List<string>() 
             {
@@ -93,6 +163,9 @@ namespace BeyondRevit
                 "BeyondRevit.Commands.SelectAllTypesInProject",
                 "BeyondRevit.Commands.SelectAllAssociatedParts",
                 "BeyondRevit.Commands.SelectAllSiblingParts",
+                "BeyondRevit.Commands.SelectAllGroupInstancesInCurrentView",
+                "BeyondRevit.Commands.SelectAllGroupInstancesInCurrentSheet",
+                "BeyondRevit.Commands.SelectAllGroupInstances"
             }.ToArray();
             string[] images = new List<string>() 
             {
@@ -103,7 +176,10 @@ namespace BeyondRevit
                 "SelectAllTypesOnSheet32.bmp",
                 "SelectAllTypesInProject32.bmp",
                 "SelectAllPartsInProject32.bmp",
-                "SelectAllPartsInProject32.bmp"
+                "SelectAllPartsInProject32.bmp",
+                "SelectAllGroupInstancesInView32.bmp",
+                "SelectAllGroupInstancesOnSheet32.bmp",
+                "SelectAllGroupInstancesInProject32.bmp"
             }.ToArray();
             string[] tooltips = new List<string>()
             {
@@ -114,7 +190,10 @@ namespace BeyondRevit
                 "Select all Types related to the FamilyInstances you are selecting which are displayed on the same Sheet as the current view. \nYou can Select multiple FamilyInstances.",
                 "Select all Types related to the FamilyInstances you are selecting in the whole Project. You can Select multiple FamilyInstances.",
                 "Select all Parts which roots go back to the selected elements.",
-                "Select all Parts which share the same source elements"
+                "Select all Parts which share the same source elements",
+                "Select all Family Instances in the Selected Model groups in the current View. You can Select multiple FamilyInstances.",
+                "Select all Family Instances in the Selected Model groups which are displayed on the same Sheet as the current view. \nYou can Select multiple FamilyInstances.",
+                "Select all Family Instances in the Selected Model groups in the whole Project. You can Select multiple FamilyInstances."
             }.ToArray();
             PulldownButtonData selectPullDown = new PulldownButtonData("SelectPullDown", "Select");
             CreateStackedRibbonButton(selectPullDown, titles, buttonNames, commands, "SelectAllInstancesInView32.bmp", SelectionPanel, images, tooltips);
@@ -122,6 +201,7 @@ namespace BeyondRevit
             #region SynchronizationPanel
             AutoSyncButton = CreateRibbonButton("Auto Sync", "StartSync", "BeyondRevit.Commands.SyncSubscribeIdleEvent", SyncPanel, "startSync_32.bmp");
             PauzeAutoSyncButton = CreateRibbonButton("Auto Sync", "PauzeSync", "BeyondRevit.Commands.SyncUnSubscribeIdleEvent", SyncPanel, "pauseSync_32.bmp");
+            SyncPanel.AddSlideOut();
             SyncSettingsButton = CreateRibbonButton("Sync Settings", "SyncSettings", "BeyondRevit.Commands.AutoSyncSettings", SyncPanel, "syncSettings_32.bmp");
             AutoSyncButton.Visible = false;
             SynchronisationConfig config = new SynchronisationConfig();
@@ -183,18 +263,16 @@ namespace BeyondRevit
                     "Divide Elements according a lineair distribution squeezed between 2 points.\nPick the First Position an the Last Position"}.ToArray()
                 );
 
-            ModifyPanel.AddSeparator();
-            PushButtonData AlignOffsetButton = CreateQuickButton("Align Offset", "AlignPlus", "BeyondRevit.CenterElementCommands.AlignWithOffset", "Align Elements with a certain offset", "AlignOffset16.bmp"); ;
-            PushButtonData MoveOffsetButton = CreateQuickButton("Move Offset", "MovePlus", "BeyondRevit.CenterElementCommands.MoveWithOffset", "Move Elements to a location with a certain offset", "MoveOffset16.bmp");
+            //ModifyPanel.AddSeparator();
+            //PushButtonData AlignOffsetButton = CreateQuickButton("Align Offset", "AlignPlus", "BeyondRevit.CenterElementCommands.AlignWithOffset", "Align Elements with a certain offset", "AlignOffset16.bmp"); ;
+            //PushButtonData MoveOffsetButton = CreateQuickButton("Move Offset", "MovePlus", "BeyondRevit.CenterElementCommands.MoveWithOffset", "Move Elements to a location with a certain offset", "MoveOffset16.bmp");
             
-            TextBoxData AlignPlusDistanceTextbox = new TextBoxData("AlignPlusDistanceTextbox");
-            IList<RibbonItem> items = ModifyPanel.AddStackedItems(AlignOffsetButton, MoveOffsetButton, AlignPlusDistanceTextbox);
+            //TextBoxData AlignPlusDistanceTextbox = new TextBoxData("AlignPlusDistanceTextbox");
+            //IList<RibbonItem> items = ModifyPanel.AddStackedItems(AlignOffsetButton, MoveOffsetButton, AlignPlusDistanceTextbox);
 
             #endregion
-
             #region QuickCommands
 
-            CommandLineButton = CreateRibbonButton("Command Line", "CommandLine", "BeyondRevit.Commands.CommandLine", QuickCommandPanel, "commandLine_32.bmp");
             PushButton ManageTabsButton = CreateRibbonButton("Manage Tabs", "ManageTabs", "BeyondRevit.Commands.ManageAddinPanels", QuickCommandPanel, "ManageTabs_32.bmp");
             ModifyPanel.AddSeparator();
 
@@ -256,18 +334,18 @@ namespace BeyondRevit
                 }.ToArray());
             #endregion
             #region Dimension
-            PulldownButtonData dimensionPullDown = new PulldownButtonData("DimensionsPullDown", "Dimensions");
+            SplitButtonData dimensionPullDown = new SplitButtonData("DimensionsPullDown", "Dimensions");
             CreateStackedRibbonButton(dimensionPullDown,
                 new List<string>() {
-                    "Create Total Dimension",
-                    "Duplicate Dimension with Offset",
-                    "Copy Dimension Overrides",
-                    "Move Small Dimensions",
-                    "Remove Dimension Reference",
-                    "Split Dimensions",
-                    "Merge Dimensions",
-                    "Isolate Dimension Hosts",
-                    "Align First Dimension Distance",
+                    "Total",
+                    "Duplicate",
+                    "Copy  Overrides",
+                    "Move Small",
+                    "Remove",
+                    "Split",
+                    "Merge",
+                    "Isolate Hosts",
+                    "Align First",
                     "Auto Dimension" }.ToArray(),
                 new List<string>() {
                     "CreateTotalDimension",
@@ -292,7 +370,7 @@ namespace BeyondRevit
                     "BeyondRevit.Commands.AlignFirstDimensionbyDistance",
                     "BeyondRevit.Commands.AutoDimension"}.ToArray(),
                 "dimensions_32.bmp",
-                DimensionsPanel, new List<string>() {
+                AnnotationsPanel, new List<string>() {
                     "dimensionTotal_32.bmp",
                     "dimensionDuplicate_32.bmp",
                     "dimensionCopyOverrides_32.bmp",
@@ -303,18 +381,44 @@ namespace BeyondRevit
                     "dimensions_32.bmp",
                     "alignDimensions_32.bmp",
                     "autoDimension_32.bmp" }.ToArray());
+
+            PulldownButtonData filtersPullDown = new PulldownButtonData("FiltersPullDown", "Filters");
+            CreateStackedRibbonButton(filtersPullDown,
+                new List<string>() {
+                    "Create View Sheet Filters",
+                    "Create Workset Filters",
+                    "Create Filled Regions by Material",
+                    "Create Filled Regions by Material (Shaded)"}.ToArray(),
+                new List<string>() {
+                    "SheetFilters",
+                    "WorksetFilers",
+                    "FilledRegionByMaterial",
+                    "FilledRegionByMaterialShaded"}.ToArray(),
+                new List<string>() {
+                    "BeyondRevit.Commands.CreateSheetFilters",
+                    "BeyondRevit.Commands.CreateWorksetFilters",
+                    "BeyondRevit.Commands.CreateFilledRegionTypesByMaterials",
+                    "BeyondRevit.Commands.CreateFilledRegionTypesByMaterialsShaded"
+                    
+                }.ToArray(),
+                "sheetFilters32.bmp",
+                AnnotationsPanel, new List<string>() {
+                    "sheetFilters32.bmp",
+                    "worksetFilters32.bmp",
+                    "filledRegionsMaterial32.bmp",
+                    "filledRegionsShaded32.bmp"}.ToArray());
+
+
             #endregion
             #region SheetPanel
             OrganizeViewsButton = CreateRibbonButton("Organize Views", "OrganizeViews", "BeyondRevit.Commands.OrganizeViewsOnSheet", SheetPanel, "organizeViews_32.bmp");
-
-            
-
-
             PulldownButtonData viewportPulldown = new PulldownButtonData("ViewportPulldown", "Viewports");
             CreateStackedRibbonButton(viewportPulldown,
                 new List<string>() {
                     "Open Views from Viewports",
-                    "Move/Copy Views to another Sheet",
+                    "Create Break lines",
+                    "Move Views to another Sheet",
+                    "Copy Views to another Sheet",
                     "Show Viewport Crop Region",
                     "Hide Viewport Crop Region",
                     "Center Viewports Vertically",
@@ -323,7 +427,9 @@ namespace BeyondRevit
                     "Distribute Viewports Vertically"}.ToArray(),
                 new List<string>() {
                     "OpenViewsFromViewport",
+                    "CreateBreakLines",
                     "MoveViewportsToSheet",
+                    "CopyViewportsToSheet",
                     "ShowViewportCropRegion",
                     "HideViewportCropRegion",
                     "CenterViewportsVertically",
@@ -332,7 +438,9 @@ namespace BeyondRevit
                     "DistributeViewportsHorizontally" }.ToArray(),
                 new List<string>() {
                     "BeyondRevit.ViewportCommands.OpenViewportView",
+                    "BeyondRevit.ViewportCommands.CreateBreakLines",
                     "BeyondRevit.ViewportCommands.MoveViewportsToAnotherSheet",
+                    "BeyondRevit.ViewportCommands.CopyViewportsToAnotherSheet",
                     "BeyondRevit.ViewportCommands.ShowCropRegion",
                     "BeyondRevit.ViewportCommands.HideCropRegion",
                     "BeyondRevit.ViewportCommands.AlignVerticalTop",
@@ -343,6 +451,8 @@ namespace BeyondRevit
                 SheetPanel,
                 new List<string>() {
                     "ViewportOpenViews32.bmp",
+                    "Viewport_CreateBreakLines32.bmp",
+                    "MoveViewports32.bmp",
                     "MoveViewports32.bmp",
                     "ViewportShowCropRegion32.bmp",
                     "ViewportHideCropRegion32.bmp",
@@ -388,8 +498,8 @@ namespace BeyondRevit
                     "BeyondRevit.Hades.PurgeViewFilters",
                     "BeyondRevit.Hades.PurgeViewTemplates",
                     "BeyondRevit.Hades.PurgeScopeboxes",
-                    "BeyondRevit.Hades.PurgeViewsNotOnSheet",
                     "BeyondRevit.Hades.PurgeMaterials",
+                    "BeyondRevit.Hades.PurgeViewsNotOnSheet",
                     "BeyondRevit.Hades.PurgeLegendsAndSchedulesNotOnSheet",
                     "BeyondRevit.Hades.PurgeViewsNotOnSheetBySelection",
                     "BeyondRevit.Hades.PurgeCurrentSheet",
@@ -417,9 +527,9 @@ namespace BeyondRevit
                 }.ToArray());
             #endregion
             #region Facts
-            PushButtonData ShowFactButton = CreateQuickButton("Show Awesome Fact", "Fact", "BeyondRevit.Facts.ShowFact", "Shows you the Fact from the Beyond Revit Splash Window", "funfact_16.bmp");
-            PushButtonData IWantToKnowMoreButton = CreateQuickButton("I Want to Know More", "IWTKM", "BeyondRevit.Facts.IWantToKnowMore", "Shows you Google Results about the Fact from the Beyond Revit Splash Window", "funfact_16.bmp");
-            PushButtonData NextFactButton = CreateQuickButton("Show the Next Awesome Faxt", "NextFact", "BeyondRevit.Facts.NextFact", "Shows the Next Awesome Fact", "funfact_16.bmp");
+            PushButtonData ShowFactButton = CreateQuickButton("Show Awesome Fact", "Fact", "BeyondRevit.Facts.ShowFact", "Shows you the Fact from the Beyond Revit Splash Window", "funfact_16.png");
+            PushButtonData IWantToKnowMoreButton = CreateQuickButton("I Want to Know More", "IWTKM", "BeyondRevit.Facts.IWantToKnowMore", "Shows you Google Results about the Fact from the Beyond Revit Splash Window", "funfact_16.png");
+            PushButtonData NextFactButton = CreateQuickButton("Show the Next Awesome Faxt", "NextFact", "BeyondRevit.Facts.NextFact", "Shows the Next Awesome Fact", "funfact_16.png");
             FactsPanel.AddStackedItems(ShowFactButton, IWantToKnowMoreButton, NextFactButton);
             #endregion
             PostProcessing();
@@ -447,12 +557,14 @@ namespace BeyondRevit
         {
             application.CreateRibbonTab("Beyond Revit");
             BeyondRevitPanel = application.CreateRibbonPanel("Beyond Revit", "Beyond Revit "+BeyondRevitVersion);
-            SyncPanel = application.CreateRibbonPanel("Beyond Revit", "Synchronization");
+            SyncPanel = application.CreateRibbonPanel("Beyond Revit", "Sync");
+            BatcherPanel = application.CreateRibbonPanel("Beyond Revit", "Batcher");
+            FamiliesPanel = application.CreateRibbonPanel("Beyond Revit", "Families");
             SelectionPanel = application.CreateRibbonPanel("Beyond Revit", "Selection");
             ModifyPanel = application.CreateRibbonPanel("Beyond Revit", "Modify");
             QuickCommandPanel = application.CreateRibbonPanel("Beyond Revit", "Quick Commands");
             SectionboxWorkplanes = application.CreateRibbonPanel("Beyond Revit", "Workplanes");
-            DimensionsPanel = application.CreateRibbonPanel("Beyond Revit", "Dimensions");
+            AnnotationsPanel = application.CreateRibbonPanel("Beyond Revit", "Annotate");
             SheetPanel = application.CreateRibbonPanel("Beyond Revit", "Sheet");
             HadesPanel = application.CreateRibbonPanel("Beyond Revit", "Hades");
             FactsPanel = application.CreateRibbonPanel("Beyond Revit", "Facts");
@@ -482,7 +594,7 @@ namespace BeyondRevit
             
             return pushButton;
         }
-        private PulldownButton CreateStackedRibbonButton(PulldownButtonData pullDownData, string[] Titles, string[] buttonNames, string[] Commands, string RibbonPanelImage, RibbonPanel panel, string[] imageNames = null, string[] toolTips = null)
+        private PulldownButton CreateStackedRibbonButton(dynamic pullDownData, string[] Titles, string[] buttonNames, string[] Commands, string RibbonPanelImage, RibbonPanel panel, string[] imageNames = null, string[] toolTips = null)
         {
             string assemblyPath = Assembly.GetExecutingAssembly().Location;
             string folderPath = Path.GetDirectoryName(assemblyPath);
@@ -510,7 +622,7 @@ namespace BeyondRevit
             }
             return pullDown;
         }
-
+      
         private PushButtonData CreateQuickButton(string Title, string buttonName, string Command, string toolTip = null, string imageName = null)
         {
             string assemblyPath = Assembly.GetExecutingAssembly().Location;
@@ -563,18 +675,6 @@ namespace BeyondRevit
             return result;
         }
 
-        private static void TextBox_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            adskWindows.RibbonTextBox textBox = sender as adskWindows.RibbonTextBox;
-            if(!double.TryParse(textBox.TextValue, out double distance))
-            {
-                Utils.Show("Input must be a Number");
-            }
-            else
-            {
-
-            }
-        }
 
         private static void SetLargeImage(PushButtonData button,  string imageName)
         {
@@ -629,6 +729,7 @@ namespace BeyondRevit
         {
             if (File.Exists(BeyondRevit.UI.ManageTabsWindow.SaveFileLocation))
             {
+                Utils.SetupFile(BeyondRevit.UI.ManageTabsWindow.SaveFileLocation);
                 string json = File.ReadAllText(BeyondRevit.UI.ManageTabsWindow.SaveFileLocation);
                 Dictionary<string, bool> settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, bool>>(json);
                 adskWindows.RibbonTabCollection tabs = adskWindows.ComponentManager.Ribbon.Tabs;

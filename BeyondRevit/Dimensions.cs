@@ -5,6 +5,7 @@ using Autodesk.Revit.UI;
 using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.UI.Selection;
+using BeyondRevit.UI;
 
 namespace BeyondRevit.Commands
 {
@@ -608,6 +609,65 @@ namespace BeyondRevit.Commands
                 }
             }
             return result;
+        }
+    }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class CopyDimensionsTo3D : IExternalCommand
+    {
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+
+            UIDocument uidoc = commandData.Application.ActiveUIDocument;
+            Document document = uidoc.Document;
+            View view = document.ActiveView;
+
+            IList<Reference> dimensionRefs = uidoc.Selection.PickObjects(ObjectType.Element, new DimensionFilter(), "Select Dimensions to Isolate. Press Escape to Cancel");
+            List<Dimension> dimensions = new List<Dimension>();
+            foreach (Reference r in dimensionRefs)
+            {
+                Dimension dim = (Dimension)document.GetElement(r);
+                dimensions.Add(dim);
+
+            }
+
+            var views = new FilteredElementCollector(document).OfClass(typeof(View3D)).ToElements().Where(x => ((View3D)x).IsTemplate == false).ToList();
+            Dictionary<string, dynamic> map = new Dictionary<string, dynamic>();
+            foreach(View3D v in views)
+            {
+                map.Add(v.Name+" - "+ v.Id , v);
+            }
+            GenericDropdownWindow window = new GenericDropdownWindow("Select View", "Select View for Dimensions", map, Utils.RevitWindow(commandData), false);
+            window.ShowDialog();
+            if (window.Cancelled)
+            {
+                return Result.Cancelled;
+            }
+            View3D targetView = window.SelectedItems.First() as View3D;
+            uidoc.RequestViewChange(targetView);
+
+            using (Transaction trans = new Transaction(document, "Isolate Dimension Hosts"))
+            {
+                trans.Start();
+                
+                SketchPlane sketchPlane = Utils.SketchplaneByView(view);
+                targetView.SketchPlane = sketchPlane;
+                foreach(Dimension dim in dimensions)
+                {
+                    Curve curve = dim.Curve;
+                    curve.MakeBound(0, 1);
+                    Line line = Line.CreateBound(curve.GetEndPoint(0), curve.GetEndPoint(1));
+                    Dimension d = document.Create.NewDimension(targetView, line, dim.References);
+                    document.Create.NewModelCurve(curve, sketchPlane);
+                    uidoc.Selection.SetElementIds(new List<ElementId>() { d.Id });
+                }
+                trans.Commit();
+            }
+            
+
+            return Result.Succeeded;
+
         }
     }
 

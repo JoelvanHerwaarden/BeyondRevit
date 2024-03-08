@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FF5F66F1-FF7F-426A-90D7-356D7A4190D5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>BeyondRevitInstaller</RootNamespace>
+    <RootNamespace>EZInstaller</RootNamespace>
     <AssemblyName>BeyondRevitInstaller</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -125,8 +125,10 @@
     </None>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\BeyondRevit.Addin" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -138,7 +140,246 @@
     <EmbeddedResource Include="InstallationConfiguration.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <EmbeddedResource Include="Resources\BeyondRevit2024.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BeyondRevit2021.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BeyondRevit2022.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BeyondRevit2023.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AddElementsTempIsolate16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\alignDimensions_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AlignElevations16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AlignOffset16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\autoDimension_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\badger.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\badgerSynchro.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CenterElementBetweenPoints16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CenterElementBetweenPointsPerpendicular16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\commandLine_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DetachScopebox16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dimensionCopyOverrides_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dimensionDuplicate_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dimensionMerge_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dimensionRemoveReference_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dimensions_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dimensionSplit_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\dimensionTotal_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\FlipHorizontal16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\FlipVertical16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\hades_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\JoinCut32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\linkFamilyParameters16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MakeElementHalftone16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ManageTabs_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MoveAlign32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MoveOffset16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MoveViewports32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\next_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\organizeViews_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\pauseSync_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\previous_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\RemoveElementOverrides16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Rotate18016.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SectionboxBack32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SectionboxBottom32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SectionboxFront32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SectionboxLeft32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SectionboxRight32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SectionboxTop32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllGroupInstancesInProject32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllGroupInstancesInView32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllGroupInstancesOnSheet32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllInstancesInProject32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllInstancesInView32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllInstancesOnSheet32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllPartsInProject32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllPartsInView32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllTypesInProject32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllTypesInView32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SelectAllTypesOnSheet32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\selectInstancesInView_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\smalldimensions_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\StackTagHeads16.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\startSync_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\syncSettings_32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewportAlignHorizontalCenter32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewportAlignVerticalCenter32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewportDistributeHorizontal32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewportDistributeVertical32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewportHideCropRegion.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewportHideCropRegion32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewportOpenViews32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewportShowCropRegion32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\commandConsole_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\organizeViews_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\filledRegionsMaterial32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\filledRegionsShaded32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\sheetFilters32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\worksetFilters32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DWGToFamily32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\linkFamilyParameters32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Viewport_CreateBreakLines32.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\funfact_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /y "$(SolutionDir)BeyondRevit\BeyondRevit.addin" "$(SolutionDir)BeyondRevitInstaller\Resources\$(SolutionName).addin"
+Echo "$(SolutionDir)BeyondRevitTestingGround\BeyondRevit2021.dll"
+xcopy /y "$(SolutionDir)BeyondRevitTestingGround\BeyondRevit2021.dll" "$(SolutionDir)BeyondRevitInstaller\Resources\$(SolutionName)2021.dll"
+xcopy /y "$(SolutionDir)BeyondRevitTestingGround\BeyondRevit2022.dll" "$(SolutionDir)BeyondRevitInstaller\Resources\$(SolutionName)2022.dll"
+xcopy /y "$(SolutionDir)BeyondRevitTestingGround\BeyondRevit2023.dll" "$(SolutionDir)BeyondRevitInstaller\Resources\$(SolutionName)2023.dll"
+xcopy /y "$(SolutionDir)BeyondRevitTestingGround\BeyondRevit2024.dll" "$(SolutionDir)BeyondRevitInstaller\Resources\$(SolutionName)2024.dll"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
